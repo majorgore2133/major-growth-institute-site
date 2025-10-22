@@ -28,15 +28,14 @@
     @keyframes fade{to{opacity:1; transform:none}}
 
     .hero{background:#fff;padding:24px;border-radius:14px;box-shadow:0 12px 34px rgba(6,58,102,.08)}
-    /* Balanced columns, eliminate awkward whitespace */
     .hero-top{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:stretch}
     .hero img.logo{height:80px;margin:0 0 8px}
     h1{margin:6px 0 8px;color:var(--dark);font-size:34px}
     .lead{color:var(--muted);line-height:1.6}
     .cta{display:flex;gap:12px;margin-top:10px;flex-wrap:wrap}
-    .btn{background:var(--blue);color:#fff;padding:12px 18px;border:0;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 10px 28px rgba(11,95,165,.16)}
+    .btn{background:var(--blue);color:#fff;padding:12px 18px;border:0;border-radius:10px;font-weight:700;cursor:pointer;box-shadow:0 10px 28px rgba(11,95,165,.16);text-align:center;display:inline-block;text-decoration:none}
     .btn.secondary{background:transparent;border:2px solid rgba(6,58,102,.14);color:var(--dark)}
-    /* Panel tweaks to fill column gracefully */
+    .btn.gold{background:var(--gold); color:#1b2330; box-shadow:0 10px 28px rgba(202,164,59,.25)}
     .panel{background:#fff;border:1px solid rgba(6,58,102,.08);border-radius:14px;box-shadow:0 10px 28px rgba(6,58,102,.08);padding:18px;display:flex;flex-direction:column;justify-content:flex-start}
     .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;margin-top:18px}
     .card{background:#fff;border:1px solid rgba(6,58,102,.06);border-left:6px solid var(--gold);padding:14px;border-radius:12px;box-shadow:0 8px 24px rgba(6,58,102,.06)}
@@ -46,12 +45,13 @@
     form .row{display:flex;gap:10px;flex-wrap:wrap}
     video{width:100%;height:auto;border-radius:12px;box-shadow:0 10px 30px rgba(6,58,102,.08)}
 
-    /* Pricing enhancements */
+    /* Pricing */
     .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .price-card{background:#fff;border:1px solid rgba(6,58,102,.08);border-radius:14px;box-shadow:0 10px 28px rgba(6,58,102,.08);padding:18px}
+    .price-card{position:relative;background:#fff;border:1px solid rgba(6,58,102,.08);border-radius:14px;box-shadow:0 10px 28px rgba(6,58,102,.08);padding:18px}
     .price-title{font-weight:800;color:var(--dark);font-size:20px;letter-spacing:.2px}
     .price-amt{font-size:24px;font-weight:800;color:var(--blue);margin:8px 0 12px}
     .price-desc{color:var(--muted);font-size:14.5px;line-height:1.55;margin-bottom:14px}
+    .badge-popular{position:absolute;top:-10px;left:16px;background:var(--gold);color:#1b2330;font-weight:800;font-size:12px;padding:6px 10px;border-radius:999px;box-shadow:0 6px 18px rgba(202,164,59,.25)}
     .price-card .btn{width:100%}
 
     @media(max-width:980px){
@@ -142,10 +142,11 @@
           <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Choose Starter</a>
         </div>
         <div class="price-card">
+          <div class="badge-popular">Most Popular</div>
           <div class="price-title">Concierge</div>
-          <div class="price-amt">$899 / month</div>
-          <div class="price-desc">Hands‑on support, guided credit building, and curated paths to approvals.</div>
-          <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Choose Concierge</a>
+          <div class="price-amt">$1,000 — Full-Service Package</div>
+          <div class="price-desc">Hands‑on support, step‑by‑step rebuilding, and a clear path to approvals. Add your Stripe link later to accept payments instantly.</div>
+          <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Choose Concierge</a>
         </div>
         <div class="price-card">
           <div class="price-title">Funding Plan</div>
