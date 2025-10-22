@@ -24,13 +24,13 @@ a{text-decoration:none;color:var(--blue)}
 .brand{display:flex;align-items:center;gap:12px;color:#fff}
 .brand img{height:40px}
 .brand b{font-size:18px}
-.btn{display:inline-block;background:var(--blue);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;box-shadow:0 10px 28px rgba(11,95,165,.16)}
+.btn{display:inline-block;background:var(--blue);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;box-shadow:0 10px 28px rgba(11,95,165,.16);border:0;cursor:pointer}
 .btn.gold{background:var(--gold);color:#1b2330}
+.btn.ghost{background:transparent;border:2px solid rgba(6,58,102,.14);color:var(--dark)}
 .card{background:#fff;border:var(--outline);border-radius:14px;box-shadow:var(--shadow);padding:18px}
 .grid{display:grid;gap:16px}
 .two{grid-template-columns:1.2fr .8fr}
 @media(max-width:980px){.two{grid-template-columns:1fr}}
-
 .mini{font-size:12px;color:#6b7b8c}
 .input{width:100%;padding:12px;border:1px solid rgba(6,58,102,.12);border-radius:10px}
 .row{display:flex;gap:10px;flex-wrap:wrap}
@@ -44,28 +44,6 @@ ul{margin:0 0 8px 18px}
 footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
 </style>
 </head>
-  <!-- Firebase SDKs (compatible version for GitHub Pages) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
-
-<script>
-  const firebaseConfig = {
-    apiKey: "AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
-    authDomain: "majorgrowthportal.firebaseapp.com",
-    projectId: "majorgrowthportal",
-    storageBucket: "majorgrowthportal.firebasestorage.app",
-    messagingSenderId: "741963712787",
-    appId: "1:741963712787:web:dbb9fb191cdae414b0f2e6",
-    measurementId: "G-7NGDY9DYCW"
-  };
-
-  firebase.initializeApp(firebaseConfig);
-  const auth = firebase.auth();
-  const db = firebase.firestore();
-
-  console.log("Firebase connected:", !!firebase.apps.length);
-</script>
 <body>
   <div class="nav">
     <div class="nav-inner container">
@@ -86,12 +64,12 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
       <h2>Sign in to Your Portal</h2>
       <p class="mini">Private & secure. Use Email or continue with Google.</p>
       <div class="row" style="margin-top:10px">
-        <input id="email" class="input" placeholder="Email" type="email">
-        <input id="password" class="input" placeholder="Password" type="password">
+        <input id="email" class="input" placeholder="Email" type="email" autocomplete="username">
+        <input id="password" class="input" placeholder="Password" type="password" autocomplete="current-password">
       </div>
       <div class="actions">
         <button class="btn" id="emailLogin">Sign In</button>
-        <button class="btn" id="emailRegister">Create Account</button>
+        <button class="btn ghost" id="emailRegister">Create Account</button>
         <button class="btn gold" id="googleLogin">Continue with Google</button>
       </div>
       <p class="mini" style="margin-top:8px">By continuing, you agree to the portal’s privacy policy and data handling practices. You can delete your data anytime.</p>
@@ -114,7 +92,7 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
           <div class="actions">
             <button class="btn" id="prevBtn">Back</button>
             <button class="btn gold" id="nextBtn">Next</button>
-            <button class="btn" id="saveBtn">Save</button>
+            <button class="btn ghost" id="saveBtn">Save</button>
           </div>
           <p class="mini">Tip: Click “Save” to store your progress. If Firestore isn’t configured yet, we’ll store it in your browser temporarily.</p>
         </div>
@@ -137,7 +115,42 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
     </div>
   </div>
 
-  // Analyzer elts
+  <!-- Firebase SDKs (compat for static sites) -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+
+  <script>
+  // ========= CONFIG (your real keys) =========
+  const firebaseConfig = {
+    apiKey: "AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
+    authDomain: "majorgrowthportal.firebaseapp.com",
+    projectId: "majorgrowthportal",
+    storageBucket: "majorgrowthportal.firebasestorage.app",
+    messagingSenderId: "741963712787",
+    appId: "1:741963712787:web:dbb9fb191cdae414b0f2e6",
+    measurementId: "G-7NGDY9DYCW"
+  };
+
+  // ========= INIT =========
+  let auth, db, user;
+  try {
+    firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+    console.log("Firebase connected:", !!firebase.apps.length);
+  } catch(e){ console.warn("Firebase not configured yet → falling back to localStorage only.", e); }
+
+  // UI Elements
+  const authCard = document.getElementById('authCard');
+  const appShell = document.getElementById('app');
+  const userEmail = document.getElementById('userEmail');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  const emailLogin = document.getElementById('emailLogin');
+  const emailRegister = document.getElementById('emailRegister');
+  const googleLogin = document.getElementById('googleLogin');
+
   const sEls = [document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4')];
   const stageBody = document.getElementById('stageBody');
   const nextBtn = document.getElementById('nextBtn');
@@ -148,21 +161,16 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
   const funding = document.getElementById('funding');
   const clearBtn = document.getElementById('clearBtn');
 
-  // ========= 3) AUTH =========
+  // ========= AUTH FLOW =========
   function showApp(u){
-    user = u;
+    user = u || null;
     userEmail.textContent = u?.email || "";
     logoutBtn.style.display = u ? 'inline-block' : 'none';
     authCard.style.display = u ? 'none' : 'block';
     appShell.style.display = u ? 'block' : 'none';
     if(u){ loadProfile(); renderStage(); }
   }
-  if(auth){
-    auth.onAuthStateChanged(showApp);
-  } else {
-    // No Firebase → show app without auth (for testing)
-    showApp({email:"local@test"});
-  }
+  if(auth){ auth.onAuthStateChanged(showApp); } else { showApp({email:"local@test"}); }
 
   emailLogin?.addEventListener('click', async ()=>{
     try{ await auth.signInWithEmailAndPassword(email.value, password.value); }
@@ -176,31 +184,24 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
     try{ await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
     catch(e){ alert(e.message); }
   });
-  logoutBtn?.addEventListener('click', async ()=>{
-    try{ await auth.signOut(); } catch(e){ console.error(e); }
-  });
+  logoutBtn?.addEventListener('click', async ()=>{ try{ await auth.signOut(); } catch(e){ console.error(e); } });
 
-  // ========= 4) ANALYZER STATE =========
+  // ========= ANALYZER STATE =========
   let stage = 1;
   let data = {
-    // Repair
-    scores: {exp:null, eq:null, tu:null},
-    derog: {late:false, collections:false, chargeoff:false, bk:false},
-    negCount: 0,
-    // Build
-    util: {overall:null, highestCard:null},
-    mix: {revolving:0, installment:0, ageMonths:0, newInq:0},
-    // Leverage
-    goals: {personal:true, business:false, targetFunding:0, risk:'moderate'},
-    // Plan
-    notes: ""
+    scores:{exp:null,eq:null,tu:null},
+    derog:{late:false,collections:false,chargeoff:false,bk:false},
+    negCount:0,
+    util:{overall:null,highestCard:null},
+    mix:{revolving:0,installment:0,ageMonths:0,newInq:0},
+    goals:{personal:true,business:false,targetFunding:0,risk:'moderate'},
+    notes:""
   };
 
   function setStage(i){
     stage = Math.min(4, Math.max(1,i));
     sEls.forEach((el,idx)=> el.classList.toggle('active', idx===stage-1));
   }
-
   function renderStage(){
     setStage(stage);
     if(stage===1){
@@ -222,14 +223,13 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
           <input class="input" id="negCount" placeholder="# of negative items (approx)" type="number">
         </div>
       `;
-      // populate
       document.getElementById('score_exp').value = data.scores.exp ?? "";
-      document.getElementById('score_eq').value = data.scores.eq ?? "";
-      document.getElementById('score_tu').value = data.scores.tu ?? "";
-      document.getElementById('late').checked = data.derog.late;
+      document.getElementById('score_eq').value  = data.scores.eq ?? "";
+      document.getElementById('score_tu').value  = data.scores.tu ?? "";
+      document.getElementById('late').checked   = data.derog.late;
       document.getElementById('collections').checked = data.derog.collections;
-      document.getElementById('chargeoff').checked = data.derog.chargeoff;
-      document.getElementById('bk').checked = data.derog.bk;
+      document.getElementById('chargeoff').checked   = data.derog.chargeoff;
+      document.getElementById('bk').checked          = data.derog.bk;
       document.getElementById('negCount').value = data.negCount ?? "";
     }
     if(stage===2){
@@ -241,18 +241,18 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
           <input class="input" id="util_high" placeholder="Highest card utilization % (e.g., 82)" type="number">
         </div>
         <div class="row" style="margin-top:8px">
-          <input class="input" id="mix_rev" placeholder="# of revolving accounts" type="number">
+          <input class="input" id="mix_rev"  placeholder="# of revolving accounts" type="number">
           <input class="input" id="mix_inst" placeholder="# of installment accounts" type="number">
-          <input class="input" id="mix_age" placeholder="Avg age (months)" type="number">
-          <input class="input" id="mix_inq" placeholder="New inquiries (last 6–12 mo)" type="number">
+          <input class="input" id="mix_age"  placeholder="Avg age (months)" type="number">
+          <input class="input" id="mix_inq"  placeholder="New inquiries (last 6–12 mo)" type="number">
         </div>
       `;
       document.getElementById('util_overall').value = data.util.overall ?? "";
-      document.getElementById('util_high').value = data.util.highestCard ?? "";
-      document.getElementById('mix_rev').value = data.mix.revolving ?? "";
-      document.getElementById('mix_inst').value = data.mix.installment ?? "";
-      document.getElementById('mix_age').value = data.mix.ageMonths ?? "";
-      document.getElementById('mix_inq').value = data.mix.newInq ?? "";
+      document.getElementById('util_high').value   = data.util.highestCard ?? "";
+      document.getElementById('mix_rev').value     = data.mix.revolving ?? "";
+      document.getElementById('mix_inst').value    = data.mix.installment ?? "";
+      document.getElementById('mix_age').value     = data.mix.ageMonths ?? "";
+      document.getElementById('mix_inq').value     = data.mix.newInq ?? "";
     }
     if(stage===3){
       stageBody.innerHTML = `
@@ -274,15 +274,15 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
       document.getElementById('g_personal').checked = data.goals.personal;
       document.getElementById('g_business').checked = data.goals.business;
       document.getElementById('g_amount').value = data.goals.targetFunding ?? "";
-      document.getElementById('g_risk').value = data.goals.risk ?? "moderate";
+      document.getElementById('g_risk').value   = data.goals.risk ?? "moderate";
     }
     if(stage===4){
       stageBody.innerHTML = `
         <h2>Plan — Notes & Next Steps</h2>
         <p class="mini">Capture context or documents you’ll want your specialist to see.</p>
-        <textarea class="input" id="notes" rows="5" placeholder="Ex: I have two closed charge-offs from 2022; current balances 0; goal is 25k 0% personal then 30k business."></textarea>
+        <textarea class="input" id="notes" rows="5" placeholder="Ex: Two closed charge-offs from 2022; current balances 0; goal is 25k 0% personal then 30k business."></textarea>
         <div class="row" style="margin-top:8px">
-          <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book Review Call</a>
+          <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book Review Call</a>
         </div>
       `;
       document.getElementById('notes').value = data.notes ?? "";
@@ -290,154 +290,15 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
     compute();
   }
 
-  // ========= 5) CAPTURE =========
   function capture(){
     if(stage===1){
-      data.scores.exp = numOrNull('score_exp');
-      data.scores.eq  = numOrNull('score_eq');
-      data.scores.tu  = numOrNull('score_tu');
-      data.derog.late = document.getElementById('late').checked;
-      data.derog.collections = document.getElementById('collections').checked;
-      data.derog.chargeoff = document.getElementById('chargeoff').checked;
-      data.derog.bk = document.getElementById('bk').checked;
-      data.negCount = numOrNull('negCount')||0;
+      data.scores.exp = num('score_exp'); data.scores.eq = num('score_eq'); data.scores.tu = num('score_tu');
+      data.derog.late = id('late').checked; data.derog.collections = id('collections').checked; data.derog.chargeoff = id('chargeoff').checked; data.derog.bk = id('bk').checked;
+      data.negCount = num('negCount')||0;
     }
     if(stage===2){
-      data.util.overall = numOrNull('util_overall');
-      data.util.highestCard = numOrNull('util_high');
-      data.mix.revolving = numOrNull('mix_rev')||0;
-      data.mix.installment = numOrNull('mix_inst')||0;
-      data.mix.ageMonths = numOrNull('mix_age')||0;
-      data.mix.newInq = numOrNull('mix_inq')||0;
+      data.util.overall = num('util_overall'); data.util.highestCard = num('util_high');
+      data.mix.revolving = num('mix_rev')||0; data.mix.installment = num('mix_inst')||0; data.mix.ageMonths = num('mix_age')||0; data.mix.newInq = num('mix_inq')||0;
     }
     if(stage===3){
-      data.goals.personal = document.getElementById('g_personal').checked;
-      data.goals.business = document.getElementById('g_business').checked;
-      data.goals.targetFunding = numOrNull('g_amount')||0;
-      data.goals.risk = document.getElementById('g_risk').value;
-    }
-    if(stage===4){
-      data.notes = (document.getElementById('notes')?.value||"").trim();
-    }
-  }
-  function numOrNull(id){
-    const v = document.getElementById(id)?.value;
-    if(v===undefined || v==="") return null;
-    return Number(v);
-  }
-
-  // ========= 6) RULE ENGINE =========
-  function compute(){
-    // Snapshot
-    const avgScore = avg([data.scores.exp,data.scores.eq,data.scores.tu]);
-    const negs = Object.entries(data.derog).filter(([k,v])=>v).map(([k])=>k);
-    snapshot.innerHTML = `
-      <div class="pill">Avg score: <b>${avgScore ?? '—'}</b></div>
-      <div class="pill">Negatives: <b>${negs.length>0?negs.join(', '):'none reported'}</b></div>
-      <div class="pill">Overall util: <b>${data.util.overall ?? '—'}%</b></div>
-      <div class="pill">Oldest age: <b>${data.mix.ageMonths ?? '—'} mo avg</b></div>
-      <div class="pill">Inquiries: <b>${data.mix.newInq ?? '—'}</b></div>
-      <div class="pill">Goals: <b>${data.goals.personal?'Personal':''}${data.goals.personal&&data.goals.business?' + ':''}${data.goals.business?'Business':''}</b></div>
-      <div class="pill">Target: <b>$${fmt(data.goals.targetFunding||0)}</b></div>
-    `;
-
-    // Recommendations
-    const R = [];
-    // Repair logic
-    if(negs.length>0 || data.negCount>0){
-      R.push("Begin documentation bundle (ID + address docs + bureau reports). Prioritize oldest negatives first; confirm each furnisher reporting accuracy.");
-    }
-    if(data.derog.late){ R.push("Request goodwill adjustments where positive history exists; maintain on-time streak 6–12 months."); }
-    if(data.derog.collections || data.derog.chargeoff){
-      R.push("For collections/charge-offs: validate, then negotiate pay-for-delete only if validation passes; otherwise dispute inaccuracies.");
-    }
-    if(data.derog.bk){ R.push("For prior BK: focus on thick positive history and very low utilization; avoid excessive new inquiries."); }
-
-    // Build logic
-    if(data.util.overall!=null && data.util.overall>28){
-      R.push("Reduce overall utilization under 28% (ideal < 9% reporting on statement cut). Consider temporary balance shift or early mid-cycle payment.");
-    }
-    if(data.util.highestCard!=null && data.util.highestCard>57){
-      R.push("Target the maxed card first — under 57% asap, then <29%, then <9% for scoring gains.");
-    }
-    if((data.mix.revolving||0)<3){
-      R.push("Add 1–2 positive revolving lines (secured ok) to reach 3+ total; keep limits reporting clean for 90 days.");
-    }
-    if((data.mix.installment||0)<1){
-      R.push("Add one small installment tradeline (e.g., credit-builder/pledge) and pay down 90% immediately to establish open installment history.");
-    }
-    if((data.mix.ageMonths||0)<24){
-      R.push("Let accounts season; avoid closing older lines. Consider an AU line only if aged/high-limit/low util and from a trusted source.");
-    }
-    if((data.mix.newInq||0)>3){
-      R.push("Pause new applications for 60–90 days to let inquiries age and score stabilize.");
-    }
-
-    // Leverage logic
-    if(avgScore && avgScore>=680 && (data.util.overall??100) <= 28){
-      R.push("Pre-approval window: consider 0% APR personal cards for 12–18 months; avoid stacking too many in one week.");
-    } else {
-      R.push("Delay new credit pulls until repair/build steps post; pre-qualify with soft-pull tools only.");
-    }
-    if(data.goals.business){
-      R.push("Prep business: EIN, business checking, vendor lines that report, and consistent revenue records before revolving LOC apps.");
-    }
-    recs.innerHTML = "<ul>"+R.map(r=>`<li>${r}</li>`).join("")+"</ul>";
-
-    // Funding readiness tiers
-    let tier="Not Ready";
-    if(avgScore>=640 && (data.util.overall??100)<=57 && data.negCount<=4){ tier="Pre-Work"; }
-    if(avgScore>=680 && (data.util.overall??100)<=28 && data.negCount<=2 && data.mix.revolving>=3){ tier="Tier 2 (Personal 0% ready)"; }
-    if(avgScore>=720 && (data.util.overall??100)<=9 && data.negCount===0 && data.mix.ageMonths>=36){ tier="Tier 1 (Prime + biz ready)"; }
-    funding.innerHTML = `<div class="pill"><b>${tier}</b></div>`;
-  }
-  function avg(arr){
-    const nums = arr.filter(v=>typeof v==='number' && !isNaN(v));
-    if(!nums.length) return null;
-    return Math.round(nums.reduce((a,b)=>a+b,0)/nums.length);
-  }
-  function fmt(n){ return (n||0).toLocaleString(); }
-
-  // ========= 7) NAV & SAVE =========
-  nextBtn.addEventListener('click', ()=>{ capture(); stage=Math.min(4,stage+1); renderStage(); });
-  prevBtn.addEventListener('click', ()=>{ capture(); stage=Math.max(1,stage-1); renderStage(); });
-  saveBtn.addEventListener('click', ()=>{ capture(); saveProfile(); alert("Saved."); });
-  clearBtn.addEventListener('click', async ()=>{
-    if(!confirm("Delete all saved data?")) return;
-    data = {scores:{exp:null,eq:null,tu:null}, derog:{late:false,collections:false,chargeoff:false,bk:false}, negCount:0, util:{overall:null,highestCard:null}, mix:{revolving:0,installment:0,ageMonths:0,newInq:0}, goals:{personal:true,business:false,targetFunding:0,risk:'moderate'}, notes:""};
-    stage=1;
-    await delProfile();
-    renderStage();
-  });
-
-  // ========= 8) STORAGE (Firestore or localStorage) =========
-  async function saveProfile(){
-    const payload = {data, updatedAt:new Date().toISOString()};
-    if(db && user){
-      await db.collection("mgi_clients").doc(user.uid).set(payload,{merge:true});
-    } else {
-      localStorage.setItem("mgi_profile", JSON.stringify(payload));
-    }
-  }
-  async function loadProfile(){
-    let payload=null;
-    if(db && user){
-      const snap = await db.collection("mgi_clients").doc(user.uid).get();
-      payload = snap.exists ? snap.data() : null;
-    }
-    if(!payload){
-      const raw = localStorage.getItem("mgi_profile");
-      payload = raw ? JSON.parse(raw) : null;
-    }
-    if(payload?.data){ data = payload.data; }
-    compute();
-  }
-  async function delProfile(){
-    if(db && user){
-      await db.collection("mgi_clients").doc(user.uid).delete().catch(()=>{});
-    }
-    localStorage.removeItem("mgi_profile");
-  }
-  </script>
-</body>
-</html>
+      data.goals.personal = id('g_person
