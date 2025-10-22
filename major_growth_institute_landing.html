@@ -1,0 +1,378 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Major Growth Institute — Credit Repair & Wealth Compliance</title>
+  <meta name="description" content="Major Growth Institute — professional credit repair, compliance-aware funding strategies, and concierge support. Book a consult."/>
+  <style>
+    :root{
+      --blue:#0b5fa5;
+      --dark-blue:#063a66;
+      --gold:#caa43b;
+      --white:#ffffff;
+      --muted:#6b7b8c;
+      --max-width:1100px;
+      font-family: Inter, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;background:linear-gradient(180deg,#f8fbff 0%, #ffffff 100%);color:var(--dark-blue);-webkit-font-smoothing:antialiased}
+    .wrap{max-width:var(--max-width);margin:40px auto;padding:24px}
+    header{display:flex;align-items:center;justify-content:space-between}
+    .logo{display:flex;align-items:center;gap:12px}
+    .logo .mark{width:56px;height:56px;border-radius:10px;background:linear-gradient(135deg,var(--blue),var(--dark-blue));display:flex;align-items:center;justify-content:center;color:var(--white);font-weight:700;font-size:20px;box-shadow:0 6px 18px rgba(11,95,165,0.14)}
+    .logo h1{margin:0;font-size:18px;line-height:1;color:var(--dark-blue)}
+    nav a{margin-left:18px;color:var(--dark-blue);text-decoration:none;font-weight:600}
+    .hero{display:flex;gap:32px;align-items:center;margin-top:28px}
+    .hero-left{flex:1}
+    .kicker{display:inline-block;padding:6px 10px;border-radius:999px;background:linear-gradient(90deg,var(--gold),#e6c56a);color:var(--dark-blue);font-weight:700;font-size:12px}
+    h2{font-size:36px;margin:16px 0 12px;color:var(--dark-blue)}
+    p.lead{color:var(--muted);font-size:16px;line-height:1.6}
+    .cta-row{margin-top:18px;display:flex;gap:12px;align-items:center}
+    .btn{background:var(--blue);color:var(--white);padding:12px 18px;border-radius:10px;border:0;font-weight:700;cursor:pointer;box-shadow:0 8px 24px rgba(11,95,165,0.12)}
+    .btn.secondary{background:transparent;color:var(--dark-blue);border:2px solid rgba(6,58,102,0.08)}
+    .hero-right{width:460px;background:linear-gradient(180deg,#ffffff,#f7fbff);padding:18px;border-radius:12px;box-shadow:0 10px 30px rgba(6,58,102,0.06)}
+    .stat{display:flex;gap:12px;align-items:center;margin-bottom:10px}
+    .stat .num{font-weight:800;color:var(--dark-blue);font-size:18px}
+    .card{background:linear-gradient(180deg,#ffffff,#fcfdff);padding:12px;border-radius:10px;border:1px solid rgba(6,58,102,0.04)}
+    .features{display:grid;grid-template-columns:repeat(3,1fr);gap:18px;margin-top:28px}
+    .feature{background:var(--white);padding:16px;border-radius:12px;box-shadow:0 8px 20px rgba(11,95,165,0.04);border-left:6px solid var(--gold)}
+    .feature h4{margin:0 0 8px}
+    .video-thumb{position:relative;border-radius:10px;overflow:hidden;background:#000;height:220px;display:flex;align-items:center;justify-content:center;color:#fff}
+    .video-thumb .play{width:64px;height:64px;border-radius:50%;background:rgba(202,164,59,0.95);display:flex;align-items:center;justify-content:center;font-weight:800;color:#072033}
+    .testimonials{margin-top:32px;display:flex;flex-direction:column;gap:12px}
+    .test{display:flex;gap:12px;align-items:flex-start;background:linear-gradient(180deg,#ffffff,#fbfbff);padding:14px;border-radius:10px;border:1px solid rgba(6,58,102,0.04)}
+    .avatar{width:52px;height:52px;border-radius:999px;background:linear-gradient(135deg,#0b5fa5,#063a66);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700}
+    footer{margin-top:48px;border-top:1px dashed rgba(6,58,102,0.06);padding-top:18px;display:flex;justify-content:space-between;align-items:center;color:var(--muted)}
+    .faq{margin-top:28px;display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .lead-magnet{margin-top:18px;padding:14px;border-radius:10px;background:linear-gradient(90deg,#f5f9ff,#ffffff);border:1px solid rgba(6,58,102,0.04)}
+    /* Chatbot */
+    .chat-widget{position:fixed;right:22px;bottom:22px;width:72px;height:72px;border-radius:999px;background:linear-gradient(135deg,var(--gold),#e6c56a);display:flex;align-items:center;justify-content:center;box-shadow:0 10px 30px rgba(10,30,60,0.12);cursor:pointer;z-index:9999}
+    .chat-panel{position:fixed;right:22px;bottom:106px;width:360px;max-height:70vh;border-radius:12px;overflow:hidden;box-shadow:0 18px 50px rgba(6,58,102,0.12);background:linear-gradient(180deg,#ffffff,#f7fbff);display:flex;flex-direction:column}
+    .chat-panel header{padding:12px;background:linear-gradient(90deg,var(--blue),var(--dark-blue));color:#fff;font-weight:700}
+    .messages{padding:12px;flex:1;overflow:auto}
+    .msg{margin-bottom:12px;display:flex;gap:8px;align-items:flex-start}
+    .msg.user{justify-content:flex-end}
+    .msg .bubble{max-width:78%;padding:10px 12px;border-radius:10px;background:#f1f6fb;color:var(--dark-blue)}
+    .msg.user .bubble{background:linear-gradient(90deg,var(--blue),var(--dark-blue));color:#fff}
+    .chat-input{display:flex;padding:10px;border-top:1px solid rgba(6,58,102,0.06)}
+    .chat-input input{flex:1;padding:10px;border-radius:8px;border:1px solid rgba(6,58,102,0.08)}
+    .chat-input button{margin-left:8px;padding:10px 12px;border-radius:8px;border:0;background:var(--gold);cursor:pointer;font-weight:700}
+    @media(max-width:900px){
+      .hero{flex-direction:column}
+      .hero-right{width:100%}
+      .features{grid-template-columns:1fr}
+      .faq{grid-template-columns:1fr}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="logo">
+        <div class="mark">MG</div>
+        <div>
+          <h1>Major Growth Institute</h1>
+          <div style="color:var(--muted);font-size:13px">Credit repair • Compliance-aware funding • Wealth acceleration</div>
+        </div>
+      </div>
+      <nav>
+        <a href="#how">How it works</a>
+        <a href="#testimonials">Testimonials</a>
+        <a href="#pricing">Pricing</a>
+        <a href="#contact">Contact</a>
+      </nav>
+    </header>
+
+    <section class="hero">
+      <div class="hero-left">
+        <span class="kicker">AI + Concierge</span>
+        <h2>Repair credit. Unlock funding. Scale your wealth.</h2>
+        <p class="lead">Major Growth Institute combines human-backed compliance strategies with AI-driven audit and remediation to rebuild credit profiles and open access to capital — without risky shortcuts.</p>
+        <div class="cta-row">
+          <button class="btn" onclick="book()">Book a Free Consultation</button>
+          <button class="btn secondary" onclick="document.getElementById('how').scrollIntoView()">How It Works</button>
+        </div>
+
+        <div class="features" style="margin-top:28px">
+          <div class="feature">
+            <h4>Report Repair & Disputes</h4>
+            <p style="color:var(--muted);margin:6px 0 0">AI drafts dispute language and our compliance team reviews every submission to reduce risk and avoid frivolous claims.</p>
+          </div>
+          <div class="feature">
+            <h4>Credit Architecture</h4>
+            <p style="color:var(--muted);margin:6px 0 0">We build a long-term credit foundation—credit unions, tradelines, and secured vehicles—so you look reliable to lenders.</p>
+          </div>
+          <div class="feature">
+            <h4>Funding Strategy</h4>
+            <p style="color:var(--muted);margin:6px 0 0">Compliance-aware funding sequences to access unsecured capital, responsibly and repeatably.</p>
+          </div>
+        </div>
+
+      </div>
+
+      <aside class="hero-right card">
+        <div style="display:flex;justify-content:space-between;align-items:center">
+          <div>
+            <div style="color:var(--muted);font-size:13px">Trusted by</div>
+            <div style="font-weight:800;font-size:18px">Individuals • Entrepreneurs • Small Businesses</div>
+          </div>
+          <div style="text-align:right">
+            <div style="color:var(--muted);font-size:12px">Avg approval</div>
+            <div style="font-weight:800;font-size:20px;color:var(--blue)">$12,400</div>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+        <div class="stat card">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="color:var(--muted);font-size:12px">Avg score increase</div>
+              <div class="num">+72 pts</div>
+            </div>
+            <div>
+              <div style="color:var(--muted);font-size:12px">Avg time</div>
+              <div class="num">90 days</div>
+            </div>
+          </div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div class="card" style="margin-top:10px">
+          <div style="font-weight:700">Overview Video</div>
+          <div style="height:12px"></div>
+          <div class="video-thumb" onclick="openVideo()">
+            <div style="text-align:center">
+              <div style="font-size:14px;color:#fff;margin-bottom:6px">Watch: How we pair AI & compliance</div>
+              <div class="play">▶</div>
+            </div>
+          </div>
+          <div style="font-size:12px;color:var(--muted);margin-top:8px">Note: our video explains our approach using M2 Compliance as a partner — it’s high-level and not a DIY guide.</div>
+        </div>
+
+        <div style="height:12px"></div>
+
+        <div style="display:flex;gap:8px;flex-direction:column">
+          <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="color:var(--muted);font-size:12px">Free consultation</div>
+              <div style="font-weight:800">$0</div>
+            </div>
+            <button class="btn" style="padding:8px 12px" onclick="book()">Book</button>
+          </div>
+          <div class="card" style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div style="color:var(--muted);font-size:12px">Starter plan</div>
+              <div style="font-weight:800">$249 / month</div>
+            </div>
+            <button class="btn secondary" onclick="location.href='#pricing'">View</button>
+          </div>
+        </div>
+      </aside>
+    </section>
+
+    <section id="how" style="margin-top:28px">
+      <div style="display:flex;align-items:center;justify-content:space-between">
+        <h3 style="margin:0">How it works</h3>
+        <div style="color:var(--muted)">Designed for legitimacy and scale</div>
+      </div>
+
+      <div class="lead-magnet">
+        <ol style="margin:12px 0 0 18px;color:var(--muted)">
+          <li><strong>Audit:</strong> Our AI analyzes credit files and flags high-impact disputes and reporting errors.</li>
+          <li><strong>Plan:</strong> Compliance team builds a conservative remediation roadmap (disputes, tradelines, reporting fixes).</li>
+          <li><strong>Execute:</strong> We submit vetted disputes, manage creditor communications, and layer credit-building products.</li>
+          <li><strong>Fund:</strong> Once eligible, we move into funding sequences to access capital — always within legal and compliance boundaries.</li>
+        </ol>
+      </div>
+
+      <div class="faq">
+        <div>
+          <h4>What about M2 Compliance?</h4>
+          <p style="color:var(--muted)">We partner with compliance and tech providers such as M2 Compliance to ensure our methods follow consumer protection laws and reduce risk. Our video explains the partnership at a high level — it is intentionally non-actionable.</p>
+        </div>
+        <div>
+          <h4>Is this legal?</h4>
+          <p style="color:var(--muted)">Yes. We use legally permissible dispute & remediation channels and never recommend fraudulent actions. Every client signs a compliance addendum.</p>
+        </div>
+      </div>
+    </section>
+
+    <section id="testimonials" style="margin-top:28px">
+      <h3>Client results</h3>
+      <div class="testimonials">
+        <div class="test">
+          <div class="avatar">AW</div>
+          <div>
+            <div style="font-weight:800">Aaliyah W. — Dallas, TX</div>
+            <div style="color:var(--muted);font-size:14px">“Major Growth Institute increased my score 86 points in 3 months and helped me secure a $15k business line. They were compliant, transparent, and responsive.”</div>
+            <div style="margin-top:8px;color:var(--muted);font-size:13px">— Starter Plan</div>
+          </div>
+        </div>
+
+        <div class="test">
+          <div class="avatar">MJ</div>
+          <div>
+            <div style="font-weight:800">Marcus J. — Atlanta, GA</div>
+            <div style="color:var(--muted);font-size:14px">“I was skeptical, but their AI spotted errors my credit report never showed me. 70 points up and a cleared collection in 45 days.”</div>
+            <div style="margin-top:8px;color:var(--muted);font-size:13px">— Concierge</div>
+          </div>
+        </div>
+
+        <div class="test">
+          <div class="avatar">RS</div>
+          <div>
+            <div style="font-weight:800">R. Smith — Houston, TX</div>
+            <div style="color:var(--muted);font-size:14px">“Transparent pricing, real results. The team walked me through funding options once my profile was cleaned — I now have a small business line I never thought possible.”</div>
+            <div style="margin-top:8px;color:var(--muted);font-size:13px">— Funding Plan</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="pricing" style="margin-top:28px">
+      <h3>Plans</h3>
+      <div style="display:flex;gap:12px;margin-top:12px;flex-wrap:wrap">
+        <div class="card" style="flex:1;min-width:220px">
+          <div style="font-weight:800">Starter</div>
+          <div style="color:var(--muted);margin-top:6px">$249 / month — dispute support, AI audit, monthly check-ins</div>
+        </div>
+        <div class="card" style="flex:1;min-width:220px">
+          <div style="font-weight:800">Concierge</div>
+          <div style="color:var(--muted);margin-top:6px">$899 / month — dedicated specialist, tradeline sourcing, funding sequencing</div>
+        </div>
+        <div class="card" style="flex:1;min-width:220px">
+          <div style="font-weight:800">Funding Plan</div>
+          <div style="color:var(--muted);margin-top:6px">Custom pricing — advanced compliance, business credit, and capital placement</div>
+        </div>
+      </div>
+    </section>
+
+    <section id="contact" style="margin-top:28px">
+      <h3>Get started</h3>
+      <p style="color:var(--muted)">Book a free 15-minute consultation — we’ll audit eligibility and recommend a compliant path to funding.</p>
+      <form id="leadForm" style="display:flex;gap:12px;flex-wrap:wrap">
+        <input name="name" placeholder="Full name" style="padding:12px;border-radius:8px;border:1px solid rgba(6,58,102,0.06);flex:1;min-width:200px"/>
+        <input name="email" placeholder="Email" style="padding:12px;border-radius:8px;border:1px solid rgba(6,58,102,0.06);min-width:200px"/>
+        <input name="phone" placeholder="Phone" style="padding:12px;border-radius:8px;border:1px solid rgba(6,58,102,0.06);min-width:200px"/>
+        <select name="plan" style="padding:12px;border-radius:8px;border:1px solid rgba(6,58,102,0.06);min-width:200px">
+          <option>Starter</option>
+          <option>Concierge</option>
+          <option>Funding Plan</option>
+        </select>
+        <div style="width:100%;display:flex;gap:12px">
+          <button class="btn" type="button" onclick="submitLead()">Request consult</button>
+          <button class="btn secondary" type="button" onclick="downloadPDF()">Download sample audit</button>
+        </div>
+      </form>
+    </section>
+
+    <footer>
+      <div>© Major Growth Institute • All rights reserved</div>
+      <div style="font-size:13px">Privacy • Terms</div>
+    </footer>
+  </div>
+
+  <!-- Chat widget -->
+  <div class="chat-widget" id="chatBtn" title="Chat with Major Growth">
+    <div style="font-weight:800;color:#072033">MG</div>
+  </div>
+
+  <div class="chat-panel" id="chatPanel" style="display:none">
+    <header>Major Growth Bot</header>
+    <div class="messages" id="messages">
+      <div class="msg"><div class="bubble">Hi — I'm the Major Growth assistant. Ask about plans, the audit, or how we protect your file.</div></div>
+    </div>
+    <div class="chat-input">
+      <input id="chatInput" placeholder="Type a question..." />
+      <button onclick="sendChat()">Send</button>
+    </div>
+  </div>
+
+  <!-- Video modal -->
+  <div id="videoModal" style="display:none;position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.6);align-items:center;justify-content:center;z-index:9999">
+    <div style="width:90%;max-width:900px;background:#000;border-radius:10px;overflow:hidden">
+      <div style="padding:8px;background:linear-gradient(90deg,var(--blue),var(--dark-blue));color:#fff;font-weight:700">Overview — AI & Compliance</div>
+      <div style="position:relative;padding-top:56.25%">
+        <!-- Replace VIDEO_ID with your hosted video id -->
+        <iframe id="videoFrame" style="position:absolute;left:0;top:0;width:100%;height:100%;border:0" src="" allowfullscreen></iframe>
+      </div>
+      <div style="padding:12px;background:#fff;display:flex;justify-content:flex-end">
+        <button class="btn secondary" onclick="closeVideo()">Close</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function book(){ alert('Thanks — booking flow placeholder. Replace with calendar integration.'); }
+    function submitLead(){
+      const form = document.getElementById('leadForm');
+      const data = {
+        name: form.name.value, email: form.email.value, phone: form.phone.value, plan: form.plan.value
+      };
+      if(!data.name || !data.email){ alert('Please enter name and email'); return; }
+      alert('Thanks ' + data.name + '! We received your request. A specialist will reach out.');
+      form.reset();
+    }
+    function downloadPDF(){
+      alert('Sample audit download placeholder — integrate with your backend to deliver a real PDF.');
+    }
+
+    // Chat widget logic (simple simulated AI)
+    const chatBtn = document.getElementById('chatBtn');
+    const chatPanel = document.getElementById('chatPanel');
+    chatBtn.addEventListener('click', ()=> {
+      chatPanel.style.display = chatPanel.style.display === 'none' ? 'flex' : 'none';
+      document.getElementById('chatInput').focus();
+    });
+
+    function sendChat(){
+      const input = document.getElementById('chatInput');
+      const text = input.value.trim();
+      if(!text) return;
+      const messages = document.getElementById('messages');
+      const userMsg = document.createElement('div'); userMsg.className='msg user';
+      userMsg.innerHTML = '<div class="bubble">'+escapeHtml(text)+'</div>';
+      messages.appendChild(userMsg);
+      messages.scrollTop = messages.scrollHeight;
+      input.value='';
+
+      // Simple simulated responses
+      setTimeout(()=> {
+        const bot = document.createElement('div'); bot.className='msg';
+        const response = generateBotResponse(text.toLowerCase());
+        bot.innerHTML = '<div class="bubble">'+escapeHtml(response)+'</div>';
+        messages.appendChild(bot);
+        messages.scrollTop = messages.scrollHeight;
+      },700);
+    }
+
+    function generateBotResponse(q){
+      if(q.includes('price')||q.includes('cost')) return 'Our Starter plan begins at $249/month. We also offer a free consult.';
+      if(q.includes('m2')||q.includes('compliance')) return 'We partner with compliance providers like M2 Compliance to ensure our methods follow regulations — we can explain at a consult.';
+      if(q.includes('how long')) return 'Most clients see measurable improvements inside 60–120 days depending on file complexity.';
+      if(q.includes('testimonials')) return 'Check our testimonials section — we publish client success stories with consent.';
+      if(q.includes('book')||q.includes('consult')) return 'Click "Book a Free Consultation" and pick a time that works.';
+      return 'Great question. For compliance and security we handle detailed strategy in a consult. Want me to connect you to a specialist?';
+    }
+
+    function escapeHtml(s){
+      return s.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+    }
+
+    // Video controls
+    function openVideo(){
+      document.getElementById('videoModal').style.display='flex';
+      // Set the iframe src to a placeholder — replace VIDEO_ID with your YouTube id
+      const VIDEO_ID = 'REPLACE_WITH_VIDEO_ID';
+      document.getElementById('videoFrame').src = VIDEO_ID ? ('https://www.youtube.com/embed/' + VIDEO_ID + '?rel=0') : '';
+    }
+    function closeVideo(){
+      document.getElementById('videoModal').style.display='none';
+      document.getElementById('videoFrame').src='';
+    }
+
+  </script>
+</body>
+</html>
