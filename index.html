@@ -29,11 +29,13 @@
   <style>
     :root{
       --blue:#0b5fa5; --dark:#0b2d4a; --gold:#caa43b; --muted:#6b7b8c;
+      --ink:#1b2330; --paper:#ffffff; --soft:#f4f7fb;
       --shadow:0 12px 34px rgba(6,58,102,.08);
+      --outline:1px solid rgba(6,58,102,.12);
     }
     *{box-sizing:border-box}
     html{scroll-behavior:smooth}
-    body{margin:0;background:linear-gradient(180deg,#f8fbff,#fff);color:#1b2330;
+    body{margin:0;background:linear-gradient(180deg,#f8fbff,#fff);color:var(--ink);
          font-family:"Open Sans",system-ui,-apple-system,Segoe UI,Roboto,Arial}
     h1,h2,h3,h4{font-family:"Playfair Display",Georgia,"Times New Roman",serif;color:var(--dark);margin:0 0 10px}
     p{margin:0 0 10px;line-height:1.65;color:#3a4a5a}
@@ -56,14 +58,15 @@
 
     /* Hero */
     .hero{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:24px;margin-top:24px}
-    .hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:stretch}
+    .hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:start}
     .hero img.logo{height:80px;margin-bottom:8px}
     .lead{color:var(--muted)}
     .btn{display:inline-block;background:var(--blue);color:#fff;padding:12px 18px;border-radius:10px;font-weight:700;box-shadow:0 10px 28px rgba(11,95,165,.16)}
+    .btn:hover{filter:brightness(.95)}
     .btn.secondary{background:transparent;border:2px solid rgba(6,58,102,.14);color:var(--dark)}
     .btn.gold{background:var(--gold);color:#1b2330;box-shadow:0 10px 28px rgba(202,164,59,.25)}
     .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
-    .panel{background:#fff;border:1px solid rgba(6,58,102,.08);border-radius:14px;box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column}
+    .panel{background:#fff;border:var(--outline);border-radius:14px;box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column}
     input{padding:12px;border-radius:10px;border:1px solid rgba(6,58,102,.12);width:100%}
     form .row{display:flex;gap:10px;flex-wrap:wrap}
     video{width:100%;height:auto;border-radius:12px;box-shadow:0 10px 30px rgba(6,58,102,.08)}
@@ -71,22 +74,30 @@
     /* Sections */
     .section{margin-top:28px}
     .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .card{background:#fff;border:1px solid rgba(6,58,102,.08);border-left:6px solid var(--gold);border-radius:12px;box-shadow:0 8px 24px rgba(6,58,102,.06);padding:14px}
     .center{text-align:center}
-    .icon{width:28px;height:28px;vertical-align:-4px;margin-right:8px}
+
+    /* Card styles (varied) */
+    .card{background:#fff;border:var(--outline);border-radius:12px;box-shadow:0 8px 24px rgba(6,58,102,.06);padding:14px}
+    .card.outline{background:#fff;border:1px dashed rgba(11,95,165,.3)}
+    .card.soft{background:linear-gradient(180deg,#ffffff,#f8fbff);border-left:6px solid var(--gold)}
+    .card.tint{background:#fcfdff;border:1px solid #e7eff7}
+    .card h3{margin-bottom:6px}
+    .sub{color:var(--muted);font-size:.95rem}
 
     /* Pricing */
     .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .price-card{position:relative;background:#fff;border:1px solid rgba(6,58,102,.08);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+    .price-card{position:relative;background:#fff;border:var(--outline);border-radius:14px;box-shadow:var(--shadow);padding:18px;transition:transform .2s ease}
+    .price-card:hover{transform:translateY(-2px)}
     .price-title{font-weight:800;font-size:20px;letter-spacing:.2px}
-    .price-amt{font-size:24px;font-weight:800;color:#0b5fa5;margin:8px 0 14px}
+    .price-amt{font-size:24px;font-weight:800;color:var(--blue);margin:8px 0 16px}
     .price-desc{color:var(--muted);font-size:14.5px;line-height:1.55;margin-bottom:16px}
     .badge-popular{position:absolute;top:-10px;left:16px;background:var(--gold);color:#1b2330;font-weight:800;font-size:12px;padding:6px 10px;border-radius:999px;box-shadow:0 6px 18px rgba(202,164,59,.25)}
     .price-card .btn{width:100%}
 
     /* Timeline */
     .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .step{background:#fff;border:1px solid rgba(6,58,102,.08);border-radius:12px;padding:14px;box-shadow:0 8px 24px rgba(6,58,102,.06)}
+    .step{background:#fff;border:var(--outline);border-radius:12px;padding:14px;box-shadow:0 8px 24px rgba(6,58,102,.06)}
+    .step .sub{display:block;margin-top:4px}
 
     /* Floating CTA */
     .float-cta{position:fixed;right:18px;bottom:18px;z-index:1001}
@@ -147,7 +158,7 @@
         <div>
           <a href="#top"><img class="logo fade-in" src="logo-mgi.png" alt="Major Growth Institute"/></a>
           <h1 class="fade-in fade-1">Build Wealth the Right Way</h1>
-          <p class="lead fade-in fade-2">We combine intelligent credit analysis with hands-on strategy to clean up your reports, build a solid profile, and unlock real funding.</p>
+          <p class="lead fade-in fade-2">We combine intelligent credit analysis with hands-on strategy to clean up your reports, build a solid profile, and unlock real funding — without the guesswork.</p>
           <div class="cta fade-in fade-3">
             <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Free Consultation</a>
             <a class="btn secondary" href="#why">Why credit matters</a>
@@ -161,21 +172,37 @@
           </div>
         </div>
 
-        <!-- Contact Panel -->
-        <aside class="panel" id="contact-panel">
-          <h3 style="margin:0 0 8px">Talk to a Specialist</h3>
-          <p class="lead" style="margin:0 0 12px;color:var(--muted)">Free 15-minute consult. Share your best contact or book now.</p>
-          <form onsubmit="event.preventDefault(); submitContact();">
-            <div class="row">
-              <input id="contactOne" placeholder="Your best contact (email or phone)" required>
-              <button class="btn" type="submit" style="width:100%">Share Contact</button>
+        <!-- Right column: Contact + Founder -->
+        <div>
+          <!-- Contact Panel -->
+          <aside class="panel" id="contact-panel">
+            <h3 style="margin:0 0 8px">Talk to a Specialist</h3>
+            <p class="lead" style="margin:0 0 12px;color:var(--muted)">Free 15-minute consult. Share your best contact or book now.</p>
+            <form onsubmit="event.preventDefault(); submitContact();">
+              <div class="row">
+                <input id="contactOne" placeholder="Your best contact (email or phone)" required>
+                <button class="btn" type="submit" style="width:100%">Share Contact</button>
+              </div>
+            </form>
+            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+              <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener" style="flex:1;text-align:center">Request Consult</a>
             </div>
-          </form>
-          <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-            <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener" style="flex:1;text-align:center">Request Consult</a>
-          </div>
-          <div style="font-size:12px;color:var(--muted);margin-top:10px">We respect your time and privacy. One of our specialists will reach out shortly.</div>
-        </aside>
+            <div style="font-size:12px;color:var(--muted);margin-top:10px">We respect your time and privacy. A specialist will reach out shortly.</div>
+          </aside>
+
+          <!-- Meet the Founder (new) -->
+          <aside class="panel" style="margin-top:14px">
+            <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
+              <img src="founder.jpg" alt="Founder" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid rgba(6,58,102,.15)" onerror="this.src='logo-mgi.png'">
+              <div>
+                <h3 style="margin:0">Meet the Founder</h3>
+                <div class="sub">A personal, guided approach</div>
+              </div>
+            </div>
+            <p>After experiencing firsthand how difficult it can be to build real financial stability without understanding credit, this company was created to make the path clear. The goal is simple: provide structure, timing, and the right moves so people can use credit as a tool — not a trap.</p>
+            <p style="margin-top:8px">What began as a personal mission became a practical system: clean up what’s holding you back, rebuild with intent, and leverage that progress into real funding. The focus isn’t hype — it’s results, education, and ownership of your financial future.</p>
+          </aside>
+        </div>
       </div>
     </section>
 
@@ -183,9 +210,21 @@
     <section id="why" class="section">
       <h2>Why Credit Matters</h2>
       <div class="grid-3">
-        <div class="card"><b>Wealth Leverage</b><p>Strong credit multiplies opportunity — from lower interest costs to access to capital for assets and business growth.</p></div>
-        <div class="card"><b>Opportunity Engine</b><p>Approvals, limits, and terms improve with a clean, seasoned profile — giving you options when it counts.</p></div>
-        <div class="card"><b>Cash Flow Protection</b><p>Credit can protect your cash while you invest smartly. Poor credit doesn’t just cost money — it costs freedom.</p></div>
+        <div class="card soft">
+          <h3>Wealth Leverage</h3>
+          <p class="sub">Turn credit into a multiplier</p>
+          <p>With strong credit, borrowing costs drop and capital becomes accessible. That means more room to invest in assets, education, or a business — without draining savings.</p>
+        </div>
+        <div class="card tint">
+          <h3>Opportunity Access</h3>
+          <p class="sub">Better approvals, better terms</p>
+          <p>Lenders reward clean, seasoned profiles with higher limits and lower rates. That’s what opens doors for zero-interest promos, balance flexibility, and growth capital.</p>
+        </div>
+        <div class="card outline">
+          <h3>Cash-Flow Protection</h3>
+          <p class="sub">Preserve cash, plan smarter</p>
+          <p>Good credit helps protect liquidity while you build. Poor credit doesn’t just cost money — it limits choices. We change that by structuring a durable profile.</p>
+        </div>
       </div>
     </section>
 
@@ -193,9 +232,21 @@
     <section id="process" class="section">
       <h2>Our Process</h2>
       <div class="grid-3">
-        <div class="card"><b>Analyze</b><p>We audit all three bureaus, spot reporting errors, and identify structural gaps lenders notice.</p></div>
-        <div class="card"><b>Optimize</b><p>We correct inaccuracies, rebuild mix, and time actions to strengthen your file organically.</p></div>
-        <div class="card"><b>Leverage</b><p>We turn the improved profile into a funding plan — personal and, if needed, business credit.</p></div>
+        <div class="card">
+          <h3>Audit</h3>
+          <p class="sub">Week 1 — clarity & plan</p>
+          <p>We pull all three bureaus, find reporting errors, and identify what lenders flag: utilization patterns, missing mix, thin history, and outdated negatives.</p>
+        </div>
+        <div class="card tint">
+          <h3>Rebuild</h3>
+          <p class="sub">Weeks 2–8 — structure & seasoning</p>
+          <p>We correct inaccuracies, introduce the right lines (secured/pledge/vendor), and time payments to stabilize utilization and build reliable history.</p>
+        </div>
+        <div class="card soft">
+          <h3>Leverage</h3>
+          <p class="sub">Weeks 9–12 — funding readiness</p>
+          <p>We match your profile to lender tiers and design a funding sequence (personal and/or business). You’ll know what to apply for, when, and why.</p>
+        </div>
       </div>
     </section>
 
@@ -203,9 +254,21 @@
     <section id="blueprint" class="section">
       <h2>Credit Wealth Blueprint</h2>
       <div class="grid-3">
-        <div class="card"><b>Repair</b><p>Clean the foundation: dispute errors, remove inaccuracies, and stabilize utilization.</p></div>
-        <div class="card"><b>Build</b><p>Establish positive history: the right mix, age, and limits lenders respect.</p></div>
-        <div class="card"><b>Leverage</b><p>Use stronger credit to secure capital for your goals — assets, business, or investments.</p></div>
+        <div class="card outline">
+          <h3>Repair</h3>
+          <p class="sub">Fix what’s holding you back</p>
+          <p>Dispute process with documentation, goodwill approaches, and data-furnisher follow-ups. We also remove duplicate/obsolete items and correct profile errors.</p>
+        </div>
+        <div class="card">
+          <h3>Build</h3>
+          <p class="sub">Look like an ideal borrower</p>
+          <p>Banking relationship setup, reporting lines, utilization strategy, and payment cadence. The aim is organic growth that lenders recognize and reward.</p>
+        </div>
+        <div class="card tint">
+          <h3>Leverage</h3>
+          <p class="sub">Turn profile strength into capital</p>
+          <p>Tier-based approvals, 0% promo stacking, and capital planning. If relevant, we prep business structure and vendor lines to boost total available credit.</p>
+        </div>
       </div>
     </section>
 
@@ -213,9 +276,21 @@
     <section id="ai" class="section">
       <h2>AI Advantage</h2>
       <div class="grid-3">
-        <div class="card"><b>Faster Analysis</b><p>We use data-driven automation to surface patterns and priorities in your reports.</p></div>
-        <div class="card"><b>Smarter Strategy</b><p>Guidance is built on what lenders actually look for — not myths and guesswork.</p></div>
-        <div class="card"><b>Predictable Progress</b><p>A clear plan with checkpoints so you know what’s next and why it matters.</p></div>
+        <div class="card">
+          <h3>Faster Analysis</h3>
+          <p class="sub">Patterns & priorities at a glance</p>
+          <p>We use data-driven tooling to surface utilization spikes, stale negatives, and missing mix — so you act on the right things first.</p>
+        </div>
+        <div class="card soft">
+          <h3>Smarter Strategy</h3>
+          <p class="sub">Built on lender behavior</p>
+          <p>Guidance isn’t guesswork. We align to what underwriters actually check: history depth, payment consistency, and responsible expansion.</p>
+        </div>
+        <div class="card outline">
+          <h3>Predictable Progress</h3>
+          <p class="sub">Clear milestones, real updates</p>
+          <p>A transparent plan with checkpoints and “why it matters” explanations. You’ll always know what’s next and what to expect.</p>
+        </div>
       </div>
     </section>
 
@@ -223,9 +298,21 @@
     <section id="stories" class="section">
       <h2>Client Stories</h2>
       <div class="grid-3">
-        <div class="card"><b>Danielle — Charlotte, NC</b><p>“I was scared to even open my reports. Three months later my score was up 90 points — but most importantly, I finally had a plan.”</p></div>
-        <div class="card"><b>Terrence — Houston, TX</b><p>“They didn’t just send letters — they taught me how to build the right way. I’ve got two approvals and a real relationship with my bank.”</p></div>
-        <div class="card"><b>Angela — Chicago, IL</b><p>“No hype. Clear guidance and steady progress. My profile looks better than ever and I’m preparing for business funding.”</p></div>
+        <div class="card soft">
+          <h3>Danielle — Charlotte, NC</h3>
+          <p class="sub">From anxious to in control</p>
+          <p>“I used to avoid my reports. Three months in, my score was up 90 points — but more than that, I finally understood my blueprint. First approval came the next week.”</p>
+        </div>
+        <div class="card">
+          <h3>Terrence — Houston, TX</h3>
+          <p class="sub">Real approvals, real plan</p>
+          <p>“It wasn’t just letters. I learned how to build the right way. Now I’ve got two new cards, better terms, and a real relationship with my credit union.”</p>
+        </div>
+        <div class="card outline">
+          <h3>Angela — Chicago, IL</h3>
+          <p class="sub">Steady progress to funding</p>
+          <p>“No hype — just clear steps. My profile finally makes sense and I’m preparing for business funding. The guidance saved me time and money.”</p>
+        </div>
       </div>
     </section>
 
@@ -233,10 +320,26 @@
     <section id="timeline" class="section">
       <h2>Timeline of Results</h2>
       <div class="timeline">
-        <div class="step"><b>Week 1 – Audit</b><p>Pull reports, map issues, set goals.</p></div>
-        <div class="step"><b>Week 4 – Updates</b><p>Start seeing dispute results; utilization strategy.</p></div>
-        <div class="step"><b>Week 8 – Build</b><p>Positive lines, mix optimization, limit strategy.</p></div>
-        <div class="step"><b>Week 12 – Funding Ready</b><p>Funding roadmap review (personal + business).</p></div>
+        <div class="step">
+          <b>Week 1 — Audit</b>
+          <span class="sub">Pull, map, prioritize</span>
+          <p>Three-bureau pull, error mapping, and goal setting. You’ll leave Week 1 with a clear action plan.</p>
+        </div>
+        <div class="step">
+          <b>Week 4 — Updates</b>
+          <span class="sub">Early dispute results</span>
+          <p>Initial corrections post, utilization plan in motion, and the first signs of score stabilization.</p>
+        </div>
+        <div class="step">
+          <b>Week 8 — Build</b>
+          <span class="sub">Seasoning & structure</span>
+          <p>New positive lines reporting, mix optimization, and a cadence lenders like to see.</p>
+        </div>
+        <div class="step">
+          <b>Week 12 — Funding Ready</b>
+          <span class="sub">Sequenced approvals</span>
+          <p>Tier-matched targets, timing strategy, and a capital roadmap (personal + business as applicable).</p>
+        </div>
       </div>
     </section>
 
@@ -256,6 +359,7 @@
           </div>
           <a class="btn" href="#" onclick="goPay('https://buy.stripe.com/test_6oU5kFepa0dZd7wcJE53O01');return false;">Choose Starter</a>
         </div>
+
         <div class="price-card">
           <div class="badge-popular">Most Popular</div>
           <div class="price-title">Concierge</div>
@@ -270,6 +374,7 @@
           </div>
           <a class="btn gold" href="#" onclick="goPay('https://buy.stripe.com/test_00w6oJ5SEd0LgjI39453O00');return false;">Choose Concierge</a>
         </div>
+
         <div class="price-card">
           <div class="price-title">Funding Plan</div>
           <div class="price-amt">Custom Pricing</div>
