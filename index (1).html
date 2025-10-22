@@ -1,528 +1,176 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Major Growth Institute — Build Wealth the Right Way</title>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Major Growth Institute — Build Wealth the Right Way</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#0b5fa5; --navy:#003366; --gold:#caa43b; --ink:#142433; --muted:#6b7b8c;
+  --bd:#e6eef6; --soft:#f7fbff; --paper:#fff
+}
+*{box-sizing:border-box}
+body{margin:0;font-family:Inter,system-ui,Segoe UI,Roboto,Arial;color:var(--ink);background:linear-gradient(180deg,#f8fbff,#fff)}
+a{color:inherit;text-decoration:none}
+header{padding:16px 12px;text-align:center;background:var(--navy);color:#fff}
+header .brand{display:flex;flex-direction:column;align-items:center;gap:8px}
+.brand img{height:56px;width:auto;object-fit:contain;filter:drop-shadow(0 2px 8px rgba(0,0,0,.18))}
+.brand h1{margin:0;font-size:28px;letter-spacing:.2px}
+.container{max-width:1100px;margin:0 auto;padding:18px 14px}
 
-  <!-- Favicon / PWA (safe if missing) -->
-  <link rel="icon" href="favicon.png">
-  <link rel="apple-touch-icon" href="apple-touch-icon.png">
-  <link rel="manifest" href="site.webmanifest">
+/* HERO */
+.hero{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:20px;
+      box-shadow:0 16px 40px rgba(8,68,120,.08);text-align:center}
+.hero h2{margin:6px 0 6px;color:var(--navy);font-size:30px}
+.tagline{opacity:0;transform:translateY(8px);animation:fadeUp .7s ease .15s forwards;
+         font-size:16px;color:#2b3d50}
+@keyframes fadeUp{to{opacity:1;transform:none}}
+.cta-row{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;margin-top:12px}
+.btn{background:var(--blue);color:#fff;border:0;border-radius:12px;padding:10px 16px;font-weight:800;cursor:pointer;
+     box-shadow:0 12px 28px rgba(11,95,165,.16);transition:transform .06s ease}
+.btn:hover{transform:translateY(-1px)}
+.btn.gold{background:linear-gradient(90deg,#f8e7b0,#e8c86e,#caa43b);color:#1b2330}
+.btn.pulse{animation:pulse 2.2s ease-in-out infinite}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(202,164,59,.35)}50%{box-shadow:0 0 0 10px rgba(202,164,59,0)}}
 
-  <!-- Fonts -->
-  <link rel="preconnect" href="https://fonts.googleapis.com">
-  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+/* WHY CARDS */
+.section{margin-top:18px}
+h3.section-title{margin:0 0 8px;color:var(--navy)}
+.why{display:grid;gap:12px;grid-template-columns:repeat(5,1fr)}
+@media(max-width:980px){.why{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:640px){.why{grid-template-columns:repeat(2,1fr)}}
+.card{
+  background:#fff;border:1px solid var(--bd);border-radius:14px;padding:12px;text-align:center;
+  box-shadow:0 10px 28px rgba(8,68,120,.06);transition:transform .12s ease, box-shadow .12s ease
+}
+.card:hover{transform:translateY(-2px);box-shadow:0 16px 40px rgba(8,68,120,.12)}
+.card .ico{font-size:24px}
+.card .title{font-weight:800;margin-top:6px}
+.card .sub{font-size:12px;color:var(--muted);margin-top:4px}
 
-  <!-- SEO -->
-  <link rel="canonical" href="https://majorgrowthinstitute.com/">
-  <meta name="title" content="Major Growth Institute — Build Wealth the Right Way">
-  <meta name="description" content="Repair, build, and fund with a clean, modern credit strategy. Book a free consultation with Major Growth Institute.">
-  <meta property="og:title" content="Major Growth Institute">
-  <meta property="og:description" content="Repair → Build → Funding. Book a free consultation.">
-  <meta property="og:type" content="website">
-  <meta property="og:url" content="https://majorgrowthinstitute.com/">
-  <meta property="og:image" content="icon-512.png">
-  <meta name="twitter:card" content="summary_large_image">
+/* STATS BAR */
+.strip{background:#fff;border:1px solid var(--bd);border-radius:14px;padding:14px;box-shadow:0 10px 28px rgba(8,68,120,.06)}
+.strip .goals{font-weight:700;color:#24374a;margin-bottom:8px;text-align:center}
+.progress{height:12px;background:#edf3fb;border-radius:999px;overflow:hidden}
+.progress > span{display:block;height:100%;width:0%;
+  background:linear-gradient(90deg,#d72638,#f0b429,#2bb673);
+  transition:width .7s ease}
 
-  <style>
-    :root{
-      --blue:#0b5fa5; --dark:#0b2d4a; --gold:#caa43b; --muted:#6b7b8c;
-      --ink:#1b2330; --paper:#ffffff; --soft:#f4f7fb;
-      --shadow:0 12px 34px rgba(6,58,102,.08);
-      --outline:1px solid rgba(6,58,102,.12);
-    }
-    *{box-sizing:border-box}
-    html{scroll-behavior:smooth}
-    body{margin:0;background:linear-gradient(180deg,#f8fbff,#fff);color:var(--ink);
-         font-family:"Open Sans",system-ui,-apple-system,Segoe UI,Roboto,Arial}
-    h1,h2,h3,h4{font-family:"Playfair Display",Georgia,"Times New Roman",serif;color:var(--dark);margin:0 0 10px}
-    p{margin:0 0 10px;line-height:1.65;color:#3a4a5a}
-    a{text-decoration:none;color:var(--blue)}
-    .container{max-width:1100px;margin:0 auto;padding:18px}
+/* CTA BIG */
+.big-cta{background:#fff;border:1px solid var(--bd);border-radius:16px;padding:18px;text-align:center;
+         box-shadow:0 16px 44px rgba(8,68,120,.08)}
+.big-cta h4{margin:6px 0 10px;font-size:22px;color:#213349}
 
-    /* Sticky Nav */
-    .nav{position:sticky;top:0;z-index:1000;background:linear-gradient(90deg,var(--dark),#0a4c85);box-shadow:0 6px 18px rgba(6,58,102,.12)}
-    .nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 18px}
-    .brand{display:flex;align-items:center;gap:12px;color:#fff}
-    .brand img{height:44px}
-    .brand b{font-size:18px}
-    .menu a{color:#dfe9f7;margin-left:16px;font-weight:600}
-    .hamburger{display:none;color:#fff;background:transparent;border:0;font-size:24px}
-    @media(max-width:980px){
-      .menu{display:none;position:absolute;top:64px;left:0;right:0;background:#0a4c85;padding:10px 18px}
-      .menu a{display:block;margin:10px 0}
-      .hamburger{display:block}
-    }
+/* DISCLAIMER */
+.disclaimer{background:#fbfcff;border:1px solid var(--bd);border-radius:14px;padding:14px;color:#405163;font-size:13px}
 
-    /* Hero */
-    .hero{background:#fff;border-radius:14px;box-shadow:var(--shadow);padding:24px;margin-top:24px}
-    .hero-grid{display:grid;grid-template-columns:1.35fr 1fr;gap:22px;align-items:start}
-    .hero img.logo{height:80px;margin-bottom:8px}
-    .lead{color:var(--muted)}
-    .btn{display:inline-block;background:var(--blue);color:#fff;padding:12px 18px;border-radius:10px;font-weight:700;box-shadow:0 10px 28px rgba(11,95,165,.16)}
-    .btn:hover{filter:brightness(.95)}
-    .btn.secondary{background:transparent;border:2px solid rgba(6,58,102,.14);color:var(--dark)}
-    .btn.gold{background:var(--gold);color:#1b2330;box-shadow:0 10px 28px rgba(202,164,59,.25)}
-    .cta{display:flex;gap:12px;flex-wrap:wrap;margin-top:10px}
-    .panel{background:#fff;border:var(--outline);border-radius:14px;box-shadow:var(--shadow);padding:18px;display:flex;flex-direction:column}
-    input{padding:12px;border-radius:10px;border:1px solid rgba(6,58,102,.12);width:100%}
-    form .row{display:flex;gap:10px;flex-wrap:wrap}
-    video{width:100%;height:auto;border-radius:12px;box-shadow:0 10px 30px rgba(6,58,102,.08)}
-
-    /* Sections */
-    .section{margin-top:28px}
-    .grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .center{text-align:center}
-
-    /* Card styles (varied) */
-    .card{background:#fff;border:var(--outline);border-radius:12px;box-shadow:0 8px 24px rgba(6,58,102,.06);padding:14px}
-    .card.outline{background:#fff;border:1px dashed rgba(11,95,165,.3)}
-    .card.soft{background:linear-gradient(180deg,#ffffff,#f8fbff);border-left:6px solid var(--gold)}
-    .card.tint{background:#fcfdff;border:1px solid #e7eff7}
-    .card h3{margin-bottom:6px}
-    .sub{color:var(--muted);font-size:.95rem}
-
-    /* Why Choose Us strip */
-    .strip{background:linear-gradient(180deg,#f7faff,#f1f5fb);border:1px solid #e7eff7;border-radius:14px;box-shadow:0 8px 24px rgba(6,58,102,.06);padding:16px}
-    .strip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
-    .chip{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid #e7eff7;padding:12px;border-radius:12px}
-    .chip svg{flex:0 0 28px;width:28px;height:28px}
-
-    /* Pricing */
-    .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
-    .price-card{position:relative;background:#fff;border:var(--outline);border-radius:14px;box-shadow:var(--shadow);padding:18px;transition:transform .2s ease}
-    .price-card:hover{transform:translateY(-2px)}
-    .price-title{font-weight:800;font-size:20px;letter-spacing:.2px}
-    .price-amt{font-size:24px;font-weight:800;color:var(--blue);margin:8px 0 16px}
-    .price-desc{color:var(--muted);font-size:14.5px;line-height:1.55;margin-bottom:12px}
-    .badge-popular{position:absolute;top:-10px;left:16px;background:var(--gold);color:#1b2330;font-weight:800;font-size:12px;padding:6px 10px;border-radius:999px;box-shadow:0 6px 18px rgba(202,164,59,.25)}
-    .trustline{font-size:12px;color:#6b7b8c;margin:8px 0 0}
-
-    /* Timeline */
-    .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
-    .step{background:#fff;border:var(--outline);border-radius:12px;padding:14px;box-shadow:0 8px 24px rgba(6,58,102,.06)}
-    .step .sub{display:block;margin-top:4px}
-
-    /* Floating CTA */
-    .float-cta{position:fixed;right:18px;bottom:18px;z-index:1001}
-    .float-cta a{display:inline-flex;align-items:center;gap:8px;padding:14px 18px;border-radius:999px;background:var(--gold);color:#1b2330;font-weight:800;box-shadow:0 14px 36px rgba(202,164,59,.25)}
-
-    /* Fade-in animation */
-    .fade-in{opacity:0;transform:translateY(6px);animation:fade .8s ease-out forwards}
-    .fade-1{animation-delay:.1s}.fade-2{animation-delay:.2s}.fade-3{animation-delay:.3s}
-    @keyframes fade{to{opacity:1;transform:none}}
-
-    /* Loading Splash */
-    #splash{position:fixed;inset:0;background:#fff;display:flex;flex-direction:column;align-items:center;justify-content:center;z-index:2000;opacity:1;transition:opacity .4s ease}
-    #splash img{width:160px;height:auto;margin-bottom:10px}
-    #splash p{color:#556575;font-family:"Open Sans",system-ui,-apple-system}
-
-    footer{margin:40px 0 20px;color:#6b7b8c;text-align:center}
-
-    @media(max-width:980px){
-      .hero-grid{grid-template-columns:1fr}
-      .grid-3{grid-template-columns:1fr}
-      .strip-grid{grid-template-columns:1fr}
-      .pricing{grid-template-columns:1fr}
-      .timeline{grid-template-columns:1fr}
-    }
-  </style>
+/* utility */
+.grid-two{display:grid;gap:16px;grid-template-columns:1.2fr .8fr}
+@media(max-width:980px){.grid-two{grid-template-columns:1fr}}
+.badge{display:inline-block;background:#eef5fb;color:#0b5fa5;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800}
+</style>
 </head>
-<body id="top">
-  <!-- Loading Splash -->
-  <div id="splash">
-    <img src="logo-mgi.png" alt="Major Growth Institute"/>
-    <p>Building Wealth the Right Way</p>
-  </div>
+<body>
 
-  <!-- Sticky Nav -->
-  <div class="nav">
-    <div class="nav-inner container">
-      <a class="brand" href="#top">
-        <img src="logo-mgi.png" alt="Major Growth Institute logo"/>
-        <b>Major Growth Institute</b>
+<header>
+  <div class="brand">
+    <!-- Replace src with your actual logo path in the repo -->
+    <img src="logo.png" alt="Major Growth Institute Logo" />
+    <h1>Major Growth Institute</h1>
+  </div>
+</header>
+
+<main class="container">
+
+  <!-- HERO -->
+  <section class="hero" id="top">
+    <span class="badge">Build Wealth the Right Way</span>
+    <h2>Credit is your leverage. Use it with a plan.</h2>
+    <p class="tagline">Your credit is more than a number — it’s the key to your next move.</p>
+    <div class="cta-row">
+      <a class="btn gold pulse" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Free Consultation</a>
+      <a class="btn" href="app.html">Start Free</a>
+      <a class="btn" href="portal.html">Client Dashboard</a>
+    </div>
+  </section>
+
+  <!-- WHY -->
+  <section class="section">
+    <h3 class="section-title">Choose Your Why</h3>
+    <div class="why">
+      <a class="card" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">
+        <div class="ico">🏠</div><div class="title">Buy a Home</div><div class="sub">Reach your address faster</div>
       </a>
-      <button id="hamburger" class="hamburger" aria-label="Open menu">☰</button>
-      <div id="menu" class="menu">
-        <a href="#why">Why Credit Matters</a>
-        <a href="#process">Process</a>
-        <a href="#blueprint">Blueprint</a>
-        <a href="#ai">AI Advantage</a>
-        <a href="#choose">Why Choose Us</a>
-        <a href="#stories">Client Stories</a>
-        <a href="#timeline">Timeline</a>
-        <a href="#faq">FAQ</a>
-        <a href="#pricing">Pricing</a>
-        <a href="#contact">Contact</a>
-        <a href="app.html">Client Login</a>
+      <a class="card" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">
+        <div class="ico">🚗</div><div class="title">Get a Car</div><div class="sub">Better terms, less stress</div>
+      </a>
+      <a class="card" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">
+        <div class="ico">💳</div><div class="title">Build Credit</div><div class="sub">Create real leverage</div>
+      </a>
+      <a class="card" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">
+        <div class="ico">💼</div><div class="title">Business Funding</div><div class="sub">Turn ideas into impact</div>
+      </a>
+      <a class="card" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">
+        <div class="ico">💰</div><div class="title">Debt Freedom</div><div class="sub">Get your peace back</div>
+      </a>
+    </div>
+  </section>
+
+  <!-- STATS BAR -->
+  <section class="section strip" id="credit-goals">
+    <div class="goals">What prime looks like:</div>
+    <div style="text-align:center;color:#4a5c70;font-size:14px;margin-bottom:8px">
+      8–12 Positive Accounts • &lt;10% Utilization • 100% On-Time • Zero Derogs
+    </div>
+    <div class="progress" aria-label="credit-progress"><span id="statsFill"></span></div>
+    <p style="text-align:center;color:#6b7b8c;font-size:12px;margin-top:8px">
+      We help you go from repair → build → fund with a lender-aligned path.
+    </p>
+  </section>
+
+  <!-- TWO-COLUMN: QUICK VALUE + CTA -->
+  <section class="section grid-two">
+    <div class="big-cta">
+      <span class="badge">Why strong credit pays</span>
+      <h4>Better rates, higher limits, faster approvals.</h4>
+      <ul style="line-height:1.6;margin:8px 0 0 18px">
+        <li>Lower borrowing costs = more money stays with you.</li>
+        <li>Prime profiles unlock 0% intro APR, travel rewards, and growth capital.</li>
+        <li>Strong mix (revolving + installment) and low utilization signal low risk.</li>
+        <li>Clean history (100% on-time, zero derogs) is the best negotiation power.</li>
+      </ul>
+      <div class="cta-row" style="margin-top:12px">
+        <a class="btn" href="app.html">Start Free</a>
+        <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Talk to a Specialist</a>
       </div>
     </div>
-  </div>
 
-  <div class="container">
-    <!-- Hero -->
-    <section class="hero">
-      <div class="hero-grid">
-        <div>
-          <a href="#top"><img class="logo fade-in" src="logo-mgi.png" alt="Major Growth Institute"/></a>
-          <h1 class="fade-in fade-1">Build Wealth the Right Way</h1>
-          <p class="lead fade-in fade-2">We combine intelligent credit analysis with hands-on strategy to clean up your reports, build a solid profile, and unlock real funding — without the guesswork.</p>
-          <div class="cta fade-in fade-3">
-            <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Free Consultation</a>
-            <a class="btn secondary" href="#why">Why credit matters</a>
-          </div>
+    <div class="disclaimer">
+      <strong>⚖️ Educational Notice</strong><br/>
+      Major Growth Institute provides educational tools and personalized roadmaps based on your inputs. We are not a law firm, credit bureau, or financial institution. Results vary because credit is personal — <em>there is no one-size-fits-all</em>. Lender criteria can change without notice, and nothing here is legal, tax, or financial advice.
+    </div>
+  </section>
 
-          <div class="section fade-in fade-3">
-            <video controls preload="metadata" poster="logo-mgi.png">
-              <source src="mgi_overview.mp4" type="video/mp4">
-              Your browser does not support the video tag.
-            </video>
-          </div>
-        </div>
+  <!-- FINAL CTA -->
+  <section class="section big-cta" style="text-align:center">
+    <h4>There are dozens of reasons to build credit — which one will make you start today?</h4>
+    <div class="cta-row" style="margin-top:10px">
+      <a class="btn gold pulse" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Free Consultation</a>
+      <a class="btn" href="app.html">Start Free</a>
+    </div>
+  </section>
 
-        <!-- Right column: Contact + Founder -->
-        <div>
-          <!-- Contact Panel -->
-          <aside class="panel" id="contact-panel">
-            <h3 style="margin:0 0 8px">Talk to a Specialist</h3>
-            <p class="lead" style="margin:0 0 12px;color:var(--muted)">Free 15-minute consult. Share your best contact or book now.</p>
-            <form onsubmit="event.preventDefault(); submitContact();">
-              <div class="row">
-                <input id="contactOne" placeholder="Your best contact (email or phone)" required>
-                <button class="btn" type="submit" style="width:100%">Share Contact</button>
-              </div>
-            </form>
-            <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
-              <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener" style="flex:1;text-align:center">Request Consult</a>
-            </div>
-            <div style="font-size:12px;color:var(--muted);margin-top:10px">We respect your time and privacy. A specialist will reach out shortly.</div>
-          </aside>
+</main>
 
-          <!-- Meet the Founder -->
-          <aside class="panel" style="margin-top:14px">
-            <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
-              <img src="founder.jpg" alt="Founder" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid rgba(6,58,102,.15)" onerror="this.src='logo-mgi.png'">
-              <div>
-                <h3 style="margin:0">Meet the Founder</h3>
-                <div class="sub">A personal, guided approach</div>
-              </div>
-            </div>
-            <p>After experiencing firsthand how difficult it can be to build real financial stability without understanding credit, this company was created to make the path clear. The goal is simple: provide structure, timing, and the right moves so people can use credit as a tool — not a trap.</p>
-            <p style="margin-top:8px">What began as a personal mission became a practical system: clean up what’s holding you back, rebuild with intent, and leverage that progress into real funding. The focus isn’t hype — it’s results, education, and ownership of your financial future.</p>
-            <p class="sub" style="margin-top:8px"><em>“I still personally oversee strategy because I remember what it felt like to start from scratch.”</em></p>
-          </aside>
-        </div>
-      </div>
-    </section>
-
-    <!-- Why Credit Matters -->
-    <section id="why" class="section">
-      <h2>Why Credit Matters</h2>
-      <div class="grid-3">
-        <div class="card soft">
-          <h3>Wealth Leverage</h3>
-          <p class="sub">Turn credit into a multiplier</p>
-          <p>With strong credit, borrowing costs drop and capital becomes accessible. That means more room to invest in assets, education, or a business — without draining savings.</p>
-        </div>
-        <div class="card tint">
-          <h3>Opportunity Access</h3>
-          <p class="sub">Better approvals, better terms</p>
-          <p>Lenders reward clean, seasoned profiles with higher limits and lower rates. That opens doors for 0% promos, responsible balance transfers, and growth capital.</p>
-        </div>
-        <div class="card outline">
-          <h3>Cash-Flow Protection</h3>
-          <p class="sub">Preserve cash, plan smarter</p>
-          <p>Good credit helps protect liquidity while you build. Poor credit doesn’t just cost money — it limits choices. We change that by structuring a durable profile.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Process -->
-    <section id="process" class="section">
-      <h2>Our Process</h2>
-      <div class="grid-3">
-        <div class="card">
-          <h3>Audit</h3>
-          <p class="sub">Week 1 — clarity & plan</p>
-          <p>We pull all three bureaus, find reporting errors, and identify what lenders flag: utilization patterns, missing mix, thin history, and outdated negatives.</p>
-        </div>
-        <div class="card tint">
-          <h3>Rebuild</h3>
-          <p class="sub">Weeks 2–8 — structure & seasoning</p>
-          <p>We correct inaccuracies, introduce the right lines (secured/pledge/vendor), and time payments to stabilize utilization and build reliable history.</p>
-        </div>
-        <div class="card soft">
-          <h3>Leverage</h3>
-          <p class="sub">Weeks 9–12 — funding readiness</p>
-          <p>We match your profile to lender tiers and design a funding sequence (personal and/or business). You’ll know what to apply for, when, and why.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Blueprint -->
-    <section id="blueprint" class="section">
-      <h2>Credit Wealth Blueprint</h2>
-      <div class="grid-3">
-        <div class="card outline">
-          <h3>Repair</h3>
-          <p class="sub">Fix what’s holding you back</p>
-          <p>Dispute process with documentation, goodwill approaches, and data-furnisher follow-ups. We also remove duplicate/obsolete items and correct profile errors.</p>
-        </div>
-        <div class="card">
-          <h3>Build</h3>
-          <p class="sub">Look like an ideal borrower</p>
-          <p>Banking relationship setup, reporting lines, utilization strategy, and payment cadence. The aim is organic growth that lenders recognize and reward.</p>
-        </div>
-        <div class="card tint">
-          <h3>Leverage</h3>
-          <p class="sub">Turn profile strength into capital</p>
-          <p>Tier-based approvals, 0% promo stacking, and capital planning. If relevant, we prep business structure and vendor lines to boost total available credit.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Why People Choose Us (Trust strip) -->
-    <section id="choose" class="section">
-      <div class="strip">
-        <h2 style="margin-bottom:10px">Why People Choose Us</h2>
-        <div class="strip-grid">
-          <div class="chip">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5 11-11" stroke="#0b5fa5" stroke-width="2"/></svg>
-            <div><b>Trust & Transparency</b><p class="sub">Straight talk and clear steps — you’ll always know what’s happening and why.</p></div>
-          </div>
-          <div class="chip">
-            <svg viewBox="0 0 24 24" fill="none"><path d="M3 20h18" stroke="#0b5fa5" stroke-width="2"/><path d="M8 20l8-12 5 7" stroke="#caa43b" stroke-width="2"/></svg>
-            <div><b>Results-Driven Strategy</b><p class="sub">We align actions to lender behavior for approvals, limits, and better terms.</p></div>
-          </div>
-          <div class="chip">
-            <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#0b5fa5" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="#caa43b" stroke-width="2"/></svg>
-            <div><b>Education-First Approach</b><p class="sub">We teach you the “why” so your profile keeps getting stronger over time.</p></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- AI Advantage -->
-    <section id="ai" class="section">
-      <h2>AI Advantage</h2>
-      <div class="grid-3">
-        <div class="card">
-          <h3>Faster Analysis</h3>
-          <p class="sub">Patterns & priorities at a glance</p>
-          <p>We use data-driven tooling to surface utilization spikes, stale negatives, and missing mix — so you act on the right things first.</p>
-        </div>
-        <div class="card soft">
-          <h3>Smarter Strategy</h3>
-          <p class="sub">Built on lender behavior</p>
-          <p>Guidance isn’t guesswork. We align to what underwriters actually check: history depth, payment consistency, and responsible expansion.</p>
-        </div>
-        <div class="card outline">
-          <h3>Predictable Progress</h3>
-          <p class="sub">Clear milestones, real updates</p>
-          <p>A transparent plan with checkpoints and “why it matters” explanations. You’ll always know what’s next and what to expect.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Client Stories -->
-    <section id="stories" class="section">
-      <h2>Client Stories</h2>
-      <div class="grid-3">
-        <div class="card soft">
-          <h3>Danielle — Charlotte, NC</h3>
-          <p class="sub">From anxious to in control</p>
-          <p>“I used to avoid my reports. Three months in, my score was up 90 points — but more than that, I finally understood my blueprint. First approval came the next week.”</p>
-        </div>
-        <div class="card">
-          <h3>Terrence — Houston, TX</h3>
-          <p class="sub">Real approvals, real plan</p>
-          <p>“It wasn’t just letters. I learned how to build the right way. Now I’ve got two new cards, better terms, and a real relationship with my credit union.”</p>
-        </div>
-        <div class="card outline">
-          <h3>Angela — Chicago, IL</h3>
-          <p class="sub">Steady progress to funding</p>
-          <p>“No hype — just clear steps. My profile finally makes sense and I’m preparing for business funding. The guidance saved me time and money.”</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Timeline -->
-    <section id="timeline" class="section">
-      <h2>Timeline of Results</h2>
-      <div class="timeline">
-        <div class="step">
-          <b>Week 1 — Audit</b>
-          <span class="sub">Pull, map, prioritize</span>
-          <p>Three-bureau pull, error mapping, and goal setting. You’ll leave Week 1 with a clear action plan.</p>
-        </div>
-        <div class="step">
-          <b>Week 4 — Updates</b>
-          <span class="sub">Early dispute results</span>
-          <p>Initial corrections post, utilization plan in motion, and the first signs of score stabilization.</p>
-        </div>
-        <div class="step">
-          <b>Week 8 — Build</b>
-          <span class="sub">Seasoning & structure</span>
-          <p>New positive lines reporting, mix optimization, and a cadence lenders like to see.</p>
-        </div>
-        <div class="step">
-          <b>Week 12 — Funding Ready</b>
-          <span class="sub">Sequenced approvals</span>
-          <p>Tier-matched targets, timing strategy, and a capital roadmap (personal + business as applicable).</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- FAQ -->
-    <section id="faq" class="section">
-      <h2>Frequently Asked Questions</h2>
-      <div class="grid-3">
-        <div class="card">
-          <h3>Will this hurt my credit?</h3>
-          <p class="sub">No — we don’t shotgun applications.</p>
-          <p>Our approach optimizes what’s on your reports and builds strategically. We only recommend applications when your profile is ready, and only where it makes sense.</p>
-        </div>
-        <div class="card tint">
-          <h3>How long until I see results?</h3>
-          <p class="sub">Most clients see measurable change in 45–90 days.</p>
-          <p>Timeline depends on your starting point. We share milestones so you know exactly what to expect at Weeks 4, 8, and 12.</p>
-        </div>
-        <div class="card soft">
-          <h3>Do you outsource the work?</h3>
-          <p class="sub">No — strategy is handled in-house.</p>
-          <p>You’ll have direct communication. We focus on transparency, education, and predictable execution.</p>
-        </div>
-        <div class="card outline">
-          <h3>What do I need from me?</h3>
-          <p class="sub">A little time and consistency.</p>
-          <p>We’ll guide monitoring setup, documents (if needed), and simple calendar reminders. Most clients spend < 1 hour/week.</p>
-        </div>
-        <div class="card">
-          <h3>Can you help with business credit?</h3>
-          <p class="sub">Yes — if it fits your goals.</p>
-          <p>We’ll assess readiness (entity, banking, vendor lines) and map a funding sequence that matches your personal profile and risk tolerance.</p>
-        </div>
-      </div>
-    </section>
-
-    <!-- Pricing -->
-    <section id="pricing" class="section">
-      <h2>Pricing</h2>
-      <div class="pricing">
-        <div class="price-card">
-          <div class="price-title">Starter</div>
-          <div class="price-amt">$249 / month</div>
-          <div class="price-desc">
-            • 3-bureau report review &amp; error analysis<br/>
-            • Up to 5 dispute rounds/month<br/>
-            • Credit monitoring setup guidance<br/>
-            • Monthly updates &amp; score tracking<br/>
-            • Custom “next steps” report
-          </div>
-          <a class="btn" href="#" onclick="goPay('https://buy.stripe.com/test_6oU5kFepa0dZd7wcJE53O01');return false;">Choose Starter</a>
-          <div class="trustline">🔒 Secure checkout powered by Stripe. No recurring charges unless stated.</div>
-        </div>
-
-        <div class="price-card">
-          <div class="badge-popular">Most Popular</div>
-          <div class="price-title">Concierge</div>
-          <div class="price-amt">$1,000 — Full-Service Package</div>
-          <div class="price-desc">
-            • Deep-dive audit + full credit plan<br/>
-            • Unlimited dispute support (docs handled)<br/>
-            • Positive tradeline guidance &amp; mix optimization<br/>
-            • Funding roadmap (personal + business)<br/>
-            • Priority email &amp; text access<br/>
-            • One credit education session
-          </div>
-          <a class="btn gold" href="#" onclick="goPay('https://buy.stripe.com/test_00w6oJ5SEd0LgjI39453O00');return false;">Choose Concierge</a>
-          <div class="trustline">🔒 Secure checkout powered by Stripe. No recurring charges unless stated.</div>
-        </div>
-
-        <div class="price-card">
-          <div class="price-title">Funding Plan</div>
-          <div class="price-amt">Custom Pricing</div>
-          <div class="price-desc">
-            • Credit &amp; business structure readiness review<br/>
-            • Lender-tier matching &amp; prequalification steps<br/>
-            • Funding projection &amp; capital roadmap<br/>
-            • Business tradeline/vendor setup<br/>
-            • 1:1 credit-to-funding coaching session
-          </div>
-          <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Discuss Funding Plan</a>
-        </div>
-      </div>
-    </section>
-
-    <!-- After You Book -->
-    <section id="after" class="section">
-      <h2>After You Book</h2>
-      <div class="grid-3">
-        <div class="card"><h3>1. Quick Intro Call</h3><p class="sub">15 minutes on Zoom</p><p>We confirm goals, current status, and the timeline. You’ll know exactly what happens next.</p></div>
-        <div class="card tint"><h3>2. Live Review</h3><p class="sub">We go through your reports</p><p>We map issues and opportunities together so you understand the plan and priorities.</p></div>
-        <div class="card soft"><h3>3. Action Plan (48 hrs)</h3><p class="sub">Your steps, clearly laid out</p><p>You get a written plan with milestones, expected timelines, and simple checklists.</p></div>
-      </div>
-    </section>
-
-    <!-- Contact / CTA -->
-    <section id="contact" class="section center">
-      <h2>Ready to Build the Right Way?</h2>
-      <p class="lead">Your credit isn’t just a score — it’s your foundation for opportunity.</p>
-      <div class="cta" style="justify-content:center;margin-top:12px">
-        <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Free Consultation</a>
-      </div>
-    </section>
-
-    <footer>© Major Growth Institute — All rights reserved</footer>
-  </div>
-
-  <!-- Floating CTA -->
-  <div class="float-cta">
-    <a href="https://calendly.com/majorgrowth" target="_blank" rel="noopener" aria-label="Book a Consultation">Book Consultation</a>
-  </div>
-
-  <script>
-    // Mobile menu toggle
-    const ham = document.getElementById('hamburger');
-    const menu = document.getElementById('menu');
-    if (ham) {
-      ham.addEventListener('click', () => {
-        const visible = menu.style.display === 'block';
-        menu.style.display = visible ? 'none' : 'block';
-      });
-    }
-    // Close mobile menu after clicking a link
-    document.querySelectorAll('#menu a').forEach(a => {
-      a.addEventListener('click', () => {
-        if (window.innerWidth <= 980) menu.style.display = 'none';
-      });
-    });
-    // Loading splash fade
-    window.addEventListener('load', () => {
-      setTimeout(() => {
-        const splash = document.getElementById('splash');
-        if (splash) { splash.style.opacity = '0'; setTimeout(() => splash.remove(), 400); }
-      }, 1200);
-    });
-    // Contact one-field submit (mailto)
-    function submitContact(){
-      const el = document.getElementById('contactOne');
-      const val = (el?.value || '').trim();
-      if(!val) return;
-      const EMAIL_TO = "info@majorgrowthinstitute.com";
-      const subj = encodeURIComponent("New MGI contact request");
-      const body = encodeURIComponent("Best contact: " + val + "\\n(Submitted from the website)");
-      window.location.href = `mailto:${EMAIL_TO}?subject=${subj}&body=${body}`;
-      el.value='';
-    }
-    // Stripe confirm + redirect
-    function goPay(url){
-      if (confirm('You will be redirected to our secure payment portal (Stripe). Continue?')) {
-        window.open(url,'_blank');
-      }
-    }
-  </script>
+<script>
+// animate the stats bar on load
+window.addEventListener('load', ()=> {
+  // Set to ~80% to visually imply “nearly there” (feel-good/motivational).
+  // If you want exact logic tied to your portal data, we can wire it later.
+  const el = document.getElementById('statsFill');
+  if(el){ requestAnimationFrame(()=> el.style.width = '80%'); }
+});
+</script>
 </body>
 </html>
