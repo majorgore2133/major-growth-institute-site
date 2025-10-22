@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MGI Client Dashboard</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f4f7fa;
+      font-family: 'Inter', sans-serif;
+      margin: 0;
+      padding: 0;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+      min-height: 100vh;
+    }
+    header {
+      background: #003366;
+      color: #fff;
+      width: 100%;
+      text-align: center;
+      padding: 20px 0;
+      font-size: 1.5rem;
+      font-weight: 600;
+    }
+    .container {
+      margin-top: 50px;
+      background: #fff;
+      padding: 30px;
+      border-radius: 12px;
+      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
+      max-width: 600px;
+      text-align: center;
+    }
+    button {
+      background: #004aad;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      border-radius: 8px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+    button:hover {
+      background: #003a8c;
+    }
+  </style>
+</head>
+<body>
+  <header>Welcome to MGI Client Dashboard</header>
+  <div class="container">
+    <h2 id="welcome"></h2>
+    <p>This is your personal credit and funding portal.</p>
+    <button id="logoutBtn">Log Out</button>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
+      authDomain: "majorgrowthportal.firebaseapp.com",
+      projectId: "majorgrowthportal",
+      storageBucket: "majorgrowthportal.firebasestorage.app",
+      messagingSenderId: "741963712787",
+      appId: "1:741963712787:web:dbb9fb191cdae414b0f2e6",
+      measurementId: "G-7NGDY9DYCW"
+    };
+
+    firebase.initializeApp(firebaseConfig);
+    const auth = firebase.auth();
+
+    auth.onAuthStateChanged(user => {
+      if (user) {
+        document.getElementById("welcome").innerText = `Welcome, ${user.email}`;
+      } else {
+        window.location.href = "app.html";
+      }
+    });
+
+    document.getElementById("logoutBtn").addEventListener("click", () => {
+      auth.signOut().then(() => {
+        window.location.href = "app.html";
+      });
+    });
+  </script>
+</body>
+</html>
