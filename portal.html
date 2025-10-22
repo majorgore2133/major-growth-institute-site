@@ -1,92 +1,347 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>MGI Client Dashboard</title>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
-  <style>
-    body {
-      background: #f4f7fa;
-      font-family: 'Inter', sans-serif;
-      margin: 0;
-      padding: 0;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
-      min-height: 100vh;
-    }
-    header {
-      background: #003366;
-      color: #fff;
-      width: 100%;
-      text-align: center;
-      padding: 20px 0;
-      font-size: 1.5rem;
-      font-weight: 600;
-    }
-    .container {
-      margin-top: 50px;
-      background: #fff;
-      padding: 30px;
-      border-radius: 12px;
-      box-shadow: 0 5px 20px rgba(0,0,0,0.08);
-      max-width: 600px;
-      text-align: center;
-    }
-    button {
-      background: #004aad;
-      color: white;
-      border: none;
-      padding: 10px 20px;
-      border-radius: 8px;
-      margin-top: 20px;
-      cursor: pointer;
-    }
-    button:hover {
-      background: #003a8c;
-    }
-  </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>MGI Client Dashboard</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+<style>
+:root{--blue:#0b5fa5;--dark:#0b2d4a;--gold:#caa43b;--ink:#142433;--muted:#6b7b8c;--paper:#fff;--soft:#f5f8fc;--bd:#e6eef6}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#f7fbff,#fff);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--ink)}
+header{background:#003366;color:#fff;padding:16px;text-align:center;font-weight:700}
+.container{max-width:1100px;margin:18px auto;padding:0 14px}
+.nav{display:flex;gap:10px;flex-wrap:wrap}
+.tab{padding:10px 14px;border:1px solid var(--bd);border-radius:10px;background:#fff;cursor:pointer;font-weight:600}
+.tab.active{background:linear-gradient(180deg,#fff,#f4f8ff);border-color:#cddff3;box-shadow:0 8px 22px rgba(11,95,165,.12)}
+.grid{display:grid;gap:16px}
+.two{grid-template-columns:1.2fr .8fr}
+@media(max-width:980px){.two{grid-template-columns:1fr}}
+.card{background:#fff;border:1px solid var(--bd);border-radius:14px;box-shadow:0 12px 32px rgba(8,68,120,.08);padding:16px}
+h2{margin:4px 0 10px;color:#0b2d4a}
+h3{margin:8px 0}
+p.mini{color:var(--muted);font-size:12px;margin:6px 0}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.input, select, textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:#fff}
+.badge{display:inline-block;background:#eef5fb;color:#0b5fa5;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
+.btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;box-shadow:0 12px 28px rgba(11,95,165,.16)}
+.btn.gold{background:var(--gold);color:#1b2330}
+.btn.ghost{background:#fff;border:2px solid #e1ecf6;color:#0b2d4a}
+.pill{display:inline-block;padding:8px 10px;border-radius:10px;background:#fcfdff;border:1px solid #e7eff7;margin:4px 6px 0 0}
+.progress{height:10px;background:#eaf2fb;border-radius:999px;overflow:hidden}
+.progress > span{display:block;height:100%;background:linear-gradient(90deg,#0b5fa5,#4aa3ff)}
+footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
+</style>
 </head>
 <body>
-  <header>Welcome to MGI Client Dashboard</header>
-  <div class="container">
-    <h2 id="welcome"></h2>
-    <p>This is your personal credit and funding portal.</p>
-    <button id="logoutBtn">Log Out</button>
+<header>Major Growth Institute — Client Dashboard</header>
+<div class="container">
+
+  <!-- Top bar -->
+  <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
+    <div><span class="badge" id="who"></span></div>
+    <div class="row" style="gap:8px">
+      <button id="logout" class="btn gold">Log out</button>
+    </div>
   </div>
 
-  <!-- Firebase SDKs -->
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
-  <script>
-    const firebaseConfig = {
-      apiKey: "AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
-      authDomain: "majorgrowthportal.firebaseapp.com",
-      projectId: "majorgrowthportal",
-      storageBucket: "majorgrowthportal.firebasestorage.app",
-      messagingSenderId: "741963712787",
-      appId: "1:741963712787:web:dbb9fb191cdae414b0f2e6",
-      measurementId: "G-7NGDY9DYCW"
-    };
+  <!-- Tabs -->
+  <div class="nav" id="tabs">
+    <div class="tab active" data-tab="overview">Overview</div>
+    <div class="tab" data-tab="analyzer">Analyzer</div>
+    <div class="tab" data-tab="reports">Reports</div>
+    <div class="tab" data-tab="progress">Progress</div>
+    <div class="tab" data-tab="support">Support</div>
+  </div>
 
-    firebase.initializeApp(firebaseConfig);
-    const auth = firebase.auth();
+  <!-- Panels -->
+  <div id="panel-overview" class="grid two" style="margin-top:14px">
+    <div class="card">
+      <h2>Welcome</h2>
+      <p class="mini">Your central hub for repair, building, and funding.</p>
+      <div class="row" style="margin-top:8px">
+        <a class="btn" href="#analyzer" onclick="selectTab('analyzer')">Start Analysis</a>
+        <a class="btn ghost" href="#reports" onclick="selectTab('reports')">See Lenders</a>
+      </div>
+      <div style="margin-top:16px">
+        <h3>Upgrade Options</h3>
+        <div class="row">
+          <a class="btn gold" href="https://buy.stripe.com/test_00w6oJ5SEd0LgjI39453O00" target="_blank" rel="noopener">Book Consultation ($100)</a>
+          <a class="btn" href="https://buy.stripe.com/test_6oU5kFepa0dZd7wcJE53O01" target="_blank" rel="noopener">Full Service Package ($1000)</a>
+        </div>
+      </div>
+    </div>
+    <div class="card">
+      <div class="badge">At a glance</div>
+      <h3>Funding Readiness</h3>
+      <div class="progress"><span id="bar-fund" style="width:0%"></span></div>
+      <p class="mini" id="fund-note">Complete the analyzer to see your readiness.</p>
+      <h3 style="margin-top:12px">Credit Repair</h3>
+      <div class="progress"><span id="bar-repair" style="width:0%"></span></div>
+      <p class="mini" id="repair-note">We’ll calculate this from your inputs.</p>
+    </div>
+  </div>
 
-    auth.onAuthStateChanged(user => {
-      if (user) {
-        document.getElementById("welcome").innerText = `Welcome, ${user.email}`;
-      } else {
-        window.location.href = "app.html";
-      }
-    });
+  <div id="panel-analyzer" class="card" style="display:none;margin-top:14px">
+    <div class="badge">Guided Analyzer</div>
+    <h2 style="margin-top:6px">Repair → Build → Fund</h2>
 
-    document.getElementById("logoutBtn").addEventListener("click", () => {
-      auth.signOut().then(() => {
-        window.location.href = "app.html";
-      });
-    });
-  </script>
+    <h3 style="margin-top:10px">Repair</h3>
+    <div class="row">
+      <input class="input" id="exp" placeholder="Experian score (e.g., 640)" type="number">
+      <input class="input" id="eq"  placeholder="Equifax score (e.g., 630)" type="number">
+      <input class="input" id="tu"  placeholder="TransUnion score (e.g., 650)" type="number">
+    </div>
+    <div class="row" style="margin-top:8px">
+      <label class="pill"><input type="checkbox" id="late"> Late payments</label>
+      <label class="pill"><input type="checkbox" id="coll"> Collections</label>
+      <label class="pill"><input type="checkbox" id="coff"> Charge-offs</label>
+      <label class="pill"><input type="checkbox" id="bk"> Bankruptcy</label>
+      <input class="input" id="negCount" placeholder="# of negative items" type="number">
+    </div>
+
+    <h3 style="margin-top:16px">Build</h3>
+    <div class="row">
+      <input class="input" id="util" placeholder="Overall utilization % (e.g., 28)" type="number">
+      <input class="input" id="rev"  placeholder="# of revolving accounts" type="number">
+      <input class="input" id="inst" placeholder="# of installment accounts" type="number">
+      <input class="input" id="age"  placeholder="Avg age (months)" type="number">
+      <input class="input" id="inq"  placeholder="New inquiries (6–12 mo)" type="number">
+    </div>
+
+    <h3 style="margin-top:16px">Fund</h3>
+    <div class="row">
+      <label class="pill"><input type="checkbox" id="goal_personal" checked> Personal funding</label>
+      <label class="pill"><input type="checkbox" id="goal_business"> Business funding</label>
+      <input class="input" id="target" placeholder="Target funding amount ($)" type="number">
+      <select class="input" id="risk">
+        <option value="conservative">Risk: Conservative</option>
+        <option value="moderate" selected>Risk: Moderate</option>
+        <option value="aggressive">Risk: Aggressive</option>
+      </select>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <button class="btn" onclick="computeAndSave()">Save & Compute</button>
+      <button class="btn ghost" onclick="clearData()">Clear</button>
+    </div>
+
+    <div style="margin-top:16px">
+      <h3>Recommendations</h3>
+      <div id="recs"></div>
+      <h3 style="margin-top:12px">Funding Readiness</h3>
+      <div id="fundingTier" class="pill">Not calculated</div>
+    </div>
+  </div>
+
+  <div id="panel-reports" class="card" style="display:none;margin-top:14px">
+    <div class="badge">Lender Finder (powered by your proxy)</div>
+    <div class="row" style="margin-top:8px">
+      <select id="stateSel" class="input"></select>
+      <button class="btn" onclick="fetchLenders()">Find Lenders</button>
+      <button class="btn ghost" onclick="detectLocation()">Detect My Location</button>
+    </div>
+    <p class="mini">We’ll tailor lenders by state. (First time? Click “Detect My Location”.)</p>
+    <div id="lenders" style="margin-top:12px"></div>
+  </div>
+
+  <div id="panel-progress" class="card" style="display:none;margin-top:14px">
+    <div class="badge">Your Progress</div>
+    <div id="progContent" style="margin-top:10px">No data yet — run the analyzer and save.</div>
+  </div>
+
+  <div id="panel-support" class="card" style="display:none;margin-top:14px">
+    <div class="badge">Support</div>
+    <p>Need help? Book a call or open a ticket.</p>
+    <div class="row" style="margin-top:8px">
+      <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Consultation</a>
+      <a class="btn" href="mailto:majorgrowthinstitute@gmail.com">Email Support</a>
+    </div>
+  </div>
+
+  <footer>© Major Growth Institute</footer>
+</div>
+
+<!-- Firebase SDKs -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey:"AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
+  authDomain:"majorgrowthportal.firebaseapp.com",
+  projectId:"majorgrowthportal",
+  storageBucket:"majorgrowthportal.firebasestorage.app",
+  messagingSenderId:"741963712787",
+  appId:"1:741963712787:web:dbb9fb191cdae414b0f2e6",
+  measurementId:"G-7NGDY9DYCW"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(), db=firebase.firestore();
+
+// --- session guard
+auth.onAuthStateChanged(u=>{
+  if(!u){ location.href="app.html"; return; }
+  document.getElementById('who').textContent = "Signed in: "+(u.displayName||u.email);
+  loadProfile();
+});
+document.getElementById('logout').onclick=()=>auth.signOut().then(()=>location.href="app.html");
+
+// --- tabs
+const tabs=document.querySelectorAll('.tab');
+function selectTab(name){
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  ['overview','analyzer','reports','progress','support'].forEach(id=>{
+    document.getElementById('panel-'+id).style.display = (id===name?'grid':'none');
+    if(id==='analyzer') document.getElementById('panel-analyzer').style.display = (id==='analyzer'?'block':'none');
+  });
+  if(name==='progress') renderProgress();
+}
+tabs.forEach(t=>t.onclick=()=>selectTab(t.dataset.tab));
+if(location.hash==="#analyzer") selectTab('analyzer');
+
+// --- analyzer state
+let profile={
+  scores:{exp:null,eq:null,tu:null},
+  neg:{late:false,coll:false,coff:false,bk:false,count:0},
+  build:{util:null,rev:0,inst:0,age:0,inq:0},
+  fund:{personal:true,biz:false,target:0,risk:'moderate'},
+  location:{state:null},
+  readiness:0, repairPct:0, tier:"Not Ready",
+  updatedAt:null
+};
+
+function val(id){ const el=document.getElementById(id); return el?.type==='checkbox' ? el.checked : (el?.value||""); }
+function num(v){ if(v===""||v==null) return null; const n=Number(v); return isNaN(n)?null:n; }
+
+function computeAndSave(){
+  // capture
+  profile.scores.exp=num(val('exp')); profile.scores.eq=num(val('eq')); profile.scores.tu=num(val('tu'));
+  profile.neg.late=val('late'); profile.neg.coll=val('coll'); profile.neg.coff=val('coff'); profile.neg.bk=val('bk'); profile.neg.count=num(val('negCount'))||0;
+  profile.build.util=num(val('util')); profile.build.rev=num(val('rev'))||0; profile.build.inst=num(val('inst'))||0; profile.build.age=num(val('age'))||0; profile.build.inq=num(val('inq'))||0;
+  profile.fund.personal=val('goal_personal'); profile.fund.biz=val('goal_business'); profile.fund.target=num(val('target'))||0; profile.fund.risk=val('risk')||'moderate';
+
+  // compute
+  const avgScore=avg([profile.scores.exp,profile.scores.eq,profile.scores.tu]);
+  let repair=100;
+  if(profile.neg.count>0) repair-=Math.min(60, profile.neg.count*10);
+  if(profile.neg.late) repair-=10; if(profile.neg.coll) repair-=15; if(profile.neg.coff) repair-=18; if(profile.neg.bk) repair-=35;
+  repair=Math.max(0,Math.min(100,repair));
+  let readiness=0;
+  if(avgScore) readiness += Math.max(0, Math.min(50,(avgScore-600)/120*50));  // 600→720 ~ 0→50
+  if(profile.build.util!=null) readiness += (profile.build.util<=9?30:profile.build.util<=28?18:profile.build.util<=57?6:0);
+  if(profile.build.rev>=3) readiness += 10;
+  if(profile.build.age>=24) readiness += 5;
+  if(profile.build.inq<=3) readiness += 5;
+  readiness=Math.round(Math.max(0,Math.min(100,readiness)));
+  let tier="Not Ready";
+  if(readiness>=80 && repair>=80) tier="Tier 1 (Prime + biz ready)";
+  else if(readiness>=60 && repair>=60) tier="Tier 2 (0% personal ready)";
+  else if(readiness>=40) tier="Pre-Work";
+  profile.readiness=readiness; profile.repairPct=repair; profile.tier=tier; profile.updatedAt=new Date().toISOString();
+
+  // UI
+  document.getElementById('fundingTier').textContent=tier;
+  document.getElementById('bar-fund').style.width=readiness+"%";
+  document.getElementById('bar-repair').style.width=repair+"%";
+  document.getElementById('fund-note').textContent = "Readiness: "+readiness+"%";
+  document.getElementById('repair-note').textContent= "Repair progress: "+repair+"%";
+  document.getElementById('recs').innerHTML = buildRecs(profile, avgScore);
+
+  // save
+  saveProfile();
+}
+
+function buildRecs(p, avgScore){
+  const R=[];
+  if(p.neg.count>0||p.neg.late||p.neg.coll||p.neg.coff||p.neg.bk) R.push("Open disputes with documentation; oldest items first. Secure goodwill deletions where strong history exists.");
+  if(p.build.util!=null && p.build.util>28) R.push("Lower utilization under 28% (ideal <9%). Mid-cycle payments help.");
+  if(p.build.rev<3) R.push("Add 1–2 revolving lines (secured is fine) to reach 3+ lines.");
+  if(p.build.inst<1) R.push("Add 1 small installment/pledge loan; pay down 80–90% and leave open.");
+  if(p.build.inq>3) R.push("Pause hard pulls for 60–90 days.");
+  if(avgScore && avgScore>=680 && (p.build.util??100)<=28) R.push("Window open for 0% APR personal cards; don’t stack too many in one week.");
+  if(p.fund.biz) R.push("Prepare EIN, business checking, vendor trade lines, and revenue docs for LOC/CC apps.");
+  return "<ul>"+R.map(x=>`<li>${x}</li>`).join("")+"</ul>";
+}
+
+function avg(a){const b=a.filter(v=>typeof v==='number'&&!isNaN(v));return b.length?Math.round(b.reduce((x,y)=>x+y,0)/b.length):null;}
+
+async function saveProfile(){
+  const u=auth.currentUser; if(!u) return;
+  await db.collection("mgi_clients").doc(u.uid).set(profile,{merge:true});
+  renderProgress();
+}
+async function loadProfile(){
+  const u=auth.currentUser; if(!u) return;
+  const d=await db.collection("mgi_clients").doc(u.uid).get();
+  if(d.exists){ profile=Object.assign(profile,d.data()); hydrateForm(); renderProgress(); }
+  loadStates(); // for reports tab
+}
+function hydrateForm(){
+  const p=profile;
+  setVal('exp',p.scores.exp); setVal('eq',p.scores.eq); setVal('tu',p.scores.tu);
+  setChk('late',p.neg.late); setChk('coll',p.neg.coll); setChk('coff',p.neg.coff); setChk('bk',p.neg.bk); setVal('negCount',p.neg.count);
+  setVal('util',p.build.util); setVal('rev',p.build.rev); setVal('inst',p.build.inst); setVal('age',p.build.age); setVal('inq',p.build.inq);
+  setChk('goal_personal',p.fund.personal); setChk('goal_business',p.fund.biz); setVal('target',p.fund.target); setSel('risk',p.fund.risk);
+  document.getElementById('bar-fund').style.width=p.readiness+"%";
+  document.getElementById('bar-repair').style.width=p.repairPct+"%";
+  document.getElementById('fundingTier').textContent=p.tier||'Not calculated';
+}
+function setVal(id,v){const el=document.getElementById(id); if(el) el.value=(v??"");}
+function setChk(id,v){const el=document.getElementById(id); if(el) el.checked=!!v;}
+function setSel(id,v){const el=document.getElementById(id); if(el) el.value=v;}
+
+function clearData(){
+  if(!confirm("Clear analyzer data?")) return;
+  profile={scores:{exp:null,eq:null,tu:null},neg:{late:false,coll:false,coff:false,bk:false,count:0},build:{util:null,rev:0,inst:0,age:0,inq:0},fund:{personal:true,biz:false,target:0,risk:'moderate'},location:{state:null},readiness:0,repairPct:0,tier:"Not Ready",updatedAt:null};
+  hydrateForm(); renderProgress(); saveProfile();
+}
+
+function renderProgress(){
+  const c=document.getElementById('progContent');
+  c.innerHTML = `
+    <p><b>Funding Readiness:</b> ${profile.readiness}%</p>
+    <p><b>Repair Progress:</b> ${profile.repairPct}%</p>
+    <p><b>Tier:</b> ${profile.tier}</p>
+    <p class="mini">Last updated: ${profile.updatedAt?new Date(profile.updatedAt).toLocaleString():'—'}</p>
+  `;
+}
+
+// --- Reports (iBanknet via proxy) ---
+const STATES=["AL","AK","AZ","AR","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY"];
+function loadStates(){
+  const sel=document.getElementById('stateSel'); sel.innerHTML="";
+  STATES.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);});
+  if(profile.location?.state) sel.value=profile.location.state;
+}
+async function detectLocation(){
+  try{
+    const r=await fetch("https://ipapi.co/json/"); // best-effort; if blocked, user can choose state
+    const j=await r.json(); const state=(j.region_code||"").toUpperCase();
+    if(STATES.includes(state)){ profile.location.state=state; document.getElementById('stateSel').value=state; saveProfile(); }
+  }catch(e){ alert("Could not detect location. Please select your state."); }
+}
+
+async function fetchLenders(){
+  const state=document.getElementById('stateSel').value;
+  profile.location.state=state; saveProfile();
+  // REPLACE this with your deployed proxy URL:
+  const PROXY="https://YOUR_REGION-YOUR_PROJECT.cloudfunctions.net/ibanknetProxy?state="+state;
+  const el=document.getElementById('lenders');
+  el.innerHTML="Loading lenders…";
+  try{
+    const r=await fetch(PROXY, {headers:{'Accept':'application/json'}});
+    if(!r.ok) throw new Error("Proxy error");
+    const data=await r.json(); // expected: [{name,city,url}, ...]
+    el.innerHTML = data.length ? data.map(x=>`
+      <div class="pill">
+        <a href="${x.url}" target="_blank" rel="noopener">${x.name}</a> — ${x.city}, ${state}
+      </div>`).join("")
+      : "No lenders found for "+state;
+  }catch(e){
+    el.innerHTML = "Live lender feed not configured yet. (Deploy the proxy endpoint and set PROXY in portal.html)";
+  }
+}
+</script>
 </body>
 </html>
