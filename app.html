@@ -44,6 +44,28 @@ ul{margin:0 0 8px 18px}
 footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
 </style>
 </head>
+  <!-- Firebase SDKs (compatible version for GitHub Pages) -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
+    authDomain: "majorgrowthportal.firebaseapp.com",
+    projectId: "majorgrowthportal",
+    storageBucket: "majorgrowthportal.firebasestorage.app",
+    messagingSenderId: "741963712787",
+    appId: "1:741963712787:web:dbb9fb191cdae414b0f2e6",
+    measurementId: "G-7NGDY9DYCW"
+  };
+
+  firebase.initializeApp(firebaseConfig);
+  const auth = firebase.auth();
+  const db = firebase.firestore();
+
+  console.log("Firebase connected:", !!firebase.apps.length);
+</script>
 <body>
   <div class="nav">
     <div class="nav-inner container">
