@@ -118,15 +118,22 @@
     };
 
     googleBtn.onclick = async () => {
-      const provider = new firebase.auth.GoogleAuthProvider();
-      try {
-        await auth.signInWithPopup(provider);
-        status.textContent = "Signed in with Google!";
+  const provider = new firebase.auth.GoogleAuthProvider();
+  try {
+    const result = await auth.signInWithPopup(provider);
+    const user = result.user;
+    if (user) {
+      status.textContent = "Signed in with Google!";
+      // Redirect after a brief delay
+      setTimeout(() => {
         window.location.href = "portal.html";
-      } catch (error) {
-        status.textContent = error.message;
-      }
-    };
+      }, 1000);
+    }
+  } catch (error) {
+    status.textContent = error.message;
+    console.error("Google Sign-In Error:", error);
+  }
+};
   </script>
 </body>
 </html>
