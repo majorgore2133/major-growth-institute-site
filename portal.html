@@ -37,7 +37,6 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
 <header>Major Growth Institute — Client Dashboard</header>
 <div class="container">
 
-  <!-- Top bar -->
   <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
     <div><span class="badge" id="who"></span></div>
     <div class="row" style="gap:8px">
@@ -45,7 +44,6 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     </div>
   </div>
 
-  <!-- Tabs -->
   <div class="nav" id="tabs">
     <div class="tab active" data-tab="overview">Overview</div>
     <div class="tab" data-tab="analyzer">Analyzer</div>
@@ -54,7 +52,6 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     <div class="tab" data-tab="support">Support</div>
   </div>
 
-  <!-- Panels -->
   <div id="panel-overview" class="grid two" style="margin-top:14px">
     <div class="card">
       <h2>Welcome</h2>
@@ -102,8 +99,37 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 
 <script>
-const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev";
+const firebaseConfig = {
+  apiKey:"AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
+  authDomain:"majorgrowthportal.firebaseapp.com",
+  projectId:"majorgrowthportal",
+  storageBucket:"majorgrowthportal.firebasestorage.app",
+  messagingSenderId:"741963712787",
+  appId:"1:741963712787:web:dbb9fb191cdae414b0f2e6",
+  measurementId:"G-7NGDY9DYCW"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth(), db=firebase.firestore();
 
+// --- session guard
+auth.onAuthStateChanged(u=>{
+  if(!u){ location.href="app.html"; return; }
+  document.getElementById('who').textContent = "Signed in: "+(u.displayName||u.email);
+});
+
+// --- tabs
+const tabs=document.querySelectorAll('.tab');
+function selectTab(name){
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  ['overview','analyzer','reports','progress','support'].forEach(id=>{
+    document.getElementById('panel-'+id).style.display = (id===name?'grid':'none');
+    if(id==='analyzer') document.getElementById('panel-analyzer')?.style.display = (id==='analyzer'?'block':'none');
+  });
+}
+tabs.forEach(t=>t.onclick=()=>selectTab(t.dataset.tab));
+
+// --- Reports / Lender Proxy ---
+const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev";
 const STATES=["AL","AK","AZ","AR","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY"];
 
 function loadStates(){
@@ -111,9 +137,7 @@ function loadStates(){
   sel.innerHTML="";
   STATES.forEach(s=>{
     const o=document.createElement('option');
-    o.value=s;
-    o.textContent=s;
-    sel.appendChild(o);
+    o.value=s; o.textContent=s; sel.appendChild(o);
   });
   sel.value="TX";
 }
@@ -127,30 +151,25 @@ async function detectLocation(){
   }catch(e){ alert("Could not detect location."); }
 }
 
-async function fetchLenders() {
-  const state=document.getElementById("stateSel").value;
-  const el=document.getElementById("lenders");
-  el.innerHTML = "Loading lenders…";
-
-  try {
-    const resp = await fetch(`${PROXY}/?state=${state}`);
-    const data = await resp.json();
-
-    if (!Array.isArray(data) || data.length === 0) {
-      el.innerHTML = "No lenders found or failed to load data.";
+async function fetchLenders(){
+  const state=document.getElementById('stateSel').value;
+  const el=document.getElementById('lenders');
+  el.innerHTML="Loading lenders…";
+  try{
+    const resp=await fetch(`${PROXY}/?state=${state}`);
+    const data=await resp.json();
+    if(!Array.isArray(data)||data.length===0){
+      el.innerHTML="No lenders found or failed to load data.";
       return;
     }
-
-    el.innerHTML = data.slice(0, 30).map(
-      x => `
-        <div class="pill" style="padding:8px;border-bottom:1px solid #ccc">
-          <strong>${x.name}</strong> – ${x.city || "Unknown"} (${x.assets || "N/A"})
-        </div>
-      `
-    ).join("");
-  } catch (err) {
+    el.innerHTML=data.slice(0,40).map(x=>`
+      <div class="pill" style="padding:8px;border-bottom:1px solid #ddd">
+        <strong>${x.name}</strong> – ${x.city||"Unknown"} (${x.assets||"N/A"})
+      </div>
+    `).join("");
+  }catch(err){
     console.error(err);
-    el.innerHTML = "Error fetching lender list.";
+    el.innerHTML="Error fetching lender list.";
   }
 }
 
