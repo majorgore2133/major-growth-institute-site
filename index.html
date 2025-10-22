@@ -683,5 +683,133 @@ Inquiries (12 mo): 4`;
     },{threshold:0.35});
     bars.forEach(b=>io.observe(b));
   </script>
+  <!-- Client Login Modal -->
+<div id="loginModal" class="login-modal">
+  <div class="login-box">
+    <button id="closeLogin" class="close-btn">×</button>
+    <h2>Client Login</h2>
+    <p class="sub">Access your personal dashboard</p>
+
+    <div id="loginForm">
+      <input type="email" id="loginEmail" placeholder="Email" required>
+      <input type="password" id="loginPass" placeholder="Password" required>
+      <button id="loginBtn" class="btn">Sign In</button>
+      <button id="googleBtn" class="btn secondary">Sign in with Google</button>
+      <p><a href="#" id="forgotLink">Forgot password?</a></p>
+      <p>Don’t have an account? <a href="#" id="switchToSignup">Create one</a></p>
+    </div>
+
+    <div id="signupForm" style="display:none">
+      <input type="email" id="signupEmail" placeholder="Email" required>
+      <input type="password" id="signupPass" placeholder="Password" required>
+      <button id="signupBtn" class="btn gold">Create Account</button>
+      <p>Already have an account? <a href="#" id="switchToLogin">Sign in</a></p>
+    </div>
+
+    <div id="forgotForm" style="display:none">
+      <input type="email" id="resetEmail" placeholder="Enter your email" required>
+      <button id="resetBtn" class="btn">Send Reset Email</button>
+      <p><a href="#" id="backToLogin">Back to Login</a></p>
+    </div>
+
+    <p id="authMsg" class="sub" style="color:#0b5fa5;margin-top:8px;"></p>
+  </div>
+</div>
+
+<style>
+.login-modal {
+  display:none; position:fixed; inset:0; background:rgba(0,0,0,.4);
+  justify-content:center; align-items:center; z-index:9999;
+}
+.login-box {
+  background:#fff; border-radius:16px; padding:28px 24px; width:320px;
+  box-shadow:0 20px 50px rgba(11,95,165,.2); text-align:center;
+  animation:fadeIn .3s ease;
+}
+.close-btn {
+  background:none; border:0; color:#999; font-size:22px;
+  position:absolute; right:24px; top:16px; cursor:pointer;
+}
+.btn {background:linear-gradient(90deg,#4aa3ff,#0b5fa5);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;width:100%;margin-top:8px;}
+.btn.secondary{background:#f1f5fb;color:#0b5fa5;border:1px solid #d9e4f3;}
+.btn.gold{background:var(--gold);color:#1b2330;}
+input{width:100%;margin:6px 0;padding:10px;border:1px solid #d8e2f1;border-radius:8px;}
+.sub{font-size:13px;color:#6b7b8c}
+@keyframes fadeIn{from{opacity:0;transform:scale(.96)}to{opacity:1;transform:none}}
+</style>
+
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script>
+const firebaseConfig = {
+  apiKey:"AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
+  authDomain:"majorgrowthportal.firebaseapp.com",
+  projectId:"majorgrowthportal",
+  storageBucket:"majorgrowthportal.firebasestorage.app",
+  messagingSenderId:"741963712787",
+  appId:"1:741963712787:web:dbb9fb191cdae414b0f2e6",
+  measurementId:"G-7NGDY9DYCW"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
+auth.setPersistence(firebase.auth.Auth.Persistence.LOCAL);
+
+// Elements
+const modal=document.getElementById("loginModal");
+const openBtn=document.getElementById("openLogin");
+const closeBtn=document.getElementById("closeLogin");
+const msg=document.getElementById("authMsg");
+openBtn.onclick=()=>modal.style.display="flex";
+closeBtn.onclick=()=>modal.style.display="none";
+window.onclick=(e)=>{if(e.target===modal)modal.style.display="none";}
+
+// Toggle forms
+const loginForm=document.getElementById("loginForm"),
+signupForm=document.getElementById("signupForm"),
+forgotForm=document.getElementById("forgotForm");
+document.getElementById("switchToSignup").onclick=()=>{loginForm.style.display="none";signupForm.style.display="block";}
+document.getElementById("switchToLogin").onclick=()=>{signupForm.style.display="none";loginForm.style.display="block";}
+document.getElementById("forgotLink").onclick=()=>{loginForm.style.display="none";forgotForm.style.display="block";}
+document.getElementById("backToLogin").onclick=()=>{forgotForm.style.display="none";loginForm.style.display="block";}
+
+// Login
+document.getElementById("loginBtn").onclick=async()=>{
+  msg.textContent="Signing in...";
+  try{
+    const email=document.getElementById("loginEmail").value;
+    const pass=document.getElementById("loginPass").value;
+    await auth.signInWithEmailAndPassword(email,pass);
+    msg.textContent="Success! Redirecting...";
+    setTimeout(()=>location.href="portal.html",1000);
+  }catch(e){msg.textContent=e.message;}
+};
+// Signup
+document.getElementById("signupBtn").onclick=async()=>{
+  msg.textContent="Creating account...";
+  try{
+    const email=document.getElementById("signupEmail").value;
+    const pass=document.getElementById("signupPass").value;
+    await auth.createUserWithEmailAndPassword(email,pass);
+    msg.textContent="Account created! Redirecting...";
+    setTimeout(()=>location.href="portal.html",1000);
+  }catch(e){msg.textContent=e.message;}
+};
+// Google Sign-in
+document.getElementById("googleBtn").onclick=async()=>{
+  const provider=new firebase.auth.GoogleAuthProvider();
+  try{
+    await auth.signInWithPopup(provider);
+    location.href="portal.html";
+  }catch(e){msg.textContent=e.message;}
+};
+// Reset
+document.getElementById("resetBtn").onclick=async()=>{
+  try{
+    const email=document.getElementById("resetEmail").value;
+    await auth.sendPasswordResetEmail(email);
+    msg.textContent="Reset email sent!";
+  }catch(e){msg.textContent=e.message;}
+};
+</script>
 </body>
 </html>
