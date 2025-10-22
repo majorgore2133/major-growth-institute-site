@@ -84,15 +84,21 @@
     .card h3{margin-bottom:6px}
     .sub{color:var(--muted);font-size:.95rem}
 
+    /* Why Choose Us strip */
+    .strip{background:linear-gradient(180deg,#f7faff,#f1f5fb);border:1px solid #e7eff7;border-radius:14px;box-shadow:0 8px 24px rgba(6,58,102,.06);padding:16px}
+    .strip-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+    .chip{display:flex;gap:10px;align-items:flex-start;background:#fff;border:1px solid #e7eff7;padding:12px;border-radius:12px}
+    .chip svg{flex:0 0 28px;width:28px;height:28px}
+
     /* Pricing */
     .pricing{display:grid;grid-template-columns:repeat(3,1fr);gap:16px}
     .price-card{position:relative;background:#fff;border:var(--outline);border-radius:14px;box-shadow:var(--shadow);padding:18px;transition:transform .2s ease}
     .price-card:hover{transform:translateY(-2px)}
     .price-title{font-weight:800;font-size:20px;letter-spacing:.2px}
     .price-amt{font-size:24px;font-weight:800;color:var(--blue);margin:8px 0 16px}
-    .price-desc{color:var(--muted);font-size:14.5px;line-height:1.55;margin-bottom:16px}
+    .price-desc{color:var(--muted);font-size:14.5px;line-height:1.55;margin-bottom:12px}
     .badge-popular{position:absolute;top:-10px;left:16px;background:var(--gold);color:#1b2330;font-weight:800;font-size:12px;padding:6px 10px;border-radius:999px;box-shadow:0 6px 18px rgba(202,164,59,.25)}
-    .price-card .btn{width:100%}
+    .trustline{font-size:12px;color:#6b7b8c;margin:8px 0 0}
 
     /* Timeline */
     .timeline{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
@@ -118,6 +124,7 @@
     @media(max-width:980px){
       .hero-grid{grid-template-columns:1fr}
       .grid-3{grid-template-columns:1fr}
+      .strip-grid{grid-template-columns:1fr}
       .pricing{grid-template-columns:1fr}
       .timeline{grid-template-columns:1fr}
     }
@@ -143,8 +150,10 @@
         <a href="#process">Process</a>
         <a href="#blueprint">Blueprint</a>
         <a href="#ai">AI Advantage</a>
+        <a href="#choose">Why Choose Us</a>
         <a href="#stories">Client Stories</a>
         <a href="#timeline">Timeline</a>
+        <a href="#faq">FAQ</a>
         <a href="#pricing">Pricing</a>
         <a href="#contact">Contact</a>
       </div>
@@ -190,17 +199,18 @@
             <div style="font-size:12px;color:var(--muted);margin-top:10px">We respect your time and privacy. A specialist will reach out shortly.</div>
           </aside>
 
-          <!-- Meet the Founder (new) -->
+          <!-- Meet the Founder -->
           <aside class="panel" style="margin-top:14px">
             <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px">
               <img src="founder.jpg" alt="Founder" style="width:56px;height:56px;border-radius:50%;object-fit:cover;border:1px solid rgba(6,58,102,.15)" onerror="this.src='logo-mgi.png'">
               <div>
                 <h3 style="margin:0">Meet the Founder</h3>
-                <div class="sub">Major Gore</div>
+                <div class="sub">A personal, guided approach</div>
               </div>
             </div>
             <p>After experiencing firsthand how difficult it can be to build real financial stability without understanding credit, this company was created to make the path clear. The goal is simple: provide structure, timing, and the right moves so people can use credit as a tool — not a trap.</p>
             <p style="margin-top:8px">What began as a personal mission became a practical system: clean up what’s holding you back, rebuild with intent, and leverage that progress into real funding. The focus isn’t hype — it’s results, education, and ownership of your financial future.</p>
+            <p class="sub" style="margin-top:8px"><em>“I still personally oversee strategy because I remember what it felt like to start from scratch.”</em></p>
           </aside>
         </div>
       </div>
@@ -218,7 +228,7 @@
         <div class="card tint">
           <h3>Opportunity Access</h3>
           <p class="sub">Better approvals, better terms</p>
-          <p>Lenders reward clean, seasoned profiles with higher limits and lower rates. That’s what opens doors for zero-interest promos, balance flexibility, and growth capital.</p>
+          <p>Lenders reward clean, seasoned profiles with higher limits and lower rates. That opens doors for 0% promos, responsible balance transfers, and growth capital.</p>
         </div>
         <div class="card outline">
           <h3>Cash-Flow Protection</h3>
@@ -268,6 +278,27 @@
           <h3>Leverage</h3>
           <p class="sub">Turn profile strength into capital</p>
           <p>Tier-based approvals, 0% promo stacking, and capital planning. If relevant, we prep business structure and vendor lines to boost total available credit.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why People Choose Us (Trust strip) -->
+    <section id="choose" class="section">
+      <div class="strip">
+        <h2 style="margin-bottom:10px">Why People Choose Us</h2>
+        <div class="strip-grid">
+          <div class="chip">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M4 12l5 5 11-11" stroke="#0b5fa5" stroke-width="2"/></svg>
+            <div><b>Trust & Transparency</b><p class="sub">Straight talk and clear steps — you’ll always know what’s happening and why.</p></div>
+          </div>
+          <div class="chip">
+            <svg viewBox="0 0 24 24" fill="none"><path d="M3 20h18" stroke="#0b5fa5" stroke-width="2"/><path d="M8 20l8-12 5 7" stroke="#caa43b" stroke-width="2"/></svg>
+            <div><b>Results-Driven Strategy</b><p class="sub">We align actions to lender behavior for approvals, limits, and better terms.</p></div>
+          </div>
+          <div class="chip">
+            <svg viewBox="0 0 24 24" fill="none"><rect x="4" y="4" width="16" height="16" rx="4" stroke="#0b5fa5" stroke-width="2"/><path d="M8 12h8M12 8v8" stroke="#caa43b" stroke-width="2"/></svg>
+            <div><b>Education-First Approach</b><p class="sub">We teach you the “why” so your profile keeps getting stronger over time.</p></div>
+          </div>
         </div>
       </div>
     </section>
@@ -343,6 +374,38 @@
       </div>
     </section>
 
+    <!-- FAQ -->
+    <section id="faq" class="section">
+      <h2>Frequently Asked Questions</h2>
+      <div class="grid-3">
+        <div class="card">
+          <h3>Will this hurt my credit?</h3>
+          <p class="sub">No — we don’t shotgun applications.</p>
+          <p>Our approach optimizes what’s on your reports and builds strategically. We only recommend applications when your profile is ready, and only where it makes sense.</p>
+        </div>
+        <div class="card tint">
+          <h3>How long until I see results?</h3>
+          <p class="sub">Most clients see measurable change in 45–90 days.</p>
+          <p>Timeline depends on your starting point. We share milestones so you know exactly what to expect at Weeks 4, 8, and 12.</p>
+        </div>
+        <div class="card soft">
+          <h3>Do you outsource the work?</h3>
+          <p class="sub">No — strategy is handled in-house.</p>
+          <p>You’ll have direct communication. We focus on transparency, education, and predictable execution.</p>
+        </div>
+        <div class="card outline">
+          <h3>What do I need from me?</h3>
+          <p class="sub">A little time and consistency.</p>
+          <p>We’ll guide monitoring setup, documents (if needed), and simple calendar reminders. Most clients spend < 1 hour/week.</p>
+        </div>
+        <div class="card">
+          <h3>Can you help with business credit?</h3>
+          <p class="sub">Yes — if it fits your goals.</p>
+          <p>We’ll assess readiness (entity, banking, vendor lines) and map a funding sequence that matches your personal profile and risk tolerance.</p>
+        </div>
+      </div>
+    </section>
+
     <!-- Pricing -->
     <section id="pricing" class="section">
       <h2>Pricing</h2>
@@ -358,6 +421,7 @@
             • Custom “next steps” report
           </div>
           <a class="btn" href="#" onclick="goPay('https://buy.stripe.com/test_6oU5kFepa0dZd7wcJE53O01');return false;">Choose Starter</a>
+          <div class="trustline">🔒 Secure checkout powered by Stripe. No recurring charges unless stated.</div>
         </div>
 
         <div class="price-card">
@@ -373,6 +437,7 @@
             • One credit education session
           </div>
           <a class="btn gold" href="#" onclick="goPay('https://buy.stripe.com/test_00w6oJ5SEd0LgjI39453O00');return false;">Choose Concierge</a>
+          <div class="trustline">🔒 Secure checkout powered by Stripe. No recurring charges unless stated.</div>
         </div>
 
         <div class="price-card">
@@ -387,6 +452,16 @@
           </div>
           <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Discuss Funding Plan</a>
         </div>
+      </div>
+    </section>
+
+    <!-- After You Book -->
+    <section id="after" class="section">
+      <h2>After You Book</h2>
+      <div class="grid-3">
+        <div class="card"><h3>1. Quick Intro Call</h3><p class="sub">15 minutes on Zoom</p><p>We confirm goals, current status, and the timeline. You’ll know exactly what happens next.</p></div>
+        <div class="card tint"><h3>2. Live Review</h3><p class="sub">We go through your reports</p><p>We map issues and opportunities together so you understand the plan and priorities.</p></div>
+        <div class="card soft"><h3>3. Action Plan (48 hrs)</h3><p class="sub">Your steps, clearly laid out</p><p>You get a written plan with milestones, expected timelines, and simple checklists.</p></div>
       </div>
     </section>
 
