@@ -301,4 +301,144 @@ footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
       data.mix.revolving = num('mix_rev')||0; data.mix.installment = num('mix_inst')||0; data.mix.ageMonths = num('mix_age')||0; data.mix.newInq = num('mix_inq')||0;
     }
     if(stage===3){
-      data.goals.personal = id('g_person
+      <script>
+// --- continue the script (PATCH STARTS HERE) ---
+  function capture(){
+    if(stage===1){
+      data.scores.exp = num('score_exp');
+      data.scores.eq  = num('score_eq');
+      data.scores.tu  = num('score_tu');
+      data.derog.late        = id('late').checked;
+      data.derog.collections = id('collections').checked;
+      data.derog.chargeoff   = id('chargeoff').checked;
+      data.derog.bk          = id('bk').checked;
+      data.negCount = num('negCount')||0;
+    }
+    if(stage===2){
+      data.util.overall     = num('util_overall');
+      data.util.highestCard = num('util_high');
+      data.mix.revolving    = num('mix_rev')||0;
+      data.mix.installment  = num('mix_inst')||0;
+      data.mix.ageMonths    = num('mix_age')||0;
+      data.mix.newInq       = num('mix_inq')||0;
+    }
+    if(stage===3){
+      data.goals.personal      = id('g_personal').checked;
+      data.goals.business      = id('g_business').checked;
+      data.goals.targetFunding = num('g_amount')||0;
+      data.goals.risk          = id('g_risk').value;
+    }
+    if(stage===4){
+      data.notes = (id('notes').value||"").trim();
+    }
+  }
+
+  function id(x){ return document.getElementById(x); }
+  function num(x){
+    const v = id(x)?.value;
+    if(v===undefined || v==="") return null;
+    return Number(v);
+  }
+  function avg(arr){
+    const nums = arr.filter(v=>typeof v==='number' && !isNaN(v));
+    if(!nums.length) return null;
+    return Math.round(nums.reduce((a,b)=>a+b,0)/nums.length);
+  }
+  function fmt(n){ return (n||0).toLocaleString(); }
+
+  function compute(){
+    const avgScore = avg([data.scores.exp,data.scores.eq,data.scores.tu]);
+    const negs = Object.entries(data.derog).filter(([k,v])=>v).map(([k])=>k);
+
+    snapshot.innerHTML = `
+      <div class="pill">Avg score: <b>${avgScore ?? '—'}</b></div>
+      <div class="pill">Negatives: <b>${negs.length?negs.join(', '):'none'}</b></div>
+      <div class="pill">Overall util: <b>${data.util.overall ?? '—'}%</b></div>
+      <div class="pill">Oldest age: <b>${data.mix.ageMonths ?? '—'} mo avg</b></div>
+      <div class="pill">Inquiries: <b>${data.mix.newInq ?? '—'}</b></div>
+      <div class="pill">Goals: <b>${data.goals.personal?'Personal':''}${data.goals.personal&&data.goals.business?' + ':''}${data.goals.business?'Business':''}</b></div>
+      <div class="pill">Target: <b>$${fmt(data.goals.targetFunding||0)}</b></div>
+    `;
+
+    const R = [];
+    // Repair
+    if(negs.length>0 || data.negCount>0){
+      R.push("Start documentation bundle (ID/address + full bureau reports). Work oldest negatives first and validate each item.");
+    }
+    if(data.derog.late){ R.push("Request goodwill adjustments where strong history exists; maintain 6–12 months on-time."); }
+    if(data.derog.collections || data.derog.chargeoff){
+      R.push("Validate debts; negotiate pay-for-delete only after validation; dispute inaccuracies with documentation.");
+    }
+    if(data.derog.bk){ R.push("Focus on thick positive history and very low utilization; avoid new inquiries for now."); }
+
+    // Build
+    if(data.util.overall!=null && data.util.overall>28){
+      R.push("Lower overall utilization under 28% (ideal <9% on statement cut). Consider mid-cycle payments.");
+    }
+    if(data.util.highestCard!=null && data.util.highestCard>57){
+      R.push("Attack the maxed card: first <57%, then <29%, then <9% for optimal scoring.");
+    }
+    if((data.mix.revolving||0)<3){ R.push("Add 1–2 revolving lines (secured ok) to reach 3+ total; keep them clean for 90 days."); }
+    if((data.mix.installment||0)<1){ R.push("Open one small installment/pledge loan and pay down 80–90% to keep it open with minimal cost."); }
+    if((data.mix.ageMonths||0)<24){ R.push("Let accounts season; don’t close older lines. AU line is optional if aged/high-limit/low util."); }
+    if((data.mix.newInq||0)>3){ R.push("Pause applications for 60–90 days to let inquiries age."); }
+
+    // Leverage
+    if(avgScore && avgScore>=680 && (data.util.overall??100) <= 28){
+      R.push("Pre-approval window: target 0% APR personal cards (12–18 mo). Don’t stack too many in one week.");
+    } else {
+      R.push("Delay new pulls until repair/build actions reflect; use soft-pull pre-qual tools only.");
+    }
+    if(data.goals.business){
+      R.push("Prep biz: EIN, business checking, reporting vendor lines, and consistent revenue before LOC/CC apps.");
+    }
+
+    recs.innerHTML = "<ul>"+R.map(r=>`<li>${r}</li>`).join("")+"</ul>";
+
+    let tier="Not Ready";
+    if(avgScore>=640 && (data.util.overall??100)<=57 && data.negCount<=4){ tier="Pre-Work"; }
+    if(avgScore>=680 && (data.util.overall??100)<=28 && data.negCount<=2 && data.mix.revolving>=3){ tier="Tier 2 (0% personal ready)"; }
+    if(avgScore>=720 && (data.util.overall??100)<=9 && data.negCount===0 && data.mix.ageMonths>=36){ tier="Tier 1 (Prime + biz ready)"; }
+    funding.innerHTML = `<div class="pill"><b>${tier}</b></div>`;
+  }
+
+  // Nav + actions
+  nextBtn.addEventListener('click', ()=>{ capture(); stage=Math.min(4,stage+1); renderStage(); });
+  prevBtn.addEventListener('click', ()=>{ capture(); stage=Math.max(1,stage-1); renderStage(); });
+  saveBtn.addEventListener('click', ()=>{ capture(); saveProfile().then(()=>alert("Saved.")); });
+  clearBtn.addEventListener('click', async ()=>{
+    if(!confirm("Delete all saved data?")) return;
+    data = {scores:{exp:null,eq:null,tu:null}, derog:{late:false,collections:false,chargeoff:false,bk:false}, negCount:0, util:{overall:null,highestCard:null}, mix:{revolving:0,installment:0,ageMonths:0,newInq:0}, goals:{personal:true,business:false,targetFunding:0,risk:'moderate'}, notes:""};
+    stage=1;
+    await delProfile();
+    renderStage();
+  });
+
+  // Persistence (Firestore if available, otherwise localStorage)
+  async function saveProfile(){
+    const payload = {data, updatedAt:new Date().toISOString()};
+    if(db && user){ return db.collection("mgi_clients").doc(user.uid).set(payload,{merge:true}); }
+    localStorage.setItem("mgi_profile", JSON.stringify(payload));
+  }
+  async function loadProfile(){
+    let payload=null;
+    if(db && user){
+      const snap = await db.collection("mgi_clients").doc(user.uid).get();
+      if(snap.exists) payload = snap.data();
+    }
+    if(!payload){
+      const raw = localStorage.getItem("mgi_profile");
+      payload = raw ? JSON.parse(raw) : null;
+    }
+    if(payload?.data){ data = payload.data; }
+    renderStage();
+  }
+  async function delProfile(){
+    if(db && user){ await db.collection("mgi_clients").doc(user.uid).delete().catch(()=>{}); }
+    localStorage.removeItem("mgi_profile");
+  }
+// --- end patch ---
+</script>
+</body>
+</html>
+
