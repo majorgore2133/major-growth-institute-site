@@ -5,38 +5,94 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MGI Client Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+
+<!-- PDF.js for client-side PDF text extraction -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
+<script>
+  // set worker for pdf.js
+  if (window['pdfjsLib']) {
+    pdfjsLib.GlobalWorkerOptions.workerSrc =
+      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+  }
+</script>
+
 <style>
-:root{--blue:#0b5fa5;--dark:#0b2d4a;--gold:#caa43b;--ink:#142433;--muted:#6b7b8c;--paper:#fff;--soft:#f5f8fc;--bd:#e6eef6}
+:root{
+  --blue:#0b5fa5; --dark:#0b2d4a; --gold:#caa43b; --ink:#142433;
+  --muted:#6b7b8c; --paper:#fff; --soft:#f5f8fc; --bd:#e6eef6
+}
 *{box-sizing:border-box}
 html,body{height:100%}
-body{margin:0;background:linear-gradient(180deg,#f7fbff,#fff);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--ink)}
-header{background:#003366;color:#fff;padding:16px;text-align:center;font-weight:700}
+body{
+  margin:0; background:linear-gradient(180deg,#f8fbff,#fff);
+  font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
+  color:var(--ink)
+}
+header{background:#003366;color:#fff;padding:16px;text-align:center;font-weight:800;letter-spacing:.2px}
 .container{max-width:1100px;margin:18px auto;padding:0 14px}
 .nav{display:flex;gap:10px;flex-wrap:wrap}
-.tab{padding:10px 14px;border:1px solid var(--bd);border-radius:10px;background:#fff;cursor:pointer;font-weight:600}
-.tab.active{background:linear-gradient(180deg,#fff,#f4f8ff);border-color:#cddff3;box-shadow:0 8px 22px rgba(11,95,165,.12)}
+.tab{
+  padding:10px 14px;border:1px solid var(--bd);border-radius:12px;background:#fff;
+  cursor:pointer;font-weight:700
+}
+.tab.active{
+  background:linear-gradient(180deg,#fff,#f6f9ff);
+  border-color:#d7e6f7; box-shadow:0 10px 26px rgba(11,95,165,.12)
+}
 .grid{display:grid;gap:16px}
 .two{grid-template-columns:1.2fr .8fr}
 @media(max-width:980px){.two{grid-template-columns:1fr}}
-.card{background:#fff;border:1px solid var(--bd);border-radius:14px;box-shadow:0 12px 32px rgba(8,68,120,.08);padding:16px}
-h2{margin:4px 0 10px;color:#0b2d4a}
+.card{
+  background:#fff;border:1px solid var(--bd);border-radius:16px;
+  box-shadow:0 16px 40px rgba(8,68,120,.08);padding:16px
+}
+h2{margin:4px 0 10px;color:var(--dark)}
 h3{margin:8px 0}
 p.mini{color:var(--muted);font-size:12px;margin:6px 0}
 .row{display:flex;gap:10px;flex-wrap:wrap}
-.input, select, textarea{width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:#fff}
-.badge{display:inline-block;background:#eef5fb;color:#0b5fa5;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:700}
-.btn{background:var(--blue);color:#fff;border:0;border-radius:10px;padding:10px 14px;font-weight:700;cursor:pointer;box-shadow:0 12px 28px rgba(11,95,165,.16)}
-.btn.gold{background:var(--gold);color:#1b2330}
+.input, select, textarea{
+  width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:#fff
+}
+.badge{display:inline-block;background:#eef5fb;color:#0b5fa5;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800}
+.btn{
+  background:var(--blue);color:#fff;border:0;border-radius:12px;
+  padding:10px 14px;font-weight:800;cursor:pointer;
+  box-shadow:0 12px 28px rgba(11,95,165,.16)
+}
+.btn.gold{
+  background:linear-gradient(90deg,#f8e7b0,#e8c86e,#caa43b);
+  color:#1b2330
+}
 .btn.ghost{background:#fff;border:2px solid #e1ecf6;color:#0b2d4a}
-.pill{display:inline-block;padding:8px 10px;border-radius:10px;background:#fcfdff;border:1px solid #e7eff7;margin:4px 6px 0 0}
-.progress{height:10px;background:#eaf2fb;border-radius:999px;overflow:hidden}
-.progress > span{display:block;height:100%;background:linear-gradient(90deg,#0b5fa5,#4aa3ff)}
+.pill{
+  display:inline-block;padding:8px 10px;border-radius:12px;background:#fcfdff;
+  border:1px solid #e7eff7;margin:4px 6px 0 0
+}
+
+/* Gradient progress (red → yellow → green) */
+.progress{height:12px;background:#edf3fb;border-radius:999px;overflow:hidden;position:relative}
+.progress > span{
+  display:block;height:100%;
+  background:linear-gradient(90deg,#d72638,#f0b429,#2bb673);
+  transition:width .35s ease
+}
+
 footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
 
-/* simple loading overlay */
-#app-loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#ffffffea;z-index:9999}
-.logo-spin{width:56px;height:56px;border-radius:50%;border:6px solid #e6eef6;border-top-color:#0b5fa5;animation:spin 0.9s linear infinite;margin-right:12px}
+/* loading overlay */
+#app-loading{
+  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
+  background:#ffffffea;z-index:9999
+}
+.logo-spin{width:56px;height:56px;border-radius:50%;border:6px solid #e6eef6;border-top-color:#0b5fa5;animation:spin .9s linear infinite;margin-right:12px}
 @keyframes spin{to{transform:rotate(360deg)}}
+
+/* helper blocks */
+.tip{
+  background:#f8fbff;border:1px dashed #d9e7f7;border-radius:12px;padding:10px;margin-top:8px
+}
+.kv{display:grid;grid-template-columns:140px 1fr;gap:6px;font-size:13px}
+@media(max-width:560px){.kv{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
@@ -63,6 +119,7 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
   <div class="nav" id="tabs">
     <div class="tab active" data-tab="overview">Overview</div>
     <div class="tab" data-tab="analyzer">Analyzer</div>
+    <div class="tab" data-tab="upload">AI Reader</div>
     <div class="tab" data-tab="reports">Reports</div>
     <div class="tab" data-tab="progress">Progress</div>
     <div class="tab" data-tab="support">Support</div>
@@ -72,15 +129,16 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
   <div id="panel-overview" class="grid two" style="margin-top:14px">
     <div class="card">
       <h2>Welcome</h2>
-      <p class="mini">Your central hub for repair, building, and funding.</p>
+      <p class="mini">Your hub for repair, building, and funding — with AI help.</p>
       <div class="row" style="margin-top:8px">
         <a class="btn" href="#analyzer" onclick="selectTab('analyzer')">Start Analysis</a>
+        <a class="btn ghost" href="#upload" onclick="selectTab('upload')">Upload Credit Report</a>
         <a class="btn ghost" href="#reports" onclick="selectTab('reports')">See Lenders</a>
       </div>
-      <div style="margin-top:16px">
-        <h3>Upgrade Options</h3>
-        <div class="row">
-          <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book Consultation ($100)</a>
+      <div class="tip">
+        <b>Book a Consultation (Free)</b> — 20 minutes to map your next steps.
+        <div class="row" style="margin-top:8px">
+          <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Consultation — Free</a>
           <a class="btn" href="https://buy.stripe.com/test_6oU5kFepa0dZd7wcJE53O01" target="_blank" rel="noopener">Full Service Package ($1000)</a>
         </div>
       </div>
@@ -88,10 +146,10 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     <div class="card">
       <div class="badge">At a glance</div>
       <h3>Funding Readiness</h3>
-      <div class="progress"><span id="bar-fund" style="width:0%"></span></div>
+      <div class="progress" aria-label="Funding readiness"><span id="bar-fund" style="width:0%"></span></div>
       <p class="mini" id="fund-note">Complete the analyzer to see your readiness.</p>
       <h3 style="margin-top:12px">Credit Repair</h3>
-      <div class="progress"><span id="bar-repair" style="width:0%"></span></div>
+      <div class="progress" aria-label="Repair progress"><span id="bar-repair" style="width:0%"></span></div>
       <p class="mini" id="repair-note">We’ll calculate this from your inputs.</p>
     </div>
   </div>
@@ -115,6 +173,11 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
       <input class="input" id="negCount" placeholder="# of negative items" type="number">
     </div>
 
+    <div class="tip">
+      <b>Why “Repair” matters:</b>
+      Removing/re-aging negatives reduces your risk flags in lender scorecards. Collections/charge-offs directly lower scorecards’ “payment history” bucket (the heaviest-weighted factor). Each deletion or goodwill removal can move you into higher approval tiers and lower pricing.
+    </div>
+
     <h3 style="margin-top:16px">Build</h3>
     <div class="row">
       <input class="input" id="util" placeholder="Overall utilization % (e.g., 28)" type="number">
@@ -122,6 +185,16 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
       <input class="input" id="inst" placeholder="# of installment accounts" type="number">
       <input class="input" id="age"  placeholder="Avg age (months)" type="number">
       <input class="input" id="inq"  placeholder="New inquiries (6–12 mo)" type="number">
+    </div>
+
+    <div class="tip">
+      <b>Why “Build” matters:</b>
+      <div class="kv">
+        <div><b>Utilization</b></div><div>Below 28% shows capacity; under 9% is prime behavior. Models treat low utilization as strong risk control, lifting scores quickly.</div>
+        <div><b>Mix</b></div><div>3+ revolving lines + 1 installment signals maturity. Lenders prefer diverse, well-managed credit over thin files.</div>
+        <div><b>Age</b></div><div>24+ months average age reduces “new credit” penalties. Closing young subprime lines too early can hurt age.</div>
+        <div><b>Inquiries</b></div><div>≤3 in last 6–12 months keeps you out of the “credit seeking” penalty buckets in underwriting.</div>
+      </div>
     </div>
 
     <h3 style="margin-top:16px">Fund</h3>
@@ -142,22 +215,43 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     </div>
 
     <div style="margin-top:16px">
-      <h3>Recommendations</h3>
+      <h3>Recommendations (with Why)</h3>
       <div id="recs"></div>
       <h3 style="margin-top:12px">Funding Readiness</h3>
       <div id="fundingTier" class="pill">Not calculated</div>
     </div>
   </div>
 
+  <!-- AI Reader (Upload / Paste) -->
+  <div id="panel-upload" class="card" style="display:none;margin-top:14px">
+    <div class="badge">AI Credit Report Reader</div>
+    <h2 style="margin-top:6px">Upload or Paste Your Report</h2>
+    <p class="mini">Upload a PDF/CSV/TXT report, or paste text. We’ll extract scores, negatives, utilization, mix, and inquiries — then auto-fill the Analyzer.</p>
+
+    <div class="row">
+      <input class="input" type="file" id="fileInput" accept=".pdf,.txt,.csv" />
+      <button class="btn" onclick="analyzeFile()">Analyze File</button>
+    </div>
+
+    <p class="mini" style="margin:10px 0 4px">— or —</p>
+    <textarea id="pasteInput" class="input" rows="6" placeholder="Paste credit report text here..."></textarea>
+    <div class="row" style="margin-top:8px">
+      <button class="btn gold" onclick="analyzePasted()">Analyze Pasted Text</button>
+      <button class="btn ghost" onclick="clearPaste()">Clear</button>
+    </div>
+
+    <div id="aiOutput" class="tip" style="display:none;margin-top:12px"></div>
+  </div>
+
   <!-- Reports -->
   <div id="panel-reports" class="card" style="display:none;margin-top:14px">
-    <div class="badge">Lender Finder (via proxy)</div>
+    <div class="badge">Lender Finder (Live Link)</div>
     <div class="row" style="margin-top:8px">
       <select id="stateSel" class="input"></select>
       <button class="btn" onclick="fetchLenders()">Find Lenders</button>
       <button class="btn ghost" onclick="detectLocation()">Detect My Location</button>
     </div>
-    <p class="mini">We’ll tailor lenders by state. (Tip: Detect location once, then browse.)</p>
+    <p class="mini">Opens the official iBankNet lender list for the selected state.</p>
     <div id="lenders" style="margin-top:12px"></div>
   </div>
 
@@ -173,7 +267,7 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
       <div class="badge">Support</div>
       <p>Need help? Book a call or open a ticket.</p>
       <div class="row" style="margin-top:8px">
-        <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Consultation</a>
+        <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Consultation — Free</a>
         <a class="btn" href="mailto:majorgrowthinstitute@gmail.com">Email Support</a>
       </div>
     </div>
@@ -223,11 +317,11 @@ document.getElementById('logout').onclick=()=>auth.signOut().then(()=>location.h
 const tabs=document.querySelectorAll('.tab');
 function selectTab(name){
   tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
-  const panels=['overview','analyzer','reports','progress','support'];
+  const panels=['overview','analyzer','upload','reports','progress','support'];
   panels.forEach(id=>{
     const el=document.getElementById('panel-'+id);
     if(!el) return;
-    el.style.display=(id===name ? (id==='analyzer'?'block':'grid') : 'none');
+    el.style.display=(id===name ? (id==='analyzer' || id==='upload' ? 'block':'grid') : 'none');
   });
 }
 tabs.forEach(t=>t.onclick=()=>selectTab(t.dataset.tab));
@@ -254,14 +348,28 @@ function setSel(id,v){const el=get(id); if(el) el.value=v;}
 
 function buildRecs(p, avgScore){
   const R=[];
-  if(p.neg.count>0||p.neg.late||p.neg.coll||p.neg.coff||p.neg.bk) R.push("Open disputes with documentation; oldest items first. Secure goodwill deletions where strong history exists.");
-  if(p.build.util!=null && p.build.util>28) R.push("Lower utilization under 28% (ideal <9%). Mid-cycle payments help.");
-  if(p.build.rev<3) R.push("Add 1–2 revolving lines (secured is fine) to reach 3+ lines.");
-  if(p.build.inst<1) R.push("Add 1 small installment/pledge loan; pay down 80–90% and leave open.");
-  if(p.build.inq>3) R.push("Pause hard pulls for 60–90 days.");
-  if(avgScore && avgScore>=680 && (p.build.util??100)<=28) R.push("Window open for 0% APR personal cards; don’t stack too many in one week.");
-  if(p.fund.biz) R.push("Prepare EIN, business checking, vendor trade lines, and revenue docs for LOC/CC apps.");
-  return "<ul>"+R.map(x=>`<li>${x}</li>`).join("")+"</ul>";
+  if(p.neg.count>0||p.neg.late||p.neg.coll||p.neg.coff||p.neg.bk){
+    R.push("<b>Address derogatories first.</b> Payment history is the largest score factor. Deletions/goodwill on late/collections/charge-offs reduce risk flags. Bankruptcies require re-establishing positive lines for 12–24 months.");
+  }
+  if(p.build.util!=null && p.build.util>28){
+    R.push("<b>Reduce utilization below 28% (ideal &lt;9%).</b> Models penalize high balance-to-limit ratios. Mid-cycle payments (before statement cut) lower reported balances and can yield quick score gains.");
+  }
+  if(p.build.rev<3){
+    R.push("<b>Reach 3+ revolving lines.</b> Thin files lack depth. Add 1–2 primary or secured cards to build consistent payment history and improve approval odds.");
+  }
+  if(p.build.inst<1){
+    R.push("<b>Add one small installment/pledge loan.</b> Improves credit mix. Pay down 80–90% early to minimize interest while keeping the account open.");
+  }
+  if(p.build.inq>3){
+    R.push("<b>Pause new hard pulls 60–90 days.</b> Many inquiries = “credit seeking” in underwriting. Space applications and batch logically.");
+  }
+  if(avgScore && avgScore>=680 && (p.build.util??100)<=28){
+    R.push("<b>0% intro APR windows are open.</b> Use for balance strategy or launch expenses, but avoid stacking too many new accounts in the same week.");
+  }
+  if(p.fund.biz){
+    R.push("<b>Prep for business funding.</b> Have EIN, business checking, aged vendor/net-30s, and revenue docs. Align bank relationships with target lenders.");
+  }
+  return "<ul style='line-height:1.5;margin-left:18px'>"+R.map(x=>`<li>${x}</li>`).join("")+"</ul>";
 }
 
 function hydrateForm(){
@@ -344,10 +452,135 @@ function clearData(){
   hydrateForm(); renderProgress(); saveProfile();
 }
 
-// ---------- Lender Finder ----------
-const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev";
+// ---------- AI Reader ----------
+async function analyzeFile(){
+  const file = document.getElementById('fileInput').files[0];
+  const out = document.getElementById('aiOutput');
+  if(!file){ alert("Choose a PDF/CSV/TXT file."); return; }
+  out.style.display='block';
+  out.innerHTML="Reading file…";
 
-// Map state abbrev → FIPS (used by iBankNet; TX=48)
+  try{
+    let text = "";
+    if(file.type === "application/pdf" || file.name.toLowerCase().endsWith(".pdf")){
+      const buf = await file.arrayBuffer();
+      const pdf = await pdfjsLib.getDocument({data:buf}).promise;
+      for(let p=1;p<=pdf.numPages;p++){
+        const page = await pdf.getPage(p);
+        const content = await page.getTextContent();
+        text += content.items.map(i=>i.str).join(" ") + "\n";
+      }
+    } else {
+      // TXT / CSV
+      text = await file.text();
+    }
+    const result = parseCreditText(text);
+    applyParsedToForm(result);
+    computeAndSave();
+    out.innerHTML = renderParsedPreview(result);
+  }catch(e){
+    console.error(e);
+    out.innerHTML = "Could not analyze this file. Try pasting the text below instead.";
+  }
+}
+
+function analyzePasted(){
+  const text = document.getElementById('pasteInput').value.trim();
+  const out = document.getElementById('aiOutput');
+  if(!text){ alert("Paste some report text first."); return; }
+  out.style.display='block';
+  const result = parseCreditText(text);
+  applyParsedToForm(result);
+  computeAndSave();
+  out.innerHTML = renderParsedPreview(result);
+}
+function clearPaste(){
+  document.getElementById('pasteInput').value="";
+  const out=document.getElementById('aiOutput');
+  out.style.display='none'; out.innerHTML="";
+}
+
+// Heuristic parser: extracts scores, utilization, negatives, counts
+function parseCreditText(t){
+  const text = t.replace(/\s+/g," ").trim();
+
+  // Scores
+  const scoreMap = {};
+  (text.match(/Experian[^0-9]{0,15}(\d{3})/i)||[])[1] && (scoreMap.exp = Number(RegExp.$1));
+  (text.match(/Equifax[^0-9]{0,15}(\d{3})/i)||[])[1] && (scoreMap.eq  = Number(RegExp.$1));
+  (text.match(/Trans.?Union[^0-9]{0,15}(\d{3})/i)||[])[1] && (scoreMap.tu = Number(RegExp.$1));
+
+  // Utilization (overall)
+  let util = null;
+  const utilMatch = text.match(/overall[^%]{0,15}util(?:ization)?[^0-9]{0,10}(\d{1,3})\s?%/i)
+                || text.match(/util(?:ization)?[^0-9]{0,10}(\d{1,3})\s?%/i);
+  if(utilMatch){ util = Number(utilMatch[1]); }
+
+  // Negatives
+  const lateCount = (text.match(/\blate\b/gi)||[]).length;
+  const collCount = (text.match(/\bcollection(s)?\b/gi)||[]).length;
+  const coffCount = (text.match(/\bcharge[\s-]?off(s)?\b/gi)||[]).length;
+  const bkCount   = (text.match(/\bbankruptcy\b/gi)||[]).length;
+  const negCount  = lateCount + collCount + coffCount + bkCount;
+
+  // Mix (very rough heuristics)
+  let rev = 0, inst = 0;
+  rev += (text.match(/\bcredit card\b/gi)||[]).length;
+  rev += (text.match(/\brevolving\b/gi)||[]).length;
+  inst += (text.match(/\binstallment\b/gi)||[]).length;
+  inst += (text.match(/\bauto loan\b/gi)||[]).length + (text.match(/\bstudent loan\b/gi)||[]).length + (text.match(/\bmortgage\b/gi)||[]).length;
+
+  // Inquiries
+  const inqMatch = text.match(/inquiries?[^0-9]{0,10}(\d{1,2})/i);
+  const inq = inqMatch ? Number(inqMatch[1]) : null;
+
+  // Age (months) if present
+  let age = null;
+  const ageMatch = text.match(/average[^0-9]{0,10}age[^0-9]{0,10}(\d{1,3})\s?month/i);
+  if(ageMatch){ age = Number(ageMatch[1]); }
+
+  return {
+    scores: scoreMap,
+    util, rev, inst, inq, age,
+    negatives: { late:lateCount>0, coll:collCount>0, coff:coffCount>0, bk:bkCount>0, count:negCount }
+  };
+}
+
+function applyParsedToForm(r){
+  if(r.scores){
+    if(r.scores.exp) setVal('exp', r.scores.exp);
+    if(r.scores.eq)  setVal('eq',  r.scores.eq);
+    if(r.scores.tu)  setVal('tu',  r.scores.tu);
+  }
+  if(r.util!=null) setVal('util', r.util);
+  if(r.rev!=null)  setVal('rev',  r.rev);
+  if(r.inst!=null) setVal('inst', r.inst);
+  if(r.age!=null)  setVal('age',  r.age);
+  if(r.inq!=null)  setVal('inq',  r.inq);
+
+  if(r.negatives){
+    setChk('late', r.negatives.late);
+    setChk('coll', r.negatives.coll);
+    setChk('coff', r.negatives.coff);
+    setChk('bk',   r.negatives.bk);
+    setVal('negCount', r.negatives.count || 0);
+  }
+}
+
+function renderParsedPreview(r){
+  const parts=[];
+  if(r.scores){
+    parts.push(`<b>Scores</b>: EXP ${r.scores.exp||'—'} | EQ ${r.scores.eq||'—'} | TU ${r.scores.tu||'—'}`);
+  }
+  if(r.util!=null) parts.push(`<b>Utilization</b>: ${r.util}%`);
+  parts.push(`<b>Mix</b>: Revolving ~${r.rev||0}, Installment ~${r.inst||0}`);
+  if(r.age!=null) parts.push(`<b>Avg Age</b>: ${r.age} mo`);
+  if(r.inq!=null) parts.push(`<b>Inquiries</b>: ${r.inq}`);
+  parts.push(`<b>Negatives</b>: late ${r.negatives?.late?'✔️':'—'}, coll ${r.negatives?.coll?'✔️':'—'}, charge-off ${r.negatives?.coff?'✔️':'—'}, bk ${r.negatives?.bk?'✔️':'—'} (count ~${r.negatives?.count||0})`);
+  return parts.join("<br>");
+}
+
+// ---------- Reports (state → iBankNet link) ----------
 const STATE_TO_CODE={
   AL:"01", AK:"02", AZ:"04", AR:"05", CA:"06", CO:"08", CT:"09", DC:"11", DE:"10",
   FL:"12", GA:"13", HI:"15", IA:"19", ID:"16", IL:"17", IN:"18", KS:"20", KY:"21",
@@ -356,8 +589,7 @@ const STATE_TO_CODE={
   OK:"40", OR:"41", PA:"42", RI:"44", SC:"45", SD:"46", TN:"47", TX:"48", UT:"49",
   VA:"51", VT:"50", WA:"53", WI:"55", WV:"54", WY:"56"
 };
-
-const STATES=["AL","AK","AZ","AR","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY"];
+const STATES=Object.keys(STATE_TO_CODE);
 
 function loadStates(){
   const sel=document.getElementById('stateSel'); if(!sel) return;
@@ -376,16 +608,16 @@ async function detectLocation(){
 }
 
 async function fetchLenders() {
-  const stateAbbr = document.getElementById("stateSel").value || "TX";
-  const code = STATE_TO_CODE[stateAbbr] || "48";
+  const abbr = document.getElementById("stateSel").value || "TX";
+  const code = STATE_TO_CODE[abbr] || "48";
   const el = document.getElementById("lenders");
 
   const link = `https://ibanknet.com/scripts/callreports/fiList.aspx?type=stateallfi&state=${code}`;
   el.innerHTML = `
-    <div style="padding:14px;border:1px solid #e6eef6;border-radius:10px;background:#f8fbff">
-      <p><b>${stateAbbr} Lenders:</b></p>
+    <div style="padding:14px;border:1px solid #e6eef6;border-radius:12px;background:#f8fbff">
+      <p style="margin:0 0 8px"><b>${abbr} Lenders:</b></p>
       <a href="${link}" target="_blank" rel="noopener" class="btn gold">🔗 View Live Lender List</a>
-      <p class="mini" style="margin-top:6px">This link opens iBankNet’s real-time lender database for ${stateAbbr}.</p>
+      <p class="mini" style="margin-top:8px">Opens iBankNet’s real-time lender database for ${abbr} in a new tab.</p>
     </div>
   `;
 }
