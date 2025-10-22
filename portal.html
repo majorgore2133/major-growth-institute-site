@@ -377,7 +377,7 @@ async function detectLocation(){
 
 async function fetchLenders() {
   const stateAbbr = document.getElementById("stateSel").value || "TX";
-  const code = STATE_TO_CODE[stateAbbr] || "48"; // convert to FIPS
+  const code = STATE_TO_CODE[stateAbbr] || "48";
   const el = document.getElementById("lenders");
 
   const link = `https://ibanknet.com/scripts/callreports/fiList.aspx?type=stateallfi&state=${code}`;
