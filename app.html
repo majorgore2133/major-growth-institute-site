@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width,initial-scale=1" />
+<title>MGI Client Portal — Guided Analyzer</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600;700;800&family=Playfair+Display:wght@600;700&display=swap" rel="stylesheet">
+<style>
+:root{
+  --blue:#0b5fa5; --dark:#0b2d4a; --gold:#caa43b; --muted:#6b7b8c;
+  --ink:#1b2330; --paper:#ffffff; --soft:#f4f7fb;
+  --shadow:0 12px 34px rgba(6,58,102,.08); --outline:1px solid rgba(6,58,102,.12);
+}
+*{box-sizing:border-box}
+body{margin:0;background:linear-gradient(180deg,#f8fbff,#fff);color:var(--ink);font-family:"Open Sans",system-ui,-apple-system,Segoe UI,Roboto,Arial}
+h1,h2,h3{font-family:"Playfair Display",Georgia,serif;color:var(--dark);margin:0 0 10px}
+p{margin:0 0 10px;line-height:1.65;color:#3a4a5a}
+a{text-decoration:none;color:var(--blue)}
+.container{max-width:1100px;margin:0 auto;padding:18px}
+.nav{position:sticky;top:0;z-index:1000;background:linear-gradient(90deg,var(--dark),#0a4c85);box-shadow:0 6px 18px rgba(6,58,102,.12)}
+.nav-inner{display:flex;align-items:center;justify-content:space-between;padding:10px 18px}
+.brand{display:flex;align-items:center;gap:12px;color:#fff}
+.brand img{height:40px}
+.brand b{font-size:18px}
+.btn{display:inline-block;background:var(--blue);color:#fff;padding:10px 16px;border-radius:10px;font-weight:700;box-shadow:0 10px 28px rgba(11,95,165,.16)}
+.btn.gold{background:var(--gold);color:#1b2330}
+.card{background:#fff;border:var(--outline);border-radius:14px;box-shadow:var(--shadow);padding:18px}
+.grid{display:grid;gap:16px}
+.two{grid-template-columns:1.2fr .8fr}
+@media(max-width:980px){.two{grid-template-columns:1fr}}
+
+.mini{font-size:12px;color:#6b7b8c}
+.input{width:100%;padding:12px;border:1px solid rgba(6,58,102,.12);border-radius:10px}
+.row{display:flex;gap:10px;flex-wrap:wrap}
+.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef5fb;color:#0b5fa5;font-weight:700;font-size:12px}
+.pill{display:inline-block;padding:8px 10px;border-radius:10px;background:#fcfdff;border:1px solid #e7eff7;margin:4px 6px 0 0}
+.stepper{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin:10px 0 16px}
+.step{background:linear-gradient(180deg,#ffffff,#f8fbff);border:1px solid #e7eff7;border-radius:12px;padding:10px;text-align:center;font-weight:700}
+.step.active{border-color:#caa43b;box-shadow:0 0 0 2px rgba(202,164,59,.2)}
+.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+ul{margin:0 0 8px 18px}
+footer{margin:30px 0 20px;color:#6b7b8c;text-align:center}
+</style>
+</head>
+<body>
+  <div class="nav">
+    <div class="nav-inner container">
+      <a class="brand" href="index.html">
+        <img src="logo-mgi.png" alt="MGI">
+        <b>Major Growth Institute — Client Portal</b>
+      </a>
+      <div style="display:flex;gap:10px;align-items:center">
+        <span id="userEmail" class="mini" style="color:#dfe9f7"></span>
+        <button class="btn gold" id="logoutBtn" style="display:none">Log out</button>
+      </div>
+    </div>
+  </div>
+
+  <div class="container">
+    <!-- AUTH CARD -->
+    <div id="authCard" class="card">
+      <h2>Sign in to Your Portal</h2>
+      <p class="mini">Private & secure. Use Email or continue with Google.</p>
+      <div class="row" style="margin-top:10px">
+        <input id="email" class="input" placeholder="Email" type="email">
+        <input id="password" class="input" placeholder="Password" type="password">
+      </div>
+      <div class="actions">
+        <button class="btn" id="emailLogin">Sign In</button>
+        <button class="btn" id="emailRegister">Create Account</button>
+        <button class="btn gold" id="googleLogin">Continue with Google</button>
+      </div>
+      <p class="mini" style="margin-top:8px">By continuing, you agree to the portal’s privacy policy and data handling practices. You can delete your data anytime.</p>
+    </div>
+
+    <!-- APP SHELL -->
+    <div id="app" style="display:none">
+      <div class="grid two">
+        <!-- LEFT: ANALYZER -->
+        <div class="card">
+          <div class="stepper">
+            <div class="step" id="s1">1. Repair</div>
+            <div class="step" id="s2">2. Build</div>
+            <div class="step" id="s3">3. Leverage</div>
+            <div class="step" id="s4">4. Plan</div>
+          </div>
+
+          <div id="stageBody"></div>
+
+          <div class="actions">
+            <button class="btn" id="prevBtn">Back</button>
+            <button class="btn gold" id="nextBtn">Next</button>
+            <button class="btn" id="saveBtn">Save</button>
+          </div>
+          <p class="mini">Tip: Click “Save” to store your progress. If Firestore isn’t configured yet, we’ll store it in your browser temporarily.</p>
+        </div>
+
+        <!-- RIGHT: SUMMARY -->
+        <div class="card">
+          <div class="badge">Live Summary</div>
+          <h3>Snapshot</h3>
+          <div id="snapshot"></div>
+          <h3 style="margin-top:12px">Recommendations</h3>
+          <div id="recs"></div>
+          <h3 style="margin-top:12px">Funding Readiness</h3>
+          <div id="funding"></div>
+          <div class="actions" style="margin-top:12px">
+            <button class="btn" id="clearBtn">Delete My Data</button>
+          </div>
+        </div>
+      </div>
+      <footer>© Major Growth Institute — Private Client Portal</footer>
+    </div>
+  </div>
+
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+  <script>
+  // ========= 1) CONFIG  =========
+  // Fill these with your Firebase project settings (Step-by-step below).
+  const firebaseConfig = {
+    apiKey: "YOUR_API_KEY",
+    authDomain: "YOUR_PROJECT_ID.firebaseapp.com",
+    projectId: "YOUR_PROJECT_ID",
+    appId: "YOUR_APP_ID"
+  };
+
+  // ========= 2) INIT =========
+  let appFB, auth, db, user;
+  try {
+    appFB = firebase.initializeApp(firebaseConfig);
+    auth = firebase.auth();
+    db = firebase.firestore();
+  } catch(e){ console.warn("Firebase not configured yet → falling back to localStorage only.", e); }
+
+  // UI Elts
+  const authCard = document.getElementById('authCard');
+  const appShell = document.getElementById('app');
+  const userEmail = document.getElementById('userEmail');
+  const logoutBtn = document.getElementById('logoutBtn');
+
+  // Auth buttons
+  const emailLogin = document.getElementById('emailLogin');
+  const emailRegister = document.getElementById('emailRegister');
+  const googleLogin = document.getElementById('googleLogin');
+
+  // Analyzer elts
+  const sEls = [document.getElementById('s1'),document.getElementById('s2'),document.getElementById('s3'),document.getElementById('s4')];
+  const stageBody = document.getElementById('stageBody');
+  const nextBtn = document.getElementById('nextBtn');
+  const prevBtn = document.getElementById('prevBtn');
+  const saveBtn = document.getElementById('saveBtn');
+  const snapshot = document.getElementById('snapshot');
+  const recs = document.getElementById('recs');
+  const funding = document.getElementById('funding');
+  const clearBtn = document.getElementById('clearBtn');
+
+  // ========= 3) AUTH =========
+  function showApp(u){
+    user = u;
+    userEmail.textContent = u?.email || "";
+    logoutBtn.style.display = u ? 'inline-block' : 'none';
+    authCard.style.display = u ? 'none' : 'block';
+    appShell.style.display = u ? 'block' : 'none';
+    if(u){ loadProfile(); renderStage(); }
+  }
+  if(auth){
+    auth.onAuthStateChanged(showApp);
+  } else {
+    // No Firebase → show app without auth (for testing)
+    showApp({email:"local@test"});
+  }
+
+  emailLogin?.addEventListener('click', async ()=>{
+    try{ await auth.signInWithEmailAndPassword(email.value, password.value); }
+    catch(e){ alert(e.message); }
+  });
+  emailRegister?.addEventListener('click', async ()=>{
+    try{ await auth.createUserWithEmailAndPassword(email.value, password.value); }
+    catch(e){ alert(e.message); }
+  });
+  googleLogin?.addEventListener('click', async ()=>{
+    try{ await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
+    catch(e){ alert(e.message); }
+  });
+  logoutBtn?.addEventListener('click', async ()=>{
+    try{ await auth.signOut(); } catch(e){ console.error(e); }
+  });
+
+  // ========= 4) ANALYZER STATE =========
+  let stage = 1;
+  let data = {
+    // Repair
+    scores: {exp:null, eq:null, tu:null},
+    derog: {late:false, collections:false, chargeoff:false, bk:false},
+    negCount: 0,
+    // Build
+    util: {overall:null, highestCard:null},
+    mix: {revolving:0, installment:0, ageMonths:0, newInq:0},
+    // Leverage
+    goals: {personal:true, business:false, targetFunding:0, risk:'moderate'},
+    // Plan
+    notes: ""
+  };
+
+  function setStage(i){
+    stage = Math.min(4, Math.max(1,i));
+    sEls.forEach((el,idx)=> el.classList.toggle('active', idx===stage-1));
+  }
+
+  function renderStage(){
+    setStage(stage);
+    if(stage===1){
+      stageBody.innerHTML = `
+        <h2>Repair — Clean the Foundation</h2>
+        <p class="mini">We’ll identify what’s hurting the profile and plan precise corrections.</p>
+        <div class="row" style="margin-top:10px">
+          <input class="input" id="score_exp" placeholder="Experian score (e.g., 640)" type="number">
+          <input class="input" id="score_eq" placeholder="Equifax score (e.g., 630)" type="number">
+          <input class="input" id="score_tu" placeholder="TransUnion score (e.g., 650)" type="number">
+        </div>
+        <div class="row" style="margin-top:8px">
+          <label class="pill"><input type="checkbox" id="late"> Late payments</label>
+          <label class="pill"><input type="checkbox" id="collections"> Collections</label>
+          <label class="pill"><input type="checkbox" id="chargeoff"> Charge-offs</label>
+          <label class="pill"><input type="checkbox" id="bk"> Bankruptcy</label>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <input class="input" id="negCount" placeholder="# of negative items (approx)" type="number">
+        </div>
+      `;
+      // populate
+      document.getElementById('score_exp').value = data.scores.exp ?? "";
+      document.getElementById('score_eq').value = data.scores.eq ?? "";
+      document.getElementById('score_tu').value = data.scores.tu ?? "";
+      document.getElementById('late').checked = data.derog.late;
+      document.getElementById('collections').checked = data.derog.collections;
+      document.getElementById('chargeoff').checked = data.derog.chargeoff;
+      document.getElementById('bk').checked = data.derog.bk;
+      document.getElementById('negCount').value = data.negCount ?? "";
+    }
+    if(stage===2){
+      stageBody.innerHTML = `
+        <h2>Build — Structure & Seasoning</h2>
+        <p class="mini">We’ll nail utilization, mix, and age so the file looks “lender-ready”.</p>
+        <div class="row" style="margin-top:10px">
+          <input class="input" id="util_overall" placeholder="Overall utilization % (e.g., 38)" type="number">
+          <input class="input" id="util_high" placeholder="Highest card utilization % (e.g., 82)" type="number">
+        </div>
+        <div class="row" style="margin-top:8px">
+          <input class="input" id="mix_rev" placeholder="# of revolving accounts" type="number">
+          <input class="input" id="mix_inst" placeholder="# of installment accounts" type="number">
+          <input class="input" id="mix_age" placeholder="Avg age (months)" type="number">
+          <input class="input" id="mix_inq" placeholder="New inquiries (last 6–12 mo)" type="number">
+        </div>
+      `;
+      document.getElementById('util_overall').value = data.util.overall ?? "";
+      document.getElementById('util_high').value = data.util.highestCard ?? "";
+      document.getElementById('mix_rev').value = data.mix.revolving ?? "";
+      document.getElementById('mix_inst').value = data.mix.installment ?? "";
+      document.getElementById('mix_age').value = data.mix.ageMonths ?? "";
+      document.getElementById('mix_inq').value = data.mix.newInq ?? "";
+    }
+    if(stage===3){
+      stageBody.innerHTML = `
+        <h2>Leverage — Funding Goals</h2>
+        <p class="mini">Define targets so we can sequence approvals the smart way.</p>
+        <div class="row" style="margin-top:10px">
+          <label class="pill"><input type="checkbox" id="g_personal"> Personal funding</label>
+          <label class="pill"><input type="checkbox" id="g_business"> Business funding</label>
+        </div>
+        <div class="row" style="margin-top:8px">
+          <input class="input" id="g_amount" placeholder="Target funding amount ($)" type="number">
+          <select class="input" id="g_risk">
+            <option value="conservative">Risk: Conservative</option>
+            <option value="moderate">Risk: Moderate</option>
+            <option value="aggressive">Risk: Aggressive</option>
+          </select>
+        </div>
+      `;
+      document.getElementById('g_personal').checked = data.goals.personal;
+      document.getElementById('g_business').checked = data.goals.business;
+      document.getElementById('g_amount').value = data.goals.targetFunding ?? "";
+      document.getElementById('g_risk').value = data.goals.risk ?? "moderate";
+    }
+    if(stage===4){
+      stageBody.innerHTML = `
+        <h2>Plan — Notes & Next Steps</h2>
+        <p class="mini">Capture context or documents you’ll want your specialist to see.</p>
+        <textarea class="input" id="notes" rows="5" placeholder="Ex: I have two closed charge-offs from 2022; current balances 0; goal is 25k 0% personal then 30k business."></textarea>
+        <div class="row" style="margin-top:8px">
+          <a class="btn" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book Review Call</a>
+        </div>
+      `;
+      document.getElementById('notes').value = data.notes ?? "";
+    }
+    compute();
+  }
+
+  // ========= 5) CAPTURE =========
+  function capture(){
+    if(stage===1){
+      data.scores.exp = numOrNull('score_exp');
+      data.scores.eq  = numOrNull('score_eq');
+      data.scores.tu  = numOrNull('score_tu');
+      data.derog.late = document.getElementById('late').checked;
+      data.derog.collections = document.getElementById('collections').checked;
+      data.derog.chargeoff = document.getElementById('chargeoff').checked;
+      data.derog.bk = document.getElementById('bk').checked;
+      data.negCount = numOrNull('negCount')||0;
+    }
+    if(stage===2){
+      data.util.overall = numOrNull('util_overall');
+      data.util.highestCard = numOrNull('util_high');
+      data.mix.revolving = numOrNull('mix_rev')||0;
+      data.mix.installment = numOrNull('mix_inst')||0;
+      data.mix.ageMonths = numOrNull('mix_age')||0;
+      data.mix.newInq = numOrNull('mix_inq')||0;
+    }
+    if(stage===3){
+      data.goals.personal = document.getElementById('g_personal').checked;
+      data.goals.business = document.getElementById('g_business').checked;
+      data.goals.targetFunding = numOrNull('g_amount')||0;
+      data.goals.risk = document.getElementById('g_risk').value;
+    }
+    if(stage===4){
+      data.notes = (document.getElementById('notes')?.value||"").trim();
+    }
+  }
+  function numOrNull(id){
+    const v = document.getElementById(id)?.value;
+    if(v===undefined || v==="") return null;
+    return Number(v);
+  }
+
+  // ========= 6) RULE ENGINE =========
+  function compute(){
+    // Snapshot
+    const avgScore = avg([data.scores.exp,data.scores.eq,data.scores.tu]);
+    const negs = Object.entries(data.derog).filter(([k,v])=>v).map(([k])=>k);
+    snapshot.innerHTML = `
+      <div class="pill">Avg score: <b>${avgScore ?? '—'}</b></div>
+      <div class="pill">Negatives: <b>${negs.length>0?negs.join(', '):'none reported'}</b></div>
+      <div class="pill">Overall util: <b>${data.util.overall ?? '—'}%</b></div>
+      <div class="pill">Oldest age: <b>${data.mix.ageMonths ?? '—'} mo avg</b></div>
+      <div class="pill">Inquiries: <b>${data.mix.newInq ?? '—'}</b></div>
+      <div class="pill">Goals: <b>${data.goals.personal?'Personal':''}${data.goals.personal&&data.goals.business?' + ':''}${data.goals.business?'Business':''}</b></div>
+      <div class="pill">Target: <b>$${fmt(data.goals.targetFunding||0)}</b></div>
+    `;
+
+    // Recommendations
+    const R = [];
+    // Repair logic
+    if(negs.length>0 || data.negCount>0){
+      R.push("Begin documentation bundle (ID + address docs + bureau reports). Prioritize oldest negatives first; confirm each furnisher reporting accuracy.");
+    }
+    if(data.derog.late){ R.push("Request goodwill adjustments where positive history exists; maintain on-time streak 6–12 months."); }
+    if(data.derog.collections || data.derog.chargeoff){
+      R.push("For collections/charge-offs: validate, then negotiate pay-for-delete only if validation passes; otherwise dispute inaccuracies.");
+    }
+    if(data.derog.bk){ R.push("For prior BK: focus on thick positive history and very low utilization; avoid excessive new inquiries."); }
+
+    // Build logic
+    if(data.util.overall!=null && data.util.overall>28){
+      R.push("Reduce overall utilization under 28% (ideal < 9% reporting on statement cut). Consider temporary balance shift or early mid-cycle payment.");
+    }
+    if(data.util.highestCard!=null && data.util.highestCard>57){
+      R.push("Target the maxed card first — under 57% asap, then <29%, then <9% for scoring gains.");
+    }
+    if((data.mix.revolving||0)<3){
+      R.push("Add 1–2 positive revolving lines (secured ok) to reach 3+ total; keep limits reporting clean for 90 days.");
+    }
+    if((data.mix.installment||0)<1){
+      R.push("Add one small installment tradeline (e.g., credit-builder/pledge) and pay down 90% immediately to establish open installment history.");
+    }
+    if((data.mix.ageMonths||0)<24){
+      R.push("Let accounts season; avoid closing older lines. Consider an AU line only if aged/high-limit/low util and from a trusted source.");
+    }
+    if((data.mix.newInq||0)>3){
+      R.push("Pause new applications for 60–90 days to let inquiries age and score stabilize.");
+    }
+
+    // Leverage logic
+    if(avgScore && avgScore>=680 && (data.util.overall??100) <= 28){
+      R.push("Pre-approval window: consider 0% APR personal cards for 12–18 months; avoid stacking too many in one week.");
+    } else {
+      R.push("Delay new credit pulls until repair/build steps post; pre-qualify with soft-pull tools only.");
+    }
+    if(data.goals.business){
+      R.push("Prep business: EIN, business checking, vendor lines that report, and consistent revenue records before revolving LOC apps.");
+    }
+    recs.innerHTML = "<ul>"+R.map(r=>`<li>${r}</li>`).join("")+"</ul>";
+
+    // Funding readiness tiers
+    let tier="Not Ready";
+    if(avgScore>=640 && (data.util.overall??100)<=57 && data.negCount<=4){ tier="Pre-Work"; }
+    if(avgScore>=680 && (data.util.overall??100)<=28 && data.negCount<=2 && data.mix.revolving>=3){ tier="Tier 2 (Personal 0% ready)"; }
+    if(avgScore>=720 && (data.util.overall??100)<=9 && data.negCount===0 && data.mix.ageMonths>=36){ tier="Tier 1 (Prime + biz ready)"; }
+    funding.innerHTML = `<div class="pill"><b>${tier}</b></div>`;
+  }
+  function avg(arr){
+    const nums = arr.filter(v=>typeof v==='number' && !isNaN(v));
+    if(!nums.length) return null;
+    return Math.round(nums.reduce((a,b)=>a+b,0)/nums.length);
+  }
+  function fmt(n){ return (n||0).toLocaleString(); }
+
+  // ========= 7) NAV & SAVE =========
+  nextBtn.addEventListener('click', ()=>{ capture(); stage=Math.min(4,stage+1); renderStage(); });
+  prevBtn.addEventListener('click', ()=>{ capture(); stage=Math.max(1,stage-1); renderStage(); });
+  saveBtn.addEventListener('click', ()=>{ capture(); saveProfile(); alert("Saved."); });
+  clearBtn.addEventListener('click', async ()=>{
+    if(!confirm("Delete all saved data?")) return;
+    data = {scores:{exp:null,eq:null,tu:null}, derog:{late:false,collections:false,chargeoff:false,bk:false}, negCount:0, util:{overall:null,highestCard:null}, mix:{revolving:0,installment:0,ageMonths:0,newInq:0}, goals:{personal:true,business:false,targetFunding:0,risk:'moderate'}, notes:""};
+    stage=1;
+    await delProfile();
+    renderStage();
+  });
+
+  // ========= 8) STORAGE (Firestore or localStorage) =========
+  async function saveProfile(){
+    const payload = {data, updatedAt:new Date().toISOString()};
+    if(db && user){
+      await db.collection("mgi_clients").doc(user.uid).set(payload,{merge:true});
+    } else {
+      localStorage.setItem("mgi_profile", JSON.stringify(payload));
+    }
+  }
+  async function loadProfile(){
+    let payload=null;
+    if(db && user){
+      const snap = await db.collection("mgi_clients").doc(user.uid).get();
+      payload = snap.exists ? snap.data() : null;
+    }
+    if(!payload){
+      const raw = localStorage.getItem("mgi_profile");
+      payload = raw ? JSON.parse(raw) : null;
+    }
+    if(payload?.data){ data = payload.data; }
+    compute();
+  }
+  async function delProfile(){
+    if(db && user){
+      await db.collection("mgi_clients").doc(user.uid).delete().catch(()=>{});
+    }
+    localStorage.removeItem("mgi_profile");
+  }
+  </script>
+</body>
+</html>
