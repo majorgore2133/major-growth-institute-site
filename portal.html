@@ -14,7 +14,20 @@
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
   }
 </script>
+/* --- Fix for scroll freeze / wheel not working --- */
+#lenderList, .scrollbox, .lender-scroll {
+  overflow-y: auto !important;
+  max-height: 70vh !important;
+  -webkit-overflow-scrolling: touch; /* makes smooth scrolling on mobile */
+}
 
+body, html {
+  overscroll-behavior: contain;
+}
+
+section, div, .panel {
+  pointer-events: auto !important;
+}
 <style>
 :root{
   --blue:#0b5fa5; --dark:#0b2d4a; --gold:#caa43b; --ink:#142433;
