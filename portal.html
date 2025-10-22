@@ -375,27 +375,50 @@ async function detectLocation(){
   }catch(e){ alert("Could not detect location."); }
 }
 
-async function fetchLenders(){
-  const abbr=document.getElementById('stateSel').value||"TX";
-  const code=STATE_TO_CODE[abbr]||"48";
-  const el=document.getElementById('lenders');
-  el.innerHTML="Loading lenders…";
-  try{
-    // Your Worker should accept either ?state=TX or numeric; we send numeric for iBankNet.
-    const resp=await fetch(`${PROXY}/?state=${code}`);
-    const data=await resp.json();
-    if(!Array.isArray(data)||data.length===0){
-      el.innerHTML="No lenders found or failed to load data.";
+async function fetchLenders() {
+  const state = document.getElementById("stateSel").value || "48";
+  const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev";
+  const el = document.getElementById("lenders");
+  el.innerHTML = "Loading lenders…";
+
+  try {
+    const response = await fetch(`${PROXY}/?state=${state}`);
+    const html = await response.text();
+
+    // Extract only the visible table rows from iBankNet’s HTML
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+    const rows = Array.from(doc.querySelectorAll("table tr"));
+    if (!rows.length) throw new Error("No data table found.");
+
+    const banks = rows
+      .map((r) => {
+        const cols = r.querySelectorAll("td");
+        if (cols.length < 2) return null;
+        const name = cols[0]?.innerText.trim();
+        const city = cols[1]?.innerText.trim();
+        return name && city ? { name, city } : null;
+      })
+      .filter(Boolean)
+      .slice(0, 40); // Limit to first 40
+
+    if (!banks.length) {
+      el.innerHTML = "No lenders found for this state.";
       return;
     }
-    el.innerHTML=data.slice(0,40).map(x=>`
-      <div class="pill" style="padding:8px;border-bottom:1px solid #e7eff7">
-        <strong>${x.name||"Bank"}</strong> — ${x.city||abbr} ${x.assets?`(${x.assets})`:""}
-      </div>
-    `).join("");
-  }catch(err){
+
+    el.innerHTML = banks
+      .map(
+        (b) => `
+        <div class="pill" style="margin:6px 0;padding:10px;border-bottom:1px solid #ddd">
+          <strong>${b.name}</strong><br>
+          <span>${b.city}</span>
+        </div>`
+      )
+      .join("");
+  } catch (err) {
     console.error(err);
-    el.innerHTML="Error fetching lender list.";
+    el.innerHTML = "Error fetching lender list.";
   }
 }
 
