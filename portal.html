@@ -326,7 +326,7 @@ async function fetchLenders(){
   const state=document.getElementById('stateSel').value;
   profile.location.state=state; saveProfile();
   // REPLACE this with your deployed proxy URL:
-const PROXY = "https://majorgrowthproxy.majorgore2133.github.io/?state=" + state;
+const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev/?state=" + state;
   const el=document.getElementById('lenders');
   el.innerHTML="Loading lenders…";
   try{
