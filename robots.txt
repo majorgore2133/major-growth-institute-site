@@ -1,0 +1,3 @@
+User-agent: *
+Allow: /
+Sitemap: https://majorgrowthinstitute.com/sitemap.xml
