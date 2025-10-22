@@ -1,106 +1,130 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>MGI Portal – Connectivity Check</title>
-<style>
-  body{font-family:system-ui,-apple-system,Segoe UI,Roboto,Arial;margin:0;background:#f7fbff;color:#142433}
-  .wrap{max-width:720px;margin:0 auto;padding:24px}
-  h1{margin:8px 0}
-  .card{background:#fff;border:1px solid #e3edf6;border-radius:12px;padding:16px;box-shadow:0 10px 24px rgba(8,68,120,.06)}
-  .row{display:flex;gap:8px;flex-wrap:wrap;margin-top:8px}
-  input,button{padding:10px 12px;border-radius:10px;border:1px solid #d7e5f2}
-  button{background:#0b5fa5;color:#fff;border:0;cursor:pointer}
-  .ok{color:#138c3f;font-weight:700}
-  .bad{color:#b2052a;font-weight:700}
-  .muted{color:#6a7a8a;font-size:13px}
-  .sp{height:10px}
-</style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>MGI Client Portal</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    body {
+      background: #f4f7fa;
+      font-family: 'Inter', sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    h1 {
+      color: #003366;
+      font-size: 2rem;
+      margin-bottom: 10px;
+    }
+    .login-container {
+      background: #fff;
+      padding: 30px;
+      border-radius: 15px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.08);
+      text-align: center;
+      width: 100%;
+      max-width: 380px;
+    }
+    input {
+      width: 90%;
+      padding: 10px;
+      margin: 8px 0;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+    button {
+      background-color: #004aad;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 8px;
+      cursor: pointer;
+      width: 90%;
+      margin-top: 10px;
+    }
+    button:hover {
+      background-color: #003a8c;
+    }
+    .google-btn {
+      background: #fff;
+      color: #444;
+      border: 1px solid #ccc;
+    }
+  </style>
 </head>
 <body>
-<div class="wrap">
-  <h1>MGI Client Portal — Connectivity Check</h1>
-  <div id="conn" class="muted">Checking Firebase…</div>
-  <div class="sp"></div>
-
-  <div class="card">
-    <h2>Sign in</h2>
-    <div class="row">
-      <input id="email" placeholder="Email" type="email" autocomplete="username">
-      <input id="password" placeholder="Password" type="password" autocomplete="current-password">
-    </div>
-    <div class="row">
-      <button id="create">Create Account</button>
-      <button id="login">Sign In</button>
-      <button id="google">Google Sign-In</button>
-      <button id="logout" style="display:none;background:#caa43b;color:#142433">Log out</button>
-    </div>
-    <div class="sp"></div>
-    <div id="status" class="muted">Not signed in.</div>
+  <h1>MGI Client Portal</h1>
+  <div class="login-container">
+    <h3>Sign in</h3>
+    <input type="email" id="email" placeholder="Email" />
+    <input type="password" id="password" placeholder="Password" />
+    <button id="loginBtn">Sign In</button>
+    <button id="signupBtn">Create Account</button>
+    <button id="googleBtn" class="google-btn">Sign in with Google</button>
+    <p id="status"></p>
   </div>
-</div>
 
-<!-- Firebase SDKs (compat for static sites) -->
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+  <!-- Firebase SDKs -->
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
 
-<script>
-  // === Your config (as you shared) ===
-  const firebaseConfig = {
-    apiKey: "AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
-    authDomain: "majorgrowthportal.firebaseapp.com",
-    projectId: "majorgrowthportal",
-    storageBucket: "majorgrowthportal.firebasestorage.app",
-    messagingSenderId: "741963712787",
-    appId: "1:741963712787:web:dbb9fb191cdae414b0f2e6",
-    measurementId: "G-7NGDY9DYCW"
-  };
+  <script>
+    const firebaseConfig = {
+      apiKey: "AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
+      authDomain: "majorgrowthportal.firebaseapp.com",
+      projectId: "majorgrowthportal",
+      storageBucket: "majorgrowthportal.firebasestorage.app",
+      messagingSenderId: "741963712787",
+      appId: "1:741963712787:web:dbb9fb191cdae414b0f2e6",
+      measurementId: "G-7NGDY9DYCW"
+    };
 
-  // === Init (single time) ===
-  let auth, db;
-  try{
     firebase.initializeApp(firebaseConfig);
-    auth = firebase.auth();
-    db   = firebase.firestore();
-    document.getElementById('conn').innerHTML = 'Firebase: <span class="ok">Connected ✅</span>';
-    console.log("Firebase connected:", !!firebase.apps.length);
-  }catch(e){
-    document.getElementById('conn').innerHTML = 'Firebase: <span class="bad">NOT connected ❌</span>';
-    console.error(e);
-  }
+    const auth = firebase.auth();
 
-  const $ = id => document.getElementById(id);
-  const status = $('status'), logout = $('logout');
+    const loginBtn = document.getElementById('loginBtn');
+    const signupBtn = document.getElementById('signupBtn');
+    const googleBtn = document.getElementById('googleBtn');
+    const status = document.getElementById('status');
 
-  // Auth state
-  if(auth){
-    auth.onAuthStateChanged(u=>{
-      if(u){
-        status.innerHTML = `Signed in as <b>${u.email}</b><br><span class="muted">uid: ${u.uid}</span>`;
-        logout.style.display = 'inline-block';
-      }else{
-        status.textContent = 'Not signed in.';
-        logout.style.display = 'none';
+    signupBtn.onclick = async () => {
+      try {
+        await auth.createUserWithEmailAndPassword(
+          document.getElementById('email').value,
+          document.getElementById('password').value
+        );
+        status.textContent = "Account created successfully!";
+      } catch (error) {
+        status.textContent = error.message;
       }
-    });
-  }
+    };
 
-  // Buttons
-  $('create').onclick = async ()=>{
-    try{ await auth.createUserWithEmailAndPassword($('email').value, $('password').value); }
-    catch(e){ alert(e.message); console.error(e); }
-  };
-  $('login').onclick = async ()=>{
-    try{ await auth.signInWithEmailAndPassword($('email').value, $('password').value); }
-    catch(e){ alert(e.message); console.error(e); }
-  };
-  $('google').onclick = async ()=>{
-    try{ await auth.signInWithPopup(new firebase.auth.GoogleAuthProvider()); }
-    catch(e){ alert(e.message); console.error(e); }
-  };
-  logout.onclick = async ()=>{ try{ await auth.signOut(); } catch(e){ console.error(e); } };
-</script>
+    loginBtn.onclick = async () => {
+      try {
+        await auth.signInWithEmailAndPassword(
+          document.getElementById('email').value,
+          document.getElementById('password').value
+        );
+        status.textContent = "Signed in successfully!";
+      } catch (error) {
+        status.textContent = error.message;
+      }
+    };
+
+    googleBtn.onclick = async () => {
+      const provider = new firebase.auth.GoogleAuthProvider();
+      try {
+        await auth.signInWithPopup(provider);
+        status.textContent = "Signed in with Google!";
+      } catch (error) {
+        status.textContent = error.message;
+      }
+    };
+  </script>
 </body>
 </html>
