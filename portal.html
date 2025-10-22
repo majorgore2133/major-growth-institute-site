@@ -9,7 +9,6 @@
 <!-- PDF.js for client-side PDF text extraction -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
-  // set worker for pdf.js
   if (window['pdfjsLib']) {
     pdfjsLib.GlobalWorkerOptions.workerSrc =
       "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
@@ -77,6 +76,8 @@ p.mini{color:var(--muted);font-size:12px;margin:6px 0}
   transition:width .35s ease
 }
 
+.badge-goal{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff5e0;border:1px solid #f3d28a;color:#875d00;font-weight:800}
+
 footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
 
 /* loading overlay */
@@ -93,6 +94,15 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
 }
 .kv{display:grid;grid-template-columns:140px 1fr;gap:6px;font-size:13px}
 @media(max-width:560px){.kv{grid-template-columns:1fr}}
+.badge-ok{color:#2bb673}
+.badge-warn{color:#f0b429}
+.badge-bad{color:#d72638}
+
+/* milestone chips */
+.mchip{
+  border:1px solid #e7eff7;background:#fcfdff;border-radius:999px;padding:8px 12px;margin:6px 8px 0 0;display:inline-flex;gap:8px;align-items:center
+}
+.mchip.done{border-color:#c8efd8;background:#f3fff7}
 </style>
 </head>
 <body>
@@ -120,8 +130,8 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     <div class="tab active" data-tab="overview">Overview</div>
     <div class="tab" data-tab="analyzer">Analyzer</div>
     <div class="tab" data-tab="upload">AI Reader</div>
+    <div class="tab" data-tab="milestones">Milestones</div>
     <div class="tab" data-tab="reports">Reports</div>
-    <div class="tab" data-tab="progress">Progress</div>
     <div class="tab" data-tab="support">Support</div>
   </div>
 
@@ -135,22 +145,30 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
         <a class="btn ghost" href="#upload" onclick="selectTab('upload')">Upload Credit Report</a>
         <a class="btn ghost" href="#reports" onclick="selectTab('reports')">See Lenders</a>
       </div>
-      <div class="tip">
-        <b>Book a Consultation (Free)</b> — 20 minutes to map your next steps.
+
+      <div class="tip" style="margin-top:10px">
+        <span class="badge-goal">Your Core Goal</span>
+        <div style="margin-top:6px">Build a prime profile: <b>8–12 positive accounts</b>, strong <b>mix</b>, long <b>age</b>, <b>100% on-time</b>, <b>no derogs</b>, <b>&lt;10% utilization</b>.</div>
         <div class="row" style="margin-top:8px">
           <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Consultation — Free</a>
           <a class="btn" href="https://buy.stripe.com/test_6oU5kFepa0dZd7wcJE53O01" target="_blank" rel="noopener">Full Service Package ($1000)</a>
         </div>
       </div>
     </div>
+
     <div class="card">
       <div class="badge">At a glance</div>
       <h3>Funding Readiness</h3>
       <div class="progress" aria-label="Funding readiness"><span id="bar-fund" style="width:0%"></span></div>
       <p class="mini" id="fund-note">Complete the analyzer to see your readiness.</p>
+
       <h3 style="margin-top:12px">Credit Repair</h3>
       <div class="progress" aria-label="Repair progress"><span id="bar-repair" style="width:0%"></span></div>
       <p class="mini" id="repair-note">We’ll calculate this from your inputs.</p>
+
+      <h3 style="margin-top:12px">Goal Progress</h3>
+      <div class="progress" aria-label="Goal progress"><span id="bar-goal" style="width:0%"></span></div>
+      <p class="mini" id="goal-note">Work the milestones to hit prime status.</p>
     </div>
   </div>
 
@@ -171,29 +189,30 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
       <label class="pill"><input type="checkbox" id="coff"> Charge-offs</label>
       <label class="pill"><input type="checkbox" id="bk"> Bankruptcy</label>
       <input class="input" id="negCount" placeholder="# of negative items" type="number">
+      <label class="pill"><input type="checkbox" id="ontime100"> 100% on-time payments</label>
     </div>
 
     <div class="tip">
-      <b>Why “Repair” matters:</b>
-      Removing/re-aging negatives reduces your risk flags in lender scorecards. Collections/charge-offs directly lower scorecards’ “payment history” bucket (the heaviest-weighted factor). Each deletion or goodwill removal can move you into higher approval tiers and lower pricing.
+      <b>Why “Repair” matters:</b> Payment history is the biggest score factor. Removing lates/collections/charge-offs reduces risk flags and can move you into higher approval tiers with better pricing. If you can’t delete, aim to re-age or add strong new positives to dilute.
     </div>
 
     <h3 style="margin-top:16px">Build</h3>
     <div class="row">
-      <input class="input" id="util" placeholder="Overall utilization % (e.g., 28)" type="number">
+      <input class="input" id="util" placeholder="Overall utilization % (e.g., 9)" type="number">
       <input class="input" id="rev"  placeholder="# of revolving accounts" type="number">
       <input class="input" id="inst" placeholder="# of installment accounts" type="number">
       <input class="input" id="age"  placeholder="Avg age (months)" type="number">
       <input class="input" id="inq"  placeholder="New inquiries (6–12 mo)" type="number">
+      <input class="input" id="acctTotal" placeholder="Total positive accounts (target 8–12)" type="number">
     </div>
 
     <div class="tip">
       <b>Why “Build” matters:</b>
       <div class="kv">
-        <div><b>Utilization</b></div><div>Below 28% shows capacity; under 9% is prime behavior. Models treat low utilization as strong risk control, lifting scores quickly.</div>
-        <div><b>Mix</b></div><div>3+ revolving lines + 1 installment signals maturity. Lenders prefer diverse, well-managed credit over thin files.</div>
-        <div><b>Age</b></div><div>24+ months average age reduces “new credit” penalties. Closing young subprime lines too early can hurt age.</div>
-        <div><b>Inquiries</b></div><div>≤3 in last 6–12 months keeps you out of the “credit seeking” penalty buckets in underwriting.</div>
+        <div><b>Utilization</b></div><div>&lt;10% signals prime behavior and high capacity. Models directly reward low balance-to-limit ratios.</div>
+        <div><b>Mix</b></div><div>≥3 revolving + ≥1 installment shows maturity lenders want to see, reducing denial risk on new lines.</div>
+        <div><b>Age</b></div><div>≥36 months average age dampens “new credit” penalties. Keep oldest lines open; avoid closing young subprime lines too early.</div>
+        <div><b>Depth</b></div><div>8–12 positive accounts gives a thick file without looking reckless. Too few = thin file; too many new = credit seeking.</div>
       </div>
     </div>
 
@@ -206,6 +225,13 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
         <option value="conservative">Risk: Conservative</option>
         <option value="moderate" selected>Risk: Moderate</option>
         <option value="aggressive">Risk: Aggressive</option>
+      </select>
+      <select class="input" id="fundReason">
+        <option value="good-credit" selected>Build strong credit</option>
+        <option value="buy-car">Buy a car</option>
+        <option value="buy-house">Buy a house</option>
+        <option value="biz-start">Start/expand a business</option>
+        <option value="debt-free">Debt freedom</option>
       </select>
     </div>
 
@@ -243,6 +269,14 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     <div id="aiOutput" class="tip" style="display:none;margin-top:12px"></div>
   </div>
 
+  <!-- Milestones -->
+  <div id="panel-milestones" class="card" style="display:none;margin-top:14px">
+    <div class="badge">Milestones</div>
+    <h2 style="margin-top:6px">Prime Profile Journey</h2>
+    <p class="mini">Hit each milestone to reach prime status and best-price funding.</p>
+    <div id="milesList" style="margin-top:8px"></div>
+  </div>
+
   <!-- Reports -->
   <div id="panel-reports" class="card" style="display:none;margin-top:14px">
     <div class="badge">Lender Finder (Live Link)</div>
@@ -255,12 +289,6 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     <div id="lenders" style="margin-top:12px"></div>
   </div>
 
-  <!-- Progress -->
-  <div id="panel-progress" class="card" style="display:none;margin-top:14px">
-    <div class="badge">Your Progress</div>
-    <div id="progContent" style="margin-top:10px">No data yet — run the analyzer and save.</div>
-  </div>
-
   <!-- Support + Founder -->
   <div id="panel-support" class="grid two" style="display:none;margin-top:14px">
     <div class="card">
@@ -270,11 +298,14 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
         <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Consultation — Free</a>
         <a class="btn" href="mailto:majorgrowthinstitute@gmail.com">Email Support</a>
       </div>
+      <div class="tip" style="margin-top:10px">
+        <b>Important:</b> This platform is educational and personalized to your inputs. It is not legal or financial advice, and results vary. There is no one-size-fits-all plan — your path may differ based on lender criteria and your profile.
+      </div>
     </div>
     <div class="card">
       <div class="badge">Meet the Founder</div>
       <h3 style="margin-top:6px">Building Wealth the Right Way</h3>
-      <p class="mini">I started Major Growth Institute after seeing too many people try to win with a playbook that wasn’t built for them. I’m here to make funding, credit, and business strategy clear, repeatable, and honest.</p>
+      <p class="mini">I started Major Growth Institute after seeing too many people try to win with a playbook that wasn’t built for them. We focus on clear steps, lender-aligned profiles, and honest funding strategies.</p>
       <ul style="margin-top:6px; padding-left:18px; line-height:1.5">
         <li>Transparent steps — no fluff, no mystery.</li>
         <li>Tailored lender matching by state and profile.</li>
@@ -282,6 +313,15 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
       </ul>
       <p class="mini">If you’re serious about momentum, book a chat and we’ll map your next 90 days.</p>
     </div>
+  </div>
+
+  <!-- Disclaimers -->
+  <div class="card" style="margin-top:16px">
+    <div class="badge">Disclaimers</div>
+    <p class="mini">
+      Major Growth Institute is not a law firm, credit bureau, or financial institution. Information is educational and based on user-provided data. Nothing here is financial, legal, or tax advice. Results vary, and no outcomes or approvals are guaranteed. All strategies are personalized — there is no one-size-fits-all plan.
+      By using this platform you agree to our Terms and understand that lenders have independent criteria that may change without notice.
+    </p>
   </div>
 
   <footer>© Major Growth Institute</footer>
@@ -310,6 +350,8 @@ auth.onAuthStateChanged(u=>{
   if(!u){ location.href="app.html"; return; }
   document.getElementById('who').textContent = "Signed in: "+(u.displayName||u.email);
   document.getElementById('app-loading').style.display='none';
+  // Load any saved profile
+  loadProfile();
 });
 document.getElementById('logout').onclick=()=>auth.signOut().then(()=>location.href="app.html");
 
@@ -317,24 +359,26 @@ document.getElementById('logout').onclick=()=>auth.signOut().then(()=>location.h
 const tabs=document.querySelectorAll('.tab');
 function selectTab(name){
   tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
-  const panels=['overview','analyzer','upload','reports','progress','support'];
+  const panels=['overview','analyzer','upload','milestones','reports','support'];
   panels.forEach(id=>{
     const el=document.getElementById('panel-'+id);
     if(!el) return;
     el.style.display=(id===name ? (id==='analyzer' || id==='upload' ? 'block':'grid') : 'none');
   });
+  if(name==='milestones') renderMilestones();
 }
 tabs.forEach(t=>t.onclick=()=>selectTab(t.dataset.tab));
 if(location.hash==="#analyzer") selectTab('analyzer'); else selectTab('overview');
 
-// ---------- Analyzer + Progress ----------
+// ---------- Analyzer + Progress + Goal Engine ----------
 let profile={
   scores:{exp:null,eq:null,tu:null},
   neg:{late:false,coll:false,coff:false,bk:false,count:0},
-  build:{util:null,rev:0,inst:0,age:0,inq:0},
-  fund:{personal:true,biz:false,target:0,risk:'moderate'},
+  build:{util:null,rev:0,inst:0,age:0,inq:0,acctTotal:0,ontime100:false},
+  fund:{personal:true,biz:false,target:0,risk:'moderate',reason:'good-credit'},
   location:{state:null},
   readiness:0, repairPct:0, tier:"Not Ready",
+  goalPct:0,
   updatedAt:null
 };
 const get=(id)=>document.getElementById(id);
@@ -342,32 +386,49 @@ const v=(id)=>{const el=get(id); return el?.type==='checkbox'?el.checked:(el?.va
 const n=(x)=>{if(x===""||x==null) return null; const y=Number(x); return isNaN(y)?null:y;}
 
 function avg(a){const b=a.filter(v=>typeof v==='number'&&!isNaN(v));return b.length?Math.round(b.reduce((x,y)=>x+y,0)/b.length):null;}
-function setVal(id,v){const el=get(id); if(el) el.value=(v??"");}
-function setChk(id,v){const el=get(id); if(el) el.checked=!!v;}
-function setSel(id,v){const el=get(id); if(el) el.value=v;}
+function setVal(id,v){const el=get(id); if(el!=null && v!=null) el.value=v;}
+function setChk(id,v){const el=get(id); if(el!=null) el.checked=!!v;}
+function setSel(id,v){const el=get(id); if(el!=null && v!=null) el.value=v;}
 
+// recommendations
 function buildRecs(p, avgScore){
   const R=[];
+  // negatives
   if(p.neg.count>0||p.neg.late||p.neg.coll||p.neg.coff||p.neg.bk){
-    R.push("<b>Address derogatories first.</b> Payment history is the largest score factor. Deletions/goodwill on late/collections/charge-offs reduce risk flags. Bankruptcies require re-establishing positive lines for 12–24 months.");
+    R.push("<b>Address derogatories first.</b> Payment history drives scores and pricing. Aim to delete, re-age, or secure goodwill. Each removal unlocks better tiers.");
+  } else {
+    R.push("<b>Great — no derogatories detected.</b> Keep it that way. One late can drop scores 60–100 points.");
   }
-  if(p.build.util!=null && p.build.util>28){
-    R.push("<b>Reduce utilization below 28% (ideal &lt;9%).</b> Models penalize high balance-to-limit ratios. Mid-cycle payments (before statement cut) lower reported balances and can yield quick score gains.");
+  // utilization
+  if(p.build.util!=null){
+    if(p.build.util>28) R.push("<b>Reduce utilization below 28% (target &lt;10%).</b> Lower reported balances before statement cuts to get faster score gains.");
+    else if(p.build.util>10) R.push("<b>Dial it down to &lt;10%.</b> That’s the sweet spot for prime underwriting and 0% APR windows.");
+    else R.push("<b>Utilization already prime (&lt;10%).</b> Maintain by paying before statement dates.");
+  } else {
+    R.push("<b>Add utilization estimate.</b> We need it to tune readiness and goal milestones.");
   }
-  if(p.build.rev<3){
-    R.push("<b>Reach 3+ revolving lines.</b> Thin files lack depth. Add 1–2 primary or secured cards to build consistent payment history and improve approval odds.");
-  }
-  if(p.build.inst<1){
-    R.push("<b>Add one small installment/pledge loan.</b> Improves credit mix. Pay down 80–90% early to minimize interest while keeping the account open.");
-  }
-  if(p.build.inq>3){
-    R.push("<b>Pause new hard pulls 60–90 days.</b> Many inquiries = “credit seeking” in underwriting. Space applications and batch logically.");
-  }
+  // mix + depth
+  if((p.build.rev||0) < 3) R.push("<b>Reach 3+ revolving lines.</b> Thin files underperform in approvals.");
+  if((p.build.inst||0) < 1) R.push("<b>Add ≥1 installment/pledge loan.</b> It strengthens mix and stabilizes score volatility.");
+  const total = (p.build.acctTotal||0) || ((p.build.rev||0)+(p.build.inst||0));
+  if(total<8) R.push("<b>Build to 8–12 positive accounts.</b> That’s ‘thick’ without looking reckless.");
+  if(p.build.age!=null && p.build.age<36) R.push("<b>Season your age to ≥36 months.</b> Keep oldest lines open; avoid closing young lines.");
+  if(p.build.ontime100) R.push("<b>Perfect payment streak.</b> Keep it 100% — it’s your best pricing lever.");
   if(avgScore && avgScore>=680 && (p.build.util??100)<=28){
-    R.push("<b>0% intro APR windows are open.</b> Use for balance strategy or launch expenses, but avoid stacking too many new accounts in the same week.");
+    R.push("<b>0% intro APR windows are open.</b> Apply in small batches; avoid stacking too many in one week.");
   }
   if(p.fund.biz){
-    R.push("<b>Prep for business funding.</b> Have EIN, business checking, aged vendor/net-30s, and revenue docs. Align bank relationships with target lenders.");
+    R.push("<b>Prep for business funding.</b> EIN, business checking, 2–3 vendor/net-30s, and revenue docs. Align CU relationships to targets.");
+  }
+  // fund reason tweaks
+  if(p.fund.reason==='buy-house'){
+    R.push("<b>Mortgage prep:</b> 3 trade lines, no recent lates, DTI planning, reserves. Keep inquiries modest for 90 days.");
+  } else if(p.fund.reason==='buy-car'){
+    R.push("<b>Auto prep:</b> Low utilization, stable income docs, and ≤3 inquiries. Consider pre-approval to set dealer expectations.");
+  } else if(p.fund.reason==='biz-start'){
+    R.push("<b>Business launch:</b> Register entity, business bank, and vendor lines. Then rotate to bank-issued biz cards/LOCs.");
+  } else if(p.fund.reason==='debt-free'){
+    R.push("<b>Debt freedom plan:</b> Snowball or avalanche strategy; protect utilization while you pay down.");
   }
   return "<ul style='line-height:1.5;margin-left:18px'>"+R.map(x=>`<li>${x}</li>`).join("")+"</ul>";
 }
@@ -377,34 +438,52 @@ function hydrateForm(){
   setVal('exp',p.scores.exp); setVal('eq',p.scores.eq); setVal('tu',p.scores.tu);
   setChk('late',p.neg.late); setChk('coll',p.neg.coll); setChk('coff',p.neg.coff); setChk('bk',p.neg.bk); setVal('negCount',p.neg.count);
   setVal('util',p.build.util); setVal('rev',p.build.rev); setVal('inst',p.build.inst); setVal('age',p.build.age); setVal('inq',p.build.inq);
+  setVal('acctTotal',p.build.acctTotal); setChk('ontime100',p.build.ontime100);
   setChk('goal_personal',p.fund.personal); setChk('goal_business',p.fund.biz); setVal('target',p.fund.target); setSel('risk',p.fund.risk);
-  get('bar-fund').style.width=p.readiness+"%";
-  get('bar-repair').style.width=p.repairPct+"%";
-  get('fundingTier').textContent=p.tier||'Not calculated';
-  renderProgress();
+  setSel('fundReason',p.fund.reason);
+  updateBars();
+  renderMilestones();
 }
 
 async function saveProfile(){
   const u=auth.currentUser; if(!u) return;
   await db.collection("mgi_clients").doc(u.uid).set(profile,{merge:true});
-  renderProgress();
+  updateBars();
 }
 async function loadProfile(){
   const u=auth.currentUser; if(!u) return;
   const d=await db.collection("mgi_clients").doc(u.uid).get();
-  if(d.exists){ profile=Object.assign(profile,d.data()); hydrateForm(); }
+  if(d.exists){ profile=Object.assign(profile,d.data()); }
+  hydrateForm();
   loadStates();
 }
 
-function renderProgress(){
-  const c=get('progContent');
-  if(!c) return;
-  c.innerHTML = `
-    <p><b>Funding Readiness:</b> ${profile.readiness}%</p>
-    <p><b>Repair Progress:</b> ${profile.repairPct}%</p>
-    <p><b>Tier:</b> ${profile.tier}</p>
-    <p class="mini">Last updated: ${profile.updatedAt?new Date(profile.updatedAt).toLocaleString():'—'}</p>
-  `;
+function updateBars(){
+  get('bar-fund').style.width=profile.readiness+"%";
+  get('bar-repair').style.width=profile.repairPct+"%";
+  get('bar-goal').style.width=profile.goalPct+"%";
+  get('fundingTier').textContent=profile.tier||'Not calculated';
+  get('fund-note').textContent = "Readiness: "+profile.readiness+"%";
+  get('repair-note').textContent= "Repair progress: "+profile.repairPct+"%";
+  get('goal-note').textContent= "Goal progress: "+profile.goalPct+"%";
+}
+
+function renderMilestones(){
+  const total = (profile.build.acctTotal||0) || ((profile.build.rev||0)+(profile.build.inst||0));
+  const items = [
+    {key:'depth', label:'8–12 positive accounts', ok: total>=8 && total<=12 },
+    {key:'mix', label:'Mix: ≥3 revolving & ≥1 installment', ok:(profile.build.rev||0)>=3 && (profile.build.inst||0)>=1},
+    {key:'util', label:'Utilization < 10%', ok:(profile.build.util!=null && profile.build.util<10)},
+    {key:'age', label:'Average age ≥ 36 months', ok:(profile.build.age!=null && profile.build.age>=36)},
+    {key:'derogs', label:'0 derogatories (lates/collections/charge-offs/BK)', ok: !(profile.neg.late||profile.neg.coll||profile.neg.coff||profile.neg.bk|| (profile.neg.count||0)>0)},
+    {key:'ontime', label:'100% on-time payments', ok: !!profile.build.ontime100}
+  ];
+  const cont = get('milesList');
+  cont.innerHTML = items.map(m => `
+    <span class="mchip ${m.ok?'done':''}">
+      ${m.ok?'✅':'⏳'} ${m.label}
+    </span>
+  `).join("");
 }
 
 function computeAndSave(){
@@ -412,34 +491,54 @@ function computeAndSave(){
   profile.scores.exp=n(v('exp')); profile.scores.eq=n(v('eq')); profile.scores.tu=n(v('tu'));
   profile.neg.late=v('late'); profile.neg.coll=v('coll'); profile.neg.coff=v('coff'); profile.neg.bk=v('bk'); profile.neg.count=n(v('negCount'))||0;
   profile.build.util=n(v('util')); profile.build.rev=n(v('rev'))||0; profile.build.inst=n(v('inst'))||0; profile.build.age=n(v('age'))||0; profile.build.inq=n(v('inq'))||0;
+  profile.build.acctTotal=n(v('acctTotal'))||((profile.build.rev||0)+(profile.build.inst||0));
+  profile.build.ontime100 = v('ontime100');
   profile.fund.personal=v('goal_personal'); profile.fund.biz=v('goal_business'); profile.fund.target=n(v('target'))||0; profile.fund.risk=v('risk')||'moderate';
+  profile.fund.reason=v('fundReason')||'good-credit';
 
-  // compute
-  const avgScore=avg([profile.scores.exp,profile.scores.eq,profile.scores.tu]);
+  // compute repair
   let repair=100;
   if(profile.neg.count>0) repair-=Math.min(60, profile.neg.count*10);
   if(profile.neg.late) repair-=10; if(profile.neg.coll) repair-=15; if(profile.neg.coff) repair-=18; if(profile.neg.bk) repair-=35;
   repair=Math.max(0,Math.min(100,repair));
+
+  // compute readiness (unchanged core + reason tweaks)
+  const avgScore=avg([profile.scores.exp,profile.scores.eq,profile.scores.tu]);
   let readiness=0;
-  if(avgScore) readiness += Math.max(0, Math.min(50,(avgScore-600)/120*50));  // 600→720 ~ 0→50
+  if(avgScore) readiness += Math.max(0, Math.min(50,(avgScore-600)/120*50));
   if(profile.build.util!=null) readiness += (profile.build.util<=9?30:profile.build.util<=28?18:profile.build.util<=57?6:0);
   if(profile.build.rev>=3) readiness += 10;
   if(profile.build.age>=24) readiness += 5;
   if(profile.build.inq<=3) readiness += 5;
+  // fund reason nudges
+  if(profile.fund.reason==='buy-house' && profile.build.age>=36 && !profile.neg.late) readiness += 5;
+  if(profile.fund.reason==='buy-car' && (profile.build.util||100)<=20) readiness += 3;
+  if(profile.fund.reason==='biz-start' && profile.fund.biz) readiness += 3;
+
   readiness=Math.round(Math.max(0,Math.min(100,readiness)));
   let tier="Not Ready";
   if(readiness>=80 && repair>=80) tier="Tier 1 (Prime + biz ready)";
   else if(readiness>=60 && repair>=60) tier="Tier 2 (0% personal ready)";
   else if(readiness>=40) tier="Pre-Work";
-  profile.readiness=readiness; profile.repairPct=repair; profile.tier=tier; profile.updatedAt=new Date().toISOString();
+
+  // compute goal progress vs your exact target
+  const total = profile.build.acctTotal||0;
+  const hits = [
+    (total>=8 && total<=12),
+    (profile.build.rev>=3 && profile.build.inst>=1),
+    (profile.build.age>=36),
+    (!profile.neg.late && !profile.neg.coll && !profile.neg.coff && !profile.neg.bk && (profile.neg.count||0)===0),
+    (profile.build.util!=null && profile.build.util<10),
+    (!!profile.build.ontime100)
+  ];
+  const goalPct = Math.round((hits.filter(Boolean).length / 6) * 100);
+
+  profile.readiness=readiness; profile.repairPct=repair; profile.tier=tier; profile.goalPct=goalPct; profile.updatedAt=new Date().toISOString();
 
   // UI
-  get('fundingTier').textContent=tier;
-  get('bar-fund').style.width=readiness+"%";
-  get('bar-repair').style.width=repair+"%";
-  get('fund-note').textContent = "Readiness: "+readiness+"%";
-  get('repair-note').textContent= "Repair progress: "+repair+"%";
   get('recs').innerHTML = buildRecs(profile, avgScore);
+  updateBars();
+  renderMilestones();
 
   saveProfile();
 }
@@ -447,9 +546,10 @@ function computeAndSave(){
 function clearData(){
   if(!confirm("Clear analyzer data?")) return;
   profile={scores:{exp:null,eq:null,tu:null},neg:{late:false,coll:false,coff:false,bk:false,count:0},
-    build:{util:null,rev:0,inst:0,age:0,inq:0},fund:{personal:true,biz:false,target:0,risk:'moderate'},
-    location:{state:null},readiness:0,repairPct:0,tier:"Not Ready",updatedAt:null};
-  hydrateForm(); renderProgress(); saveProfile();
+    build:{util:null,rev:0,inst:0,age:0,inq:0,acctTotal:0,ontime100:false},
+    fund:{personal:true,biz:false,target:0,risk:'moderate',reason:'good-credit'},
+    location:{state:null},readiness:0,repairPct:0,tier:"Not Ready",goalPct:0,updatedAt:null};
+  hydrateForm(); saveProfile();
 }
 
 // ---------- AI Reader ----------
@@ -471,7 +571,6 @@ async function analyzeFile(){
         text += content.items.map(i=>i.str).join(" ") + "\n";
       }
     } else {
-      // TXT / CSV
       text = await file.text();
     }
     const result = parseCreditText(text);
@@ -500,35 +599,39 @@ function clearPaste(){
   out.style.display='none'; out.innerHTML="";
 }
 
-// Heuristic parser: extracts scores, utilization, negatives, counts
+// Heuristic parser: extracts scores, utilization, negatives, counts, age, inquiries, basic mix
 function parseCreditText(t){
   const text = t.replace(/\s+/g," ").trim();
 
   // Scores
   const scoreMap = {};
-  (text.match(/Experian[^0-9]{0,15}(\d{3})/i)||[])[1] && (scoreMap.exp = Number(RegExp.$1));
-  (text.match(/Equifax[^0-9]{0,15}(\d{3})/i)||[])[1] && (scoreMap.eq  = Number(RegExp.$1));
-  (text.match(/Trans.?Union[^0-9]{0,15}(\d{3})/i)||[])[1] && (scoreMap.tu = Number(RegExp.$1));
+  const mExp = text.match(/Experian[^0-9]{0,15}(\d{3})/i); if(mExp) scoreMap.exp=Number(mExp[1]);
+  const mEq  = text.match(/Equifax[^0-9]{0,15}(\d{3})/i);  if(mEq)  scoreMap.eq =Number(mEq[1]);
+  const mTu  = text.match(/Trans.?Union[^0-9]{0,15}(\d{3})/i); if(mTu) scoreMap.tu=Number(mTu[1]);
 
-  // Utilization (overall)
+  // Utilization overall
   let util = null;
   const utilMatch = text.match(/overall[^%]{0,15}util(?:ization)?[^0-9]{0,10}(\d{1,3})\s?%/i)
                 || text.match(/util(?:ization)?[^0-9]{0,10}(\d{1,3})\s?%/i);
   if(utilMatch){ util = Number(utilMatch[1]); }
 
   // Negatives
-  const lateCount = (text.match(/\blate\b/gi)||[]).length;
+  const lateCount = (text.match(/\b30[-\s]?day[s]?\s+late|\blate payment/gi)||[]).length || (text.match(/\blate\b/gi)||[]).length;
   const collCount = (text.match(/\bcollection(s)?\b/gi)||[]).length;
   const coffCount = (text.match(/\bcharge[\s-]?off(s)?\b/gi)||[]).length;
   const bkCount   = (text.match(/\bbankruptcy\b/gi)||[]).length;
   const negCount  = lateCount + collCount + coffCount + bkCount;
 
-  // Mix (very rough heuristics)
+  // Mix + totals (rough)
   let rev = 0, inst = 0;
   rev += (text.match(/\bcredit card\b/gi)||[]).length;
   rev += (text.match(/\brevolving\b/gi)||[]).length;
   inst += (text.match(/\binstallment\b/gi)||[]).length;
   inst += (text.match(/\bauto loan\b/gi)||[]).length + (text.match(/\bstudent loan\b/gi)||[]).length + (text.match(/\bmortgage\b/gi)||[]).length;
+
+  // Totals
+  const totalMatch = text.match(/open accounts?:?\s*(\d{1,2})/i);
+  const acctTotal = totalMatch ? Number(totalMatch[1]) : (rev+inst);
 
   // Inquiries
   const inqMatch = text.match(/inquiries?[^0-9]{0,10}(\d{1,2})/i);
@@ -539,10 +642,15 @@ function parseCreditText(t){
   const ageMatch = text.match(/average[^0-9]{0,10}age[^0-9]{0,10}(\d{1,3})\s?month/i);
   if(ageMatch){ age = Number(ageMatch[1]); }
 
+  // On-time 100%
+  const ontime = /\b100%\s*on[-\s]?time\b/i.test(text) || /\bperfect payment history\b/i.test(text);
+
   return {
     scores: scoreMap,
     util, rev, inst, inq, age,
-    negatives: { late:lateCount>0, coll:collCount>0, coff:coffCount>0, bk:bkCount>0, count:negCount }
+    acctTotal,
+    negatives: { late:lateCount>0, coll:collCount>0, coff:coffCount>0, bk:bkCount>0, count:negCount },
+    ontime100: ontime
   };
 }
 
@@ -555,6 +663,7 @@ function applyParsedToForm(r){
   if(r.util!=null) setVal('util', r.util);
   if(r.rev!=null)  setVal('rev',  r.rev);
   if(r.inst!=null) setVal('inst', r.inst);
+  if(r.acctTotal!=null) setVal('acctTotal', r.acctTotal);
   if(r.age!=null)  setVal('age',  r.age);
   if(r.inq!=null)  setVal('inq',  r.inq);
 
@@ -565,6 +674,7 @@ function applyParsedToForm(r){
     setChk('bk',   r.negatives.bk);
     setVal('negCount', r.negatives.count || 0);
   }
+  setChk('ontime100', !!r.ontime100);
 }
 
 function renderParsedPreview(r){
@@ -574,9 +684,11 @@ function renderParsedPreview(r){
   }
   if(r.util!=null) parts.push(`<b>Utilization</b>: ${r.util}%`);
   parts.push(`<b>Mix</b>: Revolving ~${r.rev||0}, Installment ~${r.inst||0}`);
+  parts.push(`<b>Total Accounts</b>: ${r.acctTotal||((r.rev||0)+(r.inst||0))}`);
   if(r.age!=null) parts.push(`<b>Avg Age</b>: ${r.age} mo`);
   if(r.inq!=null) parts.push(`<b>Inquiries</b>: ${r.inq}`);
   parts.push(`<b>Negatives</b>: late ${r.negatives?.late?'✔️':'—'}, coll ${r.negatives?.coll?'✔️':'—'}, charge-off ${r.negatives?.coff?'✔️':'—'}, bk ${r.negatives?.bk?'✔️':'—'} (count ~${r.negatives?.count||0})`);
+  parts.push(`<b>On-time 100%</b>: ${r.ontime100?'✔️':'—'}`);
   return parts.join("<br>");
 }
 
@@ -621,8 +733,6 @@ async function fetchLenders() {
     </div>
   `;
 }
-
-loadStates();
 </script>
 </body>
 </html>
