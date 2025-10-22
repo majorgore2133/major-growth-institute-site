@@ -376,50 +376,18 @@ async function detectLocation(){
 }
 
 async function fetchLenders() {
-  const state = STATE_TO_CODE[document.getElementById("stateSel").value] || "48";
-  const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev";
+  const stateAbbr = document.getElementById("stateSel").value || "TX";
+  const code = STATE_TO_CODE[stateAbbr] || "48"; // convert to FIPS
   const el = document.getElementById("lenders");
-  el.innerHTML = "Loading lenders…";
 
-  try {
-    const response = await fetch(`${PROXY}/?state=${state}`);
-    const html = await response.text();
-
-    // Extract only the visible table rows from iBankNet’s HTML
-    const parser = new DOMParser();
-    const doc = parser.parseFromString(html, "text/html");
-    const rows = Array.from(doc.querySelectorAll("table tr"));
-    if (!rows.length) throw new Error("No data table found.");
-
-    const banks = rows
-      .map((r) => {
-        const cols = r.querySelectorAll("td");
-        if (cols.length < 2) return null;
-        const name = cols[0]?.innerText.trim();
-        const city = cols[1]?.innerText.trim();
-        return name && city ? { name, city } : null;
-      })
-      .filter(Boolean)
-      .slice(0, 40); // Limit to first 40
-
-    if (!banks.length) {
-      el.innerHTML = "No lenders found for this state.";
-      return;
-    }
-
-    el.innerHTML = banks
-      .map(
-        (b) => `
-        <div class="pill" style="margin:6px 0;padding:10px;border-bottom:1px solid #ddd">
-          <strong>${b.name}</strong><br>
-          <span>${b.city}</span>
-        </div>`
-      )
-      .join("");
-  } catch (err) {
-    console.error(err);
-    el.innerHTML = "Error fetching lender list.";
-  }
+  const link = `https://ibanknet.com/scripts/callreports/fiList.aspx?type=stateallfi&state=${code}`;
+  el.innerHTML = `
+    <div style="padding:14px;border:1px solid #e6eef6;border-radius:10px;background:#f8fbff">
+      <p><b>${stateAbbr} Lenders:</b></p>
+      <a href="${link}" target="_blank" rel="noopener" class="btn gold">🔗 View Live Lender List</a>
+      <p class="mini" style="margin-top:6px">This link opens iBankNet’s real-time lender database for ${stateAbbr}.</p>
+    </div>
+  `;
 }
 
 loadStates();
