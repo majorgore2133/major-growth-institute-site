@@ -343,5 +343,37 @@ const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev";
   }
 }
 </script>
+  <script>
+const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev";
+
+async function fetchLenders() {
+  const el = document.getElementById("lenders");
+  el.innerHTML = "Loading lenders…";
+
+  try {
+    const state = "48"; // TX
+    const resp = await fetch(`${PROXY}/?state=${state}`);
+    const data = await resp.json();
+
+    if (!Array.isArray(data) || data.length === 0) {
+      el.innerHTML = "No lenders found or failed to load data.";
+      return;
+    }
+
+    el.innerHTML = data.slice(0, 30).map(
+      x => `
+        <div class="pill" style="padding:8px;border-bottom:1px solid #ccc">
+          <strong>${x.name}</strong> – ${x.city} (${x.assets || "N/A"})
+        </div>
+      `
+    ).join("");
+  } catch (err) {
+    console.error(err);
+    el.innerHTML = "Error fetching lender list.";
+  }
+}
+
+fetchLenders();
+</script>
 </body>
 </html>
