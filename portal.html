@@ -376,7 +376,7 @@ async function detectLocation(){
 }
 
 async function fetchLenders() {
-  const state = document.getElementById("stateSel").value || "48";
+  const state = STATE_TO_CODE[document.getElementById("stateSel").value] || "48";
   const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev";
   const el = document.getElementById("lenders");
   el.innerHTML = "Loading lenders…";
