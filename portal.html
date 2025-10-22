@@ -9,10 +9,10 @@
 <!-- PDF.js for client-side PDF text extraction -->
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.min.js"></script>
 <script>
-  if (window['pdfjsLib']) {
-    pdfjsLib.GlobalWorkerOptions.workerSrc =
-      "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
-  }
+if (window['pdfjsLib']) {
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    "https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.16.105/pdf.worker.min.js";
+}
 </script>
 
 <style>
@@ -20,28 +20,24 @@
 #lenderList, .scrollbox, .lender-scroll, #lenders {
   overflow-y: auto !important;
   max-height: 70vh !important;
-  -webkit-overflow-scrolling: touch; /* smooth mobile scrolling */
+  -webkit-overflow-scrolling: touch;
 }
 
-body, html {
-  overscroll-behavior: contain;
-}
+body, html { overscroll-behavior: contain; }
+section, div, .panel { pointer-events: auto !important; }
 
-section, div, .panel {
-  pointer-events: auto !important;
-}
-
-/* --- Main styling starts here --- */
+/* --- Main Styling --- */
 :root{
   --blue:#0b5fa5; --dark:#0b2d4a; --gold:#caa43b; --ink:#142433;
-  --muted:#6b7b8c; --paper:#fff; --soft:#f5f8fc; --bd:#e6eef6
+  --muted:#6b7b8c; --paper:#fff; --soft:#f5f8fc; --bd:#e6eef6;
 }
 *{box-sizing:border-box}
 html,body{height:100%}
 body{
-  margin:0; background:linear-gradient(180deg,#f8fbff,#fff);
+  margin:0;
+  background:linear-gradient(180deg,#f8fbff,#fff);
   font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;
-  color:var(--ink)
+  color:var(--ink);
 }
 header{background:#003366;color:#fff;padding:16px;text-align:center;font-weight:800;letter-spacing:.2px}
 .container{max-width:1100px;margin:18px auto;padding:0 14px}
@@ -61,66 +57,17 @@ header{background:#003366;color:#fff;padding:16px;text-align:center;font-weight:
   background:#fff;border:1px solid var(--bd);border-radius:16px;
   box-shadow:0 16px 40px rgba(8,68,120,.08);padding:16px
 }
-h2{margin:4px 0 10px;color:var(--dark)}
-h3{margin:8px 0}
-p.mini{color:var(--muted);font-size:12px;margin:6px 0}
-.row{display:flex;gap:10px;flex-wrap:wrap}
-.input, select, textarea{
-  width:100%;padding:10px;border:1px solid var(--bd);border-radius:10px;background:#fff
-}
-.badge{display:inline-block;background:#eef5fb;color:#0b5fa5;padding:4px 8px;border-radius:999px;font-size:12px;font-weight:800}
-.btn{
-  background:var(--blue);color:#fff;border:0;border-radius:12px;
-  padding:10px 14px;font-weight:800;cursor:pointer;
-  box-shadow:0 12px 28px rgba(11,95,165,.16)
-}
-.btn.gold{
-  background:linear-gradient(90deg,#f8e7b0,#e8c86e,#caa43b);
-  color:#1b2330
-}
+.progress{height:12px;background:#edf3fb;border-radius:999px;overflow:hidden}
+.progress > span{display:block;height:100%;background:linear-gradient(90deg,#d72638,#f0b429,#2bb673);transition:width .35s ease}
+.btn{background:var(--blue);color:#fff;border:0;border-radius:12px;padding:10px 14px;font-weight:800;cursor:pointer;box-shadow:0 12px 28px rgba(11,95,165,.16)}
+.btn.gold{background:linear-gradient(90deg,#f8e7b0,#e8c86e,#caa43b);color:#1b2330}
 .btn.ghost{background:#fff;border:2px solid #e1ecf6;color:#0b2d4a}
-.pill{
-  display:inline-block;padding:8px 10px;border-radius:12px;background:#fcfdff;
-  border:1px solid #e7eff7;margin:4px 6px 0 0
-}
-
-/* Gradient progress (red → yellow → green) */
-.progress{height:12px;background:#edf3fb;border-radius:999px;overflow:hidden;position:relative}
-.progress > span{
-  display:block;height:100%;
-  background:linear-gradient(90deg,#d72638,#f0b429,#2bb673);
-  transition:width .35s ease
-}
-
-.badge-goal{display:inline-block;padding:6px 10px;border-radius:999px;background:#fff5e0;border:1px solid #f3d28a;color:#875d00;font-weight:800}
-
-footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
-
-/* loading overlay */
-#app-loading{
-  position:fixed;inset:0;display:flex;align-items:center;justify-content:center;
-  background:#ffffffea;z-index:9999
-}
+#app-loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#ffffffea;z-index:9999}
 .logo-spin{width:56px;height:56px;border-radius:50%;border:6px solid #e6eef6;border-top-color:#0b5fa5;animation:spin .9s linear infinite;margin-right:12px}
 @keyframes spin{to{transform:rotate(360deg)}}
-
-/* helper blocks */
-.tip{
-  background:#f8fbff;border:1px dashed #d9e7f7;border-radius:12px;padding:10px;margin-top:8px
-}
-.kv{display:grid;grid-template-columns:140px 1fr;gap:6px;font-size:13px}
-@media(max-width:560px){.kv{grid-template-columns:1fr}}
-.badge-ok{color:#2bb673}
-.badge-warn{color:#f0b429}
-.badge-bad{color:#d72638}
-
-/* milestone chips */
-.mchip{
-  border:1px solid #e7eff7;background:#fcfdff;border-radius:999px;padding:8px 12px;margin:6px 8px 0 0;display:inline-flex;gap:8px;align-items:center
-}
-.mchip.done{border-color:#c8efd8;background:#f3fff7}
 </style>
 </head>
+
 <body>
 <div id="app-loading">
   <div class="logo-spin"></div>
@@ -132,8 +79,6 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
 
 <header>Major Growth Institute — Client Dashboard</header>
 <div class="container">
-
-  <!-- Top bar -->
   <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
     <div><span class="badge" id="who"></span></div>
     <div class="row" style="gap:8px">
@@ -141,26 +86,111 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     </div>
   </div>
 
-  <!-- Tabs -->
   <div class="nav" id="tabs">
     <div class="tab active" data-tab="overview">Overview</div>
-    <div class="tab" data-tab="analyzer">Analyzer</div>
-    <div class="tab" data-tab="upload">AI Reader</div>
-    <div class="tab" data-tab="milestones">Milestones</div>
     <div class="tab" data-tab="reports">Reports</div>
-    <div class="tab" data-tab="support">Support</div>
   </div>
 
-  <!-- (All your other panels remain unchanged) -->
-  <!-- ... existing code continues exactly as you posted ... -->
+  <div id="panel-overview" class="card" style="margin-top:14px">
+    <h2>Welcome</h2>
+    <p>This is your client dashboard.</p>
+  </div>
 
-<!-- SCROLL FIX SCRIPT -->
+  <div id="panel-reports" class="card" style="display:none;margin-top:14px">
+    <h2>Lender Finder</h2>
+    <div class="row">
+      <select id="stateSel" class="input"></select>
+      <button class="btn" onclick="fetchLenders()">Find Lenders</button>
+      <button class="btn ghost" onclick="detectLocation()">Detect My Location</button>
+    </div>
+    <div id="lenders" style="margin-top:12px"></div>
+  </div>
+</div>
+
+<!-- Firebase SDK -->
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
+
 <script>
-document.addEventListener('wheel', (e) => {
-  const el = e.target.closest('#lenderList, .scrollbox, .lender-scroll, #lenders');
-  if (el) el.scrollTop += e.deltaY;
-}, { passive: true });
-</script>
+const firebaseConfig = {
+  apiKey:"AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
+  authDomain:"majorgrowthportal.firebaseapp.com",
+  projectId:"majorgrowthportal",
+  storageBucket:"majorgrowthportal.firebasestorage.app",
+  messagingSenderId:"741963712787",
+  appId:"1:741963712787:web:dbb9fb191cdae414b0f2e6",
+  measurementId:"G-7NGDY9DYCW"
+};
+firebase.initializeApp(firebaseConfig);
+const auth=firebase.auth();
 
+auth.onAuthStateChanged(u=>{
+  document.getElementById('app-loading').style.display='none';
+  if(!u){
+    document.getElementById('who').textContent = "Signed in: Test User";
+  } else {
+    document.getElementById('who').textContent = "Signed in: "+(u.displayName||u.email);
+  }
+});
+document.getElementById('logout').onclick=()=>auth.signOut().then(()=>alert("Signed out"));
+
+// Tabs
+const tabs=document.querySelectorAll('.tab');
+function selectTab(name){
+  tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
+  document.querySelectorAll('[id^=panel-]').forEach(el=>{
+    el.style.display=el.id==='panel-'+name?'block':'none';
+  });
+}
+tabs.forEach(t=>t.onclick=()=>selectTab(t.dataset.tab));
+
+// Lender Finder
+const STATE_TO_CODE={
+  AL:"01", AK:"02", AZ:"04", AR:"05", CA:"06", CO:"08", CT:"09", DC:"11", DE:"10",
+  FL:"12", GA:"13", HI:"15", IA:"19", ID:"16", IL:"17", IN:"18", KS:"20", KY:"21",
+  LA:"22", MA:"25", MD:"24", ME:"23", MI:"26", MN:"27", MO:"29", MS:"28", MT:"30",
+  NC:"37", ND:"38", NE:"31", NH:"33", NJ:"34", NM:"35", NV:"32", NY:"36", OH:"39",
+  OK:"40", OR:"41", PA:"42", RI:"44", SC:"45", SD:"46", TN:"47", TX:"48", UT:"49",
+  VA:"51", VT:"50", WA:"53", WI:"55", WV:"54", WY:"56"
+};
+function loadStates(){
+  const sel=document.getElementById('stateSel');
+  Object.keys(STATE_TO_CODE).forEach(s=>{
+    const o=document.createElement('option');
+    o.value=s; o.textContent=s;
+    sel.appendChild(o);
+  });
+  sel.value="TX";
+}
+loadStates();
+
+async function detectLocation(){
+  try{
+    const r=await fetch("https://ipapi.co/json/");
+    const j=await r.json();
+    const state=(j.region_code||"").toUpperCase();
+    if(STATE_TO_CODE[state]) document.getElementById('stateSel').value=state;
+  }catch(e){ alert("Could not detect location."); }
+}
+
+function fetchLenders(){
+  const abbr=document.getElementById("stateSel").value;
+  const code=STATE_TO_CODE[abbr]||"48";
+  const link=`https://ibanknet.com/scripts/callreports/fiList.aspx?type=stateallfi&state=${code}`;
+  document.getElementById("lenders").innerHTML=`
+    <div style="padding:14px;border:1px solid #e6eef6;border-radius:12px;background:#f8fbff">
+      <p><b>${abbr} Lenders:</b></p>
+      <a href="${link}" target="_blank" rel="noopener" class="btn gold">🔗 View Live Lender List</a>
+      <p class="mini" style="margin-top:8px">Opens iBankNet’s lender database for ${abbr}.</p>
+    </div>`;
+}
+
+// Scroll fix
+document.addEventListener('wheel', e=>{
+  const el=e.target.closest('#lenders,.scrollbox,.lender-scroll');
+  if(el) el.scrollTop+=e.deltaY;
+},{passive:true});
+</script>
 </body>
 </html>
