@@ -1,13 +1,14 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
+<meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
 <title>MGI Client Dashboard</title>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
 <style>
 :root{--blue:#0b5fa5;--dark:#0b2d4a;--gold:#caa43b;--ink:#142433;--muted:#6b7b8c;--paper:#fff;--soft:#f5f8fc;--bd:#e6eef6}
 *{box-sizing:border-box}
+html,body{height:100%}
 body{margin:0;background:linear-gradient(180deg,#f7fbff,#fff);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial;color:var(--ink)}
 header{background:#003366;color:#fff;padding:16px;text-align:center;font-weight:700}
 .container{max-width:1100px;margin:18px auto;padding:0 14px}
@@ -31,12 +32,26 @@ p.mini{color:var(--muted);font-size:12px;margin:6px 0}
 .progress{height:10px;background:#eaf2fb;border-radius:999px;overflow:hidden}
 .progress > span{display:block;height:100%;background:linear-gradient(90deg,#0b5fa5,#4aa3ff)}
 footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
+
+/* simple loading overlay */
+#app-loading{position:fixed;inset:0;display:flex;align-items:center;justify-content:center;background:#ffffffea;z-index:9999}
+.logo-spin{width:56px;height:56px;border-radius:50%;border:6px solid #e6eef6;border-top-color:#0b5fa5;animation:spin 0.9s linear infinite;margin-right:12px}
+@keyframes spin{to{transform:rotate(360deg)}}
 </style>
 </head>
 <body>
+<div id="app-loading">
+  <div class="logo-spin"></div>
+  <div>
+    <div style="font-weight:800;color:#003366">Major Growth Institute</div>
+    <div style="font-size:12px;color:#6b7b8c">Loading your dashboard…</div>
+  </div>
+</div>
+
 <header>Major Growth Institute — Client Dashboard</header>
 <div class="container">
 
+  <!-- Top bar -->
   <div class="row" style="justify-content:space-between;align-items:center;margin-bottom:12px">
     <div><span class="badge" id="who"></span></div>
     <div class="row" style="gap:8px">
@@ -44,6 +59,7 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     </div>
   </div>
 
+  <!-- Tabs -->
   <div class="nav" id="tabs">
     <div class="tab active" data-tab="overview">Overview</div>
     <div class="tab" data-tab="analyzer">Analyzer</div>
@@ -52,6 +68,7 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     <div class="tab" data-tab="support">Support</div>
   </div>
 
+  <!-- Overview -->
   <div id="panel-overview" class="grid two" style="margin-top:14px">
     <div class="card">
       <h2>Welcome</h2>
@@ -59,6 +76,13 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
       <div class="row" style="margin-top:8px">
         <a class="btn" href="#analyzer" onclick="selectTab('analyzer')">Start Analysis</a>
         <a class="btn ghost" href="#reports" onclick="selectTab('reports')">See Lenders</a>
+      </div>
+      <div style="margin-top:16px">
+        <h3>Upgrade Options</h3>
+        <div class="row">
+          <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book Consultation ($100)</a>
+          <a class="btn" href="https://buy.stripe.com/test_6oU5kFepa0dZd7wcJE53O01" target="_blank" rel="noopener">Full Service Package ($1000)</a>
+        </div>
       </div>
     </div>
     <div class="card">
@@ -72,14 +96,98 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
     </div>
   </div>
 
+  <!-- Analyzer -->
+  <div id="panel-analyzer" class="card" style="display:none;margin-top:14px">
+    <div class="badge">Guided Analyzer</div>
+    <h2 style="margin-top:6px">Repair → Build → Fund</h2>
+
+    <h3 style="margin-top:10px">Repair</h3>
+    <div class="row">
+      <input class="input" id="exp" placeholder="Experian score (e.g., 640)" type="number">
+      <input class="input" id="eq"  placeholder="Equifax score (e.g., 630)" type="number">
+      <input class="input" id="tu"  placeholder="TransUnion score (e.g., 650)" type="number">
+    </div>
+    <div class="row" style="margin-top:8px">
+      <label class="pill"><input type="checkbox" id="late"> Late payments</label>
+      <label class="pill"><input type="checkbox" id="coll"> Collections</label>
+      <label class="pill"><input type="checkbox" id="coff"> Charge-offs</label>
+      <label class="pill"><input type="checkbox" id="bk"> Bankruptcy</label>
+      <input class="input" id="negCount" placeholder="# of negative items" type="number">
+    </div>
+
+    <h3 style="margin-top:16px">Build</h3>
+    <div class="row">
+      <input class="input" id="util" placeholder="Overall utilization % (e.g., 28)" type="number">
+      <input class="input" id="rev"  placeholder="# of revolving accounts" type="number">
+      <input class="input" id="inst" placeholder="# of installment accounts" type="number">
+      <input class="input" id="age"  placeholder="Avg age (months)" type="number">
+      <input class="input" id="inq"  placeholder="New inquiries (6–12 mo)" type="number">
+    </div>
+
+    <h3 style="margin-top:16px">Fund</h3>
+    <div class="row">
+      <label class="pill"><input type="checkbox" id="goal_personal" checked> Personal funding</label>
+      <label class="pill"><input type="checkbox" id="goal_business"> Business funding</label>
+      <input class="input" id="target" placeholder="Target funding amount ($)" type="number">
+      <select class="input" id="risk">
+        <option value="conservative">Risk: Conservative</option>
+        <option value="moderate" selected>Risk: Moderate</option>
+        <option value="aggressive">Risk: Aggressive</option>
+      </select>
+    </div>
+
+    <div class="row" style="margin-top:12px">
+      <button class="btn" onclick="computeAndSave()">Save & Compute</button>
+      <button class="btn ghost" onclick="clearData()">Clear</button>
+    </div>
+
+    <div style="margin-top:16px">
+      <h3>Recommendations</h3>
+      <div id="recs"></div>
+      <h3 style="margin-top:12px">Funding Readiness</h3>
+      <div id="fundingTier" class="pill">Not calculated</div>
+    </div>
+  </div>
+
+  <!-- Reports -->
   <div id="panel-reports" class="card" style="display:none;margin-top:14px">
-    <div class="badge">Lender Finder</div>
+    <div class="badge">Lender Finder (via proxy)</div>
     <div class="row" style="margin-top:8px">
       <select id="stateSel" class="input"></select>
       <button class="btn" onclick="fetchLenders()">Find Lenders</button>
       <button class="btn ghost" onclick="detectLocation()">Detect My Location</button>
     </div>
+    <p class="mini">We’ll tailor lenders by state. (Tip: Detect location once, then browse.)</p>
     <div id="lenders" style="margin-top:12px"></div>
+  </div>
+
+  <!-- Progress -->
+  <div id="panel-progress" class="card" style="display:none;margin-top:14px">
+    <div class="badge">Your Progress</div>
+    <div id="progContent" style="margin-top:10px">No data yet — run the analyzer and save.</div>
+  </div>
+
+  <!-- Support + Founder -->
+  <div id="panel-support" class="grid two" style="display:none;margin-top:14px">
+    <div class="card">
+      <div class="badge">Support</div>
+      <p>Need help? Book a call or open a ticket.</p>
+      <div class="row" style="margin-top:8px">
+        <a class="btn gold" href="https://calendly.com/majorgrowth" target="_blank" rel="noopener">Book a Consultation</a>
+        <a class="btn" href="mailto:majorgrowthinstitute@gmail.com">Email Support</a>
+      </div>
+    </div>
+    <div class="card">
+      <div class="badge">Meet the Founder</div>
+      <h3 style="margin-top:6px">Building Wealth the Right Way</h3>
+      <p class="mini">I started Major Growth Institute after seeing too many people try to win with a playbook that wasn’t built for them. I’m here to make funding, credit, and business strategy clear, repeatable, and honest.</p>
+      <ul style="margin-top:6px; padding-left:18px; line-height:1.5">
+        <li>Transparent steps — no fluff, no mystery.</li>
+        <li>Tailored lender matching by state and profile.</li>
+        <li>Roadmaps that go from repair → build → fund.</li>
+      </ul>
+      <p class="mini">If you’re serious about momentum, book a chat and we’ll map your next 90 days.</p>
+    </div>
   </div>
 
   <footer>© Major Growth Institute</footer>
@@ -88,8 +196,10 @@ footer{margin:26px 0 20px;text-align:center;color:#6b7b8c}
 <!-- Firebase SDKs -->
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-app-compat.js"></script>
 <script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-auth-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.13.1/firebase-firestore-compat.js"></script>
 
 <script>
+// ---------- Firebase ----------
 const firebaseConfig = {
   apiKey:"AIzaSyAkaLgL4UDwVrKXK3RbWsDqwuhK2C7L49k",
   authDomain:"majorgrowthportal.firebaseapp.com",
@@ -100,65 +210,195 @@ const firebaseConfig = {
   measurementId:"G-7NGDY9DYCW"
 };
 firebase.initializeApp(firebaseConfig);
-const auth=firebase.auth();
+const auth=firebase.auth(), db=firebase.firestore();
 
-// --- Auth guard ---
 auth.onAuthStateChanged(u=>{
   if(!u){ location.href="app.html"; return; }
   document.getElementById('who').textContent = "Signed in: "+(u.displayName||u.email);
+  document.getElementById('app-loading').style.display='none';
 });
 document.getElementById('logout').onclick=()=>auth.signOut().then(()=>location.href="app.html");
 
-// --- Tabs ---
+// ---------- Tabs ----------
 const tabs=document.querySelectorAll('.tab');
 function selectTab(name){
   tabs.forEach(t=>t.classList.toggle('active',t.dataset.tab===name));
-  ['overview','analyzer','reports','progress','support'].forEach(id=>{
-    const panel=document.getElementById('panel-'+id);
-    if(panel) panel.style.display=(id===name?'grid':'none');
+  const panels=['overview','analyzer','reports','progress','support'];
+  panels.forEach(id=>{
+    const el=document.getElementById('panel-'+id);
+    if(!el) return;
+    el.style.display=(id===name ? (id==='analyzer'?'block':'grid') : 'none');
   });
 }
 tabs.forEach(t=>t.onclick=()=>selectTab(t.dataset.tab));
-selectTab('overview');
+if(location.hash==="#analyzer") selectTab('analyzer'); else selectTab('overview');
 
-// --- Lender fetch ---
-const PROXY="https://majorgrowthproxy.laxfreaked.workers.dev";
+// ---------- Analyzer + Progress ----------
+let profile={
+  scores:{exp:null,eq:null,tu:null},
+  neg:{late:false,coll:false,coff:false,bk:false,count:0},
+  build:{util:null,rev:0,inst:0,age:0,inq:0},
+  fund:{personal:true,biz:false,target:0,risk:'moderate'},
+  location:{state:null},
+  readiness:0, repairPct:0, tier:"Not Ready",
+  updatedAt:null
+};
+const get=(id)=>document.getElementById(id);
+const v=(id)=>{const el=get(id); return el?.type==='checkbox'?el.checked:(el?.value||"");}
+const n=(x)=>{if(x===""||x==null) return null; const y=Number(x); return isNaN(y)?null:y;}
+
+function avg(a){const b=a.filter(v=>typeof v==='number'&&!isNaN(v));return b.length?Math.round(b.reduce((x,y)=>x+y,0)/b.length):null;}
+function setVal(id,v){const el=get(id); if(el) el.value=(v??"");}
+function setChk(id,v){const el=get(id); if(el) el.checked=!!v;}
+function setSel(id,v){const el=get(id); if(el) el.value=v;}
+
+function buildRecs(p, avgScore){
+  const R=[];
+  if(p.neg.count>0||p.neg.late||p.neg.coll||p.neg.coff||p.neg.bk) R.push("Open disputes with documentation; oldest items first. Secure goodwill deletions where strong history exists.");
+  if(p.build.util!=null && p.build.util>28) R.push("Lower utilization under 28% (ideal <9%). Mid-cycle payments help.");
+  if(p.build.rev<3) R.push("Add 1–2 revolving lines (secured is fine) to reach 3+ lines.");
+  if(p.build.inst<1) R.push("Add 1 small installment/pledge loan; pay down 80–90% and leave open.");
+  if(p.build.inq>3) R.push("Pause hard pulls for 60–90 days.");
+  if(avgScore && avgScore>=680 && (p.build.util??100)<=28) R.push("Window open for 0% APR personal cards; don’t stack too many in one week.");
+  if(p.fund.biz) R.push("Prepare EIN, business checking, vendor trade lines, and revenue docs for LOC/CC apps.");
+  return "<ul>"+R.map(x=>`<li>${x}</li>`).join("")+"</ul>";
+}
+
+function hydrateForm(){
+  const p=profile;
+  setVal('exp',p.scores.exp); setVal('eq',p.scores.eq); setVal('tu',p.scores.tu);
+  setChk('late',p.neg.late); setChk('coll',p.neg.coll); setChk('coff',p.neg.coff); setChk('bk',p.neg.bk); setVal('negCount',p.neg.count);
+  setVal('util',p.build.util); setVal('rev',p.build.rev); setVal('inst',p.build.inst); setVal('age',p.build.age); setVal('inq',p.build.inq);
+  setChk('goal_personal',p.fund.personal); setChk('goal_business',p.fund.biz); setVal('target',p.fund.target); setSel('risk',p.fund.risk);
+  get('bar-fund').style.width=p.readiness+"%";
+  get('bar-repair').style.width=p.repairPct+"%";
+  get('fundingTier').textContent=p.tier||'Not calculated';
+  renderProgress();
+}
+
+async function saveProfile(){
+  const u=auth.currentUser; if(!u) return;
+  await db.collection("mgi_clients").doc(u.uid).set(profile,{merge:true});
+  renderProgress();
+}
+async function loadProfile(){
+  const u=auth.currentUser; if(!u) return;
+  const d=await db.collection("mgi_clients").doc(u.uid).get();
+  if(d.exists){ profile=Object.assign(profile,d.data()); hydrateForm(); }
+  loadStates();
+}
+
+function renderProgress(){
+  const c=get('progContent');
+  if(!c) return;
+  c.innerHTML = `
+    <p><b>Funding Readiness:</b> ${profile.readiness}%</p>
+    <p><b>Repair Progress:</b> ${profile.repairPct}%</p>
+    <p><b>Tier:</b> ${profile.tier}</p>
+    <p class="mini">Last updated: ${profile.updatedAt?new Date(profile.updatedAt).toLocaleString():'—'}</p>
+  `;
+}
+
+function computeAndSave(){
+  // capture
+  profile.scores.exp=n(v('exp')); profile.scores.eq=n(v('eq')); profile.scores.tu=n(v('tu'));
+  profile.neg.late=v('late'); profile.neg.coll=v('coll'); profile.neg.coff=v('coff'); profile.neg.bk=v('bk'); profile.neg.count=n(v('negCount'))||0;
+  profile.build.util=n(v('util')); profile.build.rev=n(v('rev'))||0; profile.build.inst=n(v('inst'))||0; profile.build.age=n(v('age'))||0; profile.build.inq=n(v('inq'))||0;
+  profile.fund.personal=v('goal_personal'); profile.fund.biz=v('goal_business'); profile.fund.target=n(v('target'))||0; profile.fund.risk=v('risk')||'moderate';
+
+  // compute
+  const avgScore=avg([profile.scores.exp,profile.scores.eq,profile.scores.tu]);
+  let repair=100;
+  if(profile.neg.count>0) repair-=Math.min(60, profile.neg.count*10);
+  if(profile.neg.late) repair-=10; if(profile.neg.coll) repair-=15; if(profile.neg.coff) repair-=18; if(profile.neg.bk) repair-=35;
+  repair=Math.max(0,Math.min(100,repair));
+  let readiness=0;
+  if(avgScore) readiness += Math.max(0, Math.min(50,(avgScore-600)/120*50));  // 600→720 ~ 0→50
+  if(profile.build.util!=null) readiness += (profile.build.util<=9?30:profile.build.util<=28?18:profile.build.util<=57?6:0);
+  if(profile.build.rev>=3) readiness += 10;
+  if(profile.build.age>=24) readiness += 5;
+  if(profile.build.inq<=3) readiness += 5;
+  readiness=Math.round(Math.max(0,Math.min(100,readiness)));
+  let tier="Not Ready";
+  if(readiness>=80 && repair>=80) tier="Tier 1 (Prime + biz ready)";
+  else if(readiness>=60 && repair>=60) tier="Tier 2 (0% personal ready)";
+  else if(readiness>=40) tier="Pre-Work";
+  profile.readiness=readiness; profile.repairPct=repair; profile.tier=tier; profile.updatedAt=new Date().toISOString();
+
+  // UI
+  get('fundingTier').textContent=tier;
+  get('bar-fund').style.width=readiness+"%";
+  get('bar-repair').style.width=repair+"%";
+  get('fund-note').textContent = "Readiness: "+readiness+"%";
+  get('repair-note').textContent= "Repair progress: "+repair+"%";
+  get('recs').innerHTML = buildRecs(profile, avgScore);
+
+  saveProfile();
+}
+
+function clearData(){
+  if(!confirm("Clear analyzer data?")) return;
+  profile={scores:{exp:null,eq:null,tu:null},neg:{late:false,coll:false,coff:false,bk:false,count:0},
+    build:{util:null,rev:0,inst:0,age:0,inq:0},fund:{personal:true,biz:false,target:0,risk:'moderate'},
+    location:{state:null},readiness:0,repairPct:0,tier:"Not Ready",updatedAt:null};
+  hydrateForm(); renderProgress(); saveProfile();
+}
+
+// ---------- Lender Finder ----------
+const PROXY = "https://majorgrowthproxy.laxfreaked.workers.dev";
+
+// Map state abbrev → FIPS (used by iBankNet; TX=48)
+const STATE_TO_CODE={
+  AL:"01", AK:"02", AZ:"04", AR:"05", CA:"06", CO:"08", CT:"09", DC:"11", DE:"10",
+  FL:"12", GA:"13", HI:"15", IA:"19", ID:"16", IL:"17", IN:"18", KS:"20", KY:"21",
+  LA:"22", MA:"25", MD:"24", ME:"23", MI:"26", MN:"27", MO:"29", MS:"28", MT:"30",
+  NC:"37", ND:"38", NE:"31", NH:"33", NJ:"34", NM:"35", NV:"32", NY:"36", OH:"39",
+  OK:"40", OR:"41", PA:"42", RI:"44", SC:"45", SD:"46", TN:"47", TX:"48", UT:"49",
+  VA:"51", VT:"50", WA:"53", WI:"55", WV:"54", WY:"56"
+};
+
 const STATES=["AL","AK","AZ","AR","CA","CO","CT","DC","DE","FL","GA","HI","IA","ID","IL","IN","KS","KY","LA","MA","MD","ME","MI","MN","MO","MS","MT","NC","ND","NE","NH","NJ","NM","NV","NY","OH","OK","OR","PA","RI","SC","SD","TN","TX","UT","VA","VT","WA","WI","WV","WY"];
+
 function loadStates(){
-  const sel=document.getElementById('stateSel');
+  const sel=document.getElementById('stateSel'); if(!sel) return;
   sel.innerHTML="";
-  STATES.forEach(s=>{
-    const o=document.createElement('option');
-    o.value=s; o.textContent=s; sel.appendChild(o);
-  });
+  STATES.forEach(s=>{const o=document.createElement('option');o.value=s;o.textContent=s;sel.appendChild(o);});
   sel.value="TX";
 }
+
 async function detectLocation(){
   try{
     const r=await fetch("https://ipapi.co/json/");
-    const j=await r.json();
+    const j=await r.json(); 
     const state=(j.region_code||"").toUpperCase();
     if(STATES.includes(state)) document.getElementById('stateSel').value=state;
-  }catch(e){alert("Could not detect location.");}
+  }catch(e){ alert("Could not detect location."); }
 }
+
 async function fetchLenders(){
-  const state=document.getElementById('stateSel').value;
+  const abbr=document.getElementById('stateSel').value||"TX";
+  const code=STATE_TO_CODE[abbr]||"48";
   const el=document.getElementById('lenders');
-  el.innerHTML="Loading lenders...";
+  el.innerHTML="Loading lenders…";
   try{
-    const resp=await fetch(`${PROXY}/?state=${state}`);
+    // Your Worker should accept either ?state=TX or numeric; we send numeric for iBankNet.
+    const resp=await fetch(`${PROXY}/?state=${code}`);
     const data=await resp.json();
     if(!Array.isArray(data)||data.length===0){
       el.innerHTML="No lenders found or failed to load data.";
       return;
     }
-    el.innerHTML=data.map(x=>`
-      <div class="pill"><strong>${x.name}</strong> — ${x.city||"Unknown"}</div>
+    el.innerHTML=data.slice(0,40).map(x=>`
+      <div class="pill" style="padding:8px;border-bottom:1px solid #e7eff7">
+        <strong>${x.name||"Bank"}</strong> — ${x.city||abbr} ${x.assets?`(${x.assets})`:""}
+      </div>
     `).join("");
   }catch(err){
-    el.innerHTML="Error fetching lenders.";
+    console.error(err);
+    el.innerHTML="Error fetching lender list.";
   }
 }
+
 loadStates();
 </script>
 </body>
